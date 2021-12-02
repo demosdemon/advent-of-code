@@ -26,7 +26,9 @@ impl FromStr for Direction {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let (dir, amt) = s.split_once(" ").ok_or(Error::InvalidInput(s.to_owned()))?;
+        let (dir, amt) = s
+            .split_once(" ")
+            .ok_or_else(|| Error::InvalidInput(s.to_owned()))?;
         let amt = amt.parse()?;
         match dir {
             "forward" => Ok(Self::Forward(amt)),
