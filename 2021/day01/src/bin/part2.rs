@@ -45,10 +45,10 @@
     the previous sum?
 */
 
-use day01::read;
+use common::read;
 
 fn main() {
-    let depths = read()
+    let depths = read::<isize, Vec<_>>()
         .unwrap()
         // a co-worker of mine pointed out that (A + B + C) < (B + C + D) is equivalent
         // to A < D, and thus, we just need a sliding window of 4 elements.

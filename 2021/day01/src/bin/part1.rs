@@ -62,10 +62,14 @@
     How many measurements are larger than the previous measurement?
 */
 
-use day01::read;
+use common::read;
 
 fn main() {
-    let depths = read().unwrap().windows(2).filter(|s| s[0] < s[1]).count();
+    let depths = read::<isize, Vec<_>>()
+        .unwrap()
+        .windows(2)
+        .filter(|s| s[0] < s[1])
+        .count();
 
     println!("increased {}", depths);
 }
