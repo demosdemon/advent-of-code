@@ -1,0 +1,19 @@
+[package]
+edition = "2021"
+name = "day01"
+publish = false
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "day01"
+
+[[bin]]
+name = "part1"
+
+[[bin]]
+name = "part2"
+
+[dependencies]
+anyhow = "1.0.51"
+structopt = "0.3.25"
