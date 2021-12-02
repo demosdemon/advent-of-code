@@ -12,11 +12,10 @@ struct Args {
     path: OsString,
 }
 
-fn map_line<T, E>(line: std::result::Result<String, E>) -> Result<T>
+fn map_line<T>(line: std::io::Result<String>) -> Result<T>
 where
     T: FromStr,
     <T as FromStr>::Err: std::error::Error + Sync + Send + 'static,
-    E: std::error::Error + Sync + Send + 'static,
 {
     line.context("reading line")?
         .parse()
