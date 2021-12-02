@@ -65,11 +65,11 @@
 use common::read;
 
 fn main() {
-    let depths = read::<isize, Vec<_>>()
+    let result = read::<isize, Vec<_>>()
         .unwrap()
         .windows(2)
         .filter(|s| s[0] < s[1])
         .count();
 
-    println!("increased {}", depths);
+    println!("increased {}", result);
 }

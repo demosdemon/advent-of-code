@@ -48,7 +48,7 @@
 use common::read;
 
 fn main() {
-    let depths = read::<isize, Vec<_>>()
+    let result = read::<isize, Vec<_>>()
         .unwrap()
         // a co-worker of mine pointed out that (A + B + C) < (B + C + D) is equivalent
         // to A < D, and thus, we just need a sliding window of 4 elements.
@@ -56,5 +56,5 @@ fn main() {
         .filter(|s| s[0] < s[3])
         .count();
 
-    println!("increased {}", depths);
+    println!("increased {}", result);
 }
