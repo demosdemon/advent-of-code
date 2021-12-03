@@ -12,6 +12,10 @@ impl Line {
         self.0.len()
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
     pub fn ceiling(self) -> Bit {
         let (ones, zeros): (Vec<_>, Vec<_>) = self.0.into_iter().partition(|b| b.to_owned().into());
         if ones.len() < zeros.len() {
