@@ -64,6 +64,7 @@
 
 use aoc::{read, IntoAnswer};
 
+#[derive(Debug)]
 struct Result(Vec<isize>);
 
 impl FromIterator<isize> for Result {
