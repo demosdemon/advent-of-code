@@ -1,11 +1,21 @@
 [package]
 edition = "2021"
-name = "common"
+name = "day03"
 publish = false
 version = "0.1.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "day03"
+
+[[bin]]
+name = "day03-part1"
+path = "src/bin/part1.rs"
+
+[[bin]]
+name = "day03-part2"
+path = "src/bin/part2.rs"
 
 [dependencies]
-structopt = "0.3.25"
+common = {path = "../common"}
 thiserror = "1.0.30"

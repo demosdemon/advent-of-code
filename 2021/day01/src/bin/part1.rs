@@ -62,14 +62,39 @@
     How many measurements are larger than the previous measurement?
 */
 
-use common::read;
+use common::{read, IntoAnswer};
+
+struct Result(Vec<isize>);
+
+impl FromIterator<isize> for Result {
+    fn from_iter<T: IntoIterator<Item = isize>>(iter: T) -> Self {
+        Self(iter.into_iter().collect())
+    }
+}
+
+impl IntoAnswer for Result {
+    fn into_answer(self) -> isize {
+        self.0.windows(2).filter(|s| s[0] < s[1]).count() as isize
+    }
+}
 
 fn main() {
-    let result = read::<isize, Vec<_>>()
-        .unwrap()
-        .windows(2)
-        .filter(|s| s[0] < s[1])
-        .count();
-
+    let result = read::<isize, Result>().unwrap();
     println!("increased {}", result);
+}
+
+mod test {
+    #[test]
+    fn test_example() {
+        let input = include_str!("../../inputs/example");
+        let res = common::test::<isize, super::Result>(input).unwrap();
+        assert_eq!(res, 7);
+    }
+
+    #[test]
+    fn test_live() {
+        let input = include_str!("../../inputs/live");
+        let res = common::test::<isize, super::Result>(input).unwrap();
+        assert_eq!(res, 1722);
+    }
 }

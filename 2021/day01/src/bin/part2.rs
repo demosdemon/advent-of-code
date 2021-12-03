@@ -45,16 +45,44 @@
     the previous sum?
 */
 
-use common::read;
+use common::{read, IntoAnswer};
+
+struct Result(Vec<isize>);
+
+impl FromIterator<isize> for Result {
+    fn from_iter<T: IntoIterator<Item = isize>>(iter: T) -> Self {
+        Self(iter.into_iter().collect())
+    }
+}
+
+impl IntoAnswer for Result {
+    fn into_answer(self) -> isize {
+        self.0
+            // a co-worker of mine pointed out that (A + B + C) < (B + C + D) is equivalent
+            // to A < D, and thus, we just need a sliding window of 4 elements.
+            .windows(4)
+            .filter(|s| s[0] < s[3])
+            .count() as isize
+    }
+}
 
 fn main() {
-    let result = read::<isize, Vec<_>>()
-        .unwrap()
-        // a co-worker of mine pointed out that (A + B + C) < (B + C + D) is equivalent
-        // to A < D, and thus, we just need a sliding window of 4 elements.
-        .windows(4)
-        .filter(|s| s[0] < s[3])
-        .count();
-
+    let result = read::<isize, Result>().unwrap();
     println!("increased {}", result);
+}
+
+mod test {
+    #[test]
+    fn test_example() {
+        let input = include_str!("../../inputs/example");
+        let res = common::test::<isize, super::Result>(input).unwrap();
+        assert_eq!(res, 5);
+    }
+
+    #[test]
+    fn test_live() {
+        let input = include_str!("../../inputs/live");
+        let res = common::test::<isize, super::Result>(input).unwrap();
+        assert_eq!(res, 1748);
+    }
 }
