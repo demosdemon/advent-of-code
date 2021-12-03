@@ -18,7 +18,7 @@ where
     #[error("an error occured while reading from source: {0}")]
     IO(#[from] std::io::Error),
 
-    #[error("an error occured while parsing the input line '{0}': {1}")]
+    #[error("an error occured while parsing the input line {0:?}: {1}")]
     Parse(String, #[source] P::Err),
 
     #[error("an error occured while generating the answer: {0}")]
