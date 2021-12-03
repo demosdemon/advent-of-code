@@ -49,7 +49,7 @@
     submarine? (Be sure to represent your answer in decimal, not binary.)
 */
 
-use common::{read, IntoAnswer};
+use aoc::{read, IntoAnswer};
 use day03::{Bit, Line};
 
 #[derive(Default, Debug)]
@@ -131,14 +131,14 @@ mod test {
     #[test]
     fn test_example() {
         let input = include_str!("../../inputs/example");
-        let res = common::test::<super::Line, super::Diagnostic>(input).unwrap();
+        let res = aoc::test::<super::Line, super::Diagnostic>(input).unwrap();
         assert_eq!(res, 198)
     }
 
     #[test]
     fn test_live() {
         let input = include_str!("../../inputs/live");
-        let res = common::test::<super::Line, super::Diagnostic>(input).unwrap();
+        let res = aoc::test::<super::Line, super::Diagnostic>(input).unwrap();
         assert_eq!(res, 4103154)
     }
 }

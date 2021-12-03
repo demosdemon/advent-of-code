@@ -45,7 +45,7 @@
     the previous sum?
 */
 
-use common::{read, IntoAnswer};
+use aoc::{read, IntoAnswer};
 
 struct Result(Vec<isize>);
 
@@ -75,14 +75,14 @@ mod test {
     #[test]
     fn test_example() {
         let input = include_str!("../../inputs/example");
-        let res = common::test::<isize, super::Result>(input).unwrap();
+        let res = aoc::test::<isize, super::Result>(input).unwrap();
         assert_eq!(res, 5);
     }
 
     #[test]
     fn test_live() {
         let input = include_str!("../../inputs/live");
-        let res = common::test::<isize, super::Result>(input).unwrap();
+        let res = aoc::test::<isize, super::Result>(input).unwrap();
         assert_eq!(res, 1748);
     }
 }

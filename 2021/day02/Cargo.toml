@@ -17,5 +17,5 @@ name = "day02-part2"
 path = "src/bin/part2.rs"
 
 [dependencies]
-common = {path = "../common"}
+aoc = {path = "../.."}
 thiserror = "1.0.30"

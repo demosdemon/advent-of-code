@@ -15,4 +15,4 @@ name = "day01-part2"
 path = "src/bin/part2.rs"
 
 [dependencies]
-common = {path = "../common"}
+aoc = {path = "../.."}

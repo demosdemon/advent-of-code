@@ -40,7 +40,7 @@
     your final depth?
 */
 
-use common::{read, IntoAnswer};
+use aoc::{read, IntoAnswer};
 use day02::Direction;
 
 #[derive(Default, Debug)]
@@ -80,14 +80,14 @@ mod test {
     #[test]
     fn test_example() {
         let input = include_str!("../../inputs/example");
-        let res = common::test::<super::Direction, super::Position>(input).unwrap();
+        let res = aoc::test::<super::Direction, super::Position>(input).unwrap();
         assert_eq!(res, 150);
     }
 
     #[test]
     fn test_live() {
         let input = include_str!("../../inputs/live");
-        let res = common::test::<super::Direction, super::Position>(input).unwrap();
+        let res = aoc::test::<super::Direction, super::Position>(input).unwrap();
         assert_eq!(res, 1714950);
     }
 }

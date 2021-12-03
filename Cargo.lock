@@ -12,6 +12,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "aoc"
+version = "0.1.0"
+dependencies = [
+ "structopt",
+ "thiserror",
+]
+
+[[package]]
 name = "atty"
 version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -44,25 +52,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "common"
-version = "0.1.0"
-dependencies = [
- "structopt",
- "thiserror",
-]
-
-[[package]]
 name = "day01"
 version = "0.1.0"
 dependencies = [
- "common",
+ "aoc",
 ]
 
 [[package]]
 name = "day02"
 version = "0.1.0"
 dependencies = [
- "common",
+ "aoc",
  "thiserror",
 ]
 
@@ -70,7 +70,7 @@ dependencies = [
 name = "day03"
 version = "0.1.0"
 dependencies = [
- "common",
+ "aoc",
  "thiserror",
 ]
 
