@@ -1,3 +1,6 @@
+pub mod part1;
+pub mod part2;
+
 use std::num::ParseIntError;
 use std::str::FromStr;
 
@@ -12,7 +15,7 @@ pub enum Error {
     InvalidDirection(String),
 
     #[error("unable to parse number: {0}")]
-    ParseError(#[from] ParseIntError),
+    Parse(#[from] ParseIntError),
 }
 
 #[derive(Debug)]

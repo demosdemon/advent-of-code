@@ -1,6 +1,6 @@
 use std::ops::Not;
 
-use crate::errors::Error;
+use super::Error;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Bit {

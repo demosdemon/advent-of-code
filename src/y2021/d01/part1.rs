@@ -62,40 +62,50 @@
     How many measurements are larger than the previous measurement?
 */
 
-use aoc::{read, IntoAnswer};
+use std::convert::Infallible;
+use std::io::BufRead;
 
-#[derive(Debug)]
-struct Result(Vec<isize>);
+use crate::{Error, Problem, Solution};
 
-impl FromIterator<isize> for Result {
-    fn from_iter<T: IntoIterator<Item = isize>>(iter: T) -> Self {
-        Self(iter.into_iter().collect())
+pub struct Answer(isize);
+
+impl<R: BufRead> TryFrom<Problem<R>> for Answer {
+    type Error = Error;
+
+    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
+        Ok(Self(
+            value
+                .parse_lines(str::parse::<isize>)
+                .collect::<Result<Vec<_>, _>>()?
+                .windows(2)
+                .filter(|s| s[0] < s[1])
+                .count() as isize,
+        ))
     }
 }
 
-impl IntoAnswer for Result {
-    fn into_answer(self) -> isize {
-        self.0.windows(2).filter(|s| s[0] < s[1]).count() as isize
-    }
-}
+impl Solution for Answer {
+    type Err = Infallible;
 
-fn main() {
-    let result = read::<isize, Result>().unwrap();
-    println!("increased {}", result);
+    fn try_into_answer(self) -> Result<isize, Self::Err> {
+        Ok(self.0)
+    }
 }
 
 mod test {
     #[test]
     fn test_example() {
-        let input = include_str!("../../inputs/example");
-        let res = aoc::test::<isize, super::Result>(input).unwrap();
-        assert_eq!(res, 7);
+        assert_eq!(
+            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
+            7
+        );
     }
 
     #[test]
     fn test_live() {
-        let input = include_str!("../../inputs/live");
-        let res = aoc::test::<isize, super::Result>(input).unwrap();
-        assert_eq!(res, 1722);
+        assert_eq!(
+            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
+            1722
+        );
     }
 }

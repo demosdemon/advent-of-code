@@ -37,25 +37,39 @@
     multiply your final horizontal position by your final depth?
 */
 
-use aoc::{read, IntoAnswer};
-use day02::Direction;
+use std::convert::Infallible;
+use std::io::BufRead;
+
+use crate::{Error, Problem, Solution};
+
+use super::Direction;
 
 #[derive(Default, Debug)]
-struct Position {
+pub struct Answer {
     aim: isize,
     horizontal: isize,
     depth: isize,
 }
 
-impl IntoAnswer for Position {
-    fn into_answer(self) -> isize {
-        self.horizontal * self.depth
+impl<R: BufRead> TryFrom<Problem<R>> for Answer {
+    type Error = Error;
+
+    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
+        value.parse_lines(str::parse::<Direction>).collect()
     }
 }
 
-impl FromIterator<Direction> for Position {
+impl Solution for Answer {
+    type Err = Infallible;
+
+    fn try_into_answer(self) -> Result<isize, Self::Err> {
+        Ok(self.horizontal * self.depth)
+    }
+}
+
+impl FromIterator<Direction> for Answer {
     fn from_iter<T: IntoIterator<Item = Direction>>(iter: T) -> Self {
-        let mut pos = Position::default();
+        let mut pos = Answer::default();
 
         for dir in iter {
             match dir {
@@ -72,23 +86,20 @@ impl FromIterator<Direction> for Position {
     }
 }
 
-fn main() {
-    let result = read::<Direction, Position>().unwrap();
-    println!("position {}", result);
-}
-
 mod test {
     #[test]
     fn test_example() {
-        let input = include_str!("../../inputs/example");
-        let res = aoc::test::<super::Direction, super::Position>(input).unwrap();
-        assert_eq!(res, 900);
+        assert_eq!(
+            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
+            900
+        );
     }
 
     #[test]
     fn test_live() {
-        let input = include_str!("../../inputs/live");
-        let res = aoc::test::<super::Direction, super::Position>(input).unwrap();
-        assert_eq!(res, 1281977850);
+        assert_eq!(
+            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
+            1281977850
+        );
     }
 }

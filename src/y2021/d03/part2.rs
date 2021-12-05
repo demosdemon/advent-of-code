@@ -67,51 +67,35 @@
     binary.)
 */
 
-use aoc::{read, IntoAnswer};
-use day03::Line;
+use std::convert::Infallible;
+use std::io::BufRead;
+
+use crate::{Error, Problem, Solution};
+
+use super::line::Line;
 
 #[derive(Default, Debug)]
-struct Diagnostic {
-    o2_rating: Line,
-    co2_rating: Line,
-}
+pub struct Answer(Vec<Line>);
 
-impl IntoAnswer for Diagnostic {
-    fn into_answer(self) -> isize {
-        let o2_rating: usize = self.o2_rating.into();
-        let co2_rating: usize = self.co2_rating.into();
-        (o2_rating * co2_rating) as isize
+impl<R: BufRead> TryFrom<Problem<R>> for Answer {
+    type Error = Error;
+
+    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
+        value.parse_lines(str::parse::<Line>).collect()
     }
 }
 
-impl FromIterator<Line> for Diagnostic {
+impl FromIterator<Line> for Answer {
     fn from_iter<T: IntoIterator<Item = Line>>(iter: T) -> Self {
-        DiagnosticBuilder::from_iter(iter).into()
+        Self(iter.into_iter().collect())
     }
 }
 
-#[derive(Default, Debug)]
-pub struct DiagnosticBuilder {
-    pub lines: Vec<Line>,
-}
+impl Solution for Answer {
+    type Err = Infallible;
 
-impl Extend<Line> for DiagnosticBuilder {
-    fn extend<T: IntoIterator<Item = Line>>(&mut self, iter: T) {
-        self.lines.extend(iter)
-    }
-}
-
-impl FromIterator<Line> for DiagnosticBuilder {
-    fn from_iter<T: IntoIterator<Item = Line>>(iter: T) -> Self {
-        let mut v = Self::default();
-        v.extend(iter);
-        v
-    }
-}
-
-impl From<DiagnosticBuilder> for Diagnostic {
-    fn from(builder: DiagnosticBuilder) -> Self {
-        let lines = builder.lines;
+    fn try_into_answer(self) -> Result<isize, Self::Err> {
+        let lines = self.0;
         let bits = lines[0].len();
         let mut o2: Vec<&Line> = lines.iter().collect();
         let mut co2: Vec<&Line> = lines.iter().collect();
@@ -131,30 +115,26 @@ impl From<DiagnosticBuilder> for Diagnostic {
         assert_eq!(o2.len(), 1);
         assert_eq!(co2.len(), 1);
 
-        Self {
-            o2_rating: o2.into_iter().next().unwrap().to_owned(),
-            co2_rating: co2.into_iter().next().unwrap().to_owned(),
-        }
+        let o2_rating: usize = o2.into_iter().next().unwrap().to_owned().into();
+        let co2_rating: usize = co2.into_iter().next().unwrap().to_owned().into();
+        Ok((o2_rating * co2_rating) as isize)
     }
-}
-
-fn main() {
-    let result = read::<Line, Diagnostic>().unwrap();
-    println!("result = {}", result);
 }
 
 mod test {
     #[test]
     fn test_example() {
-        let input = include_str!("../../inputs/example");
-        let res = aoc::test::<super::Line, super::Diagnostic>(input).unwrap();
-        assert_eq!(res, 230)
+        assert_eq!(
+            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
+            230
+        )
     }
 
     #[test]
     fn test_live() {
-        let input = include_str!("../../inputs/live");
-        let res = aoc::test::<super::Line, super::Diagnostic>(input).unwrap();
-        assert_eq!(res, 4245351)
+        assert_eq!(
+            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
+            4245351
+        )
     }
 }

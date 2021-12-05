@@ -1,8 +1,7 @@
 use std::ops::{Index, Not};
 use std::str::FromStr;
 
-use crate::bit::Bit;
-use crate::errors::Error;
+use super::bit::Bit;
 
 #[derive(Default, Debug, Clone)]
 pub struct Line(Vec<Bit>);
@@ -66,7 +65,7 @@ impl FromIterator<Bit> for Line {
 }
 
 impl FromStr for Line {
-    type Err = Error;
+    type Err = super::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         s.chars().map(TryFrom::try_from).collect()

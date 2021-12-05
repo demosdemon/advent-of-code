@@ -49,96 +49,84 @@
     submarine? (Be sure to represent your answer in decimal, not binary.)
 */
 
-use aoc::{read, IntoAnswer};
-use day03::{Bit, Line};
+use std::convert::Infallible;
+use std::io::BufRead;
+
+use crate::{Error, Problem, Solution};
+
+use super::bit::Bit;
+use super::line::Line;
 
 #[derive(Default, Debug)]
-struct Diagnostic {
-    gamma: Line,
-    epsilon: Line,
-}
-
-impl IntoAnswer for Diagnostic {
-    fn into_answer(self) -> isize {
-        let gamma: usize = self.gamma.into();
-        let epsilon: usize = self.epsilon.into();
-        (gamma * epsilon) as isize
-    }
-}
-
-impl FromIterator<Line> for Diagnostic {
-    fn from_iter<T: IntoIterator<Item = Line>>(iter: T) -> Self {
-        DiagnosticBuilder::from_iter(iter).into()
-    }
-}
-
-#[derive(Default, Debug)]
-pub struct DiagnosticBuilder {
+pub struct Answer {
     pub zeros: Vec<usize>,
     pub ones: Vec<usize>,
 }
 
-impl Extend<Line> for DiagnosticBuilder {
-    fn extend<T: IntoIterator<Item = Line>>(&mut self, iter: T) {
-        for line in iter {
-            if self.zeros.is_empty() {
-                self.zeros.resize(line.len(), 0);
-            }
-            assert_eq!(self.zeros.len(), line.len());
+impl<R: BufRead> TryFrom<Problem<R>> for Answer {
+    type Error = Error;
 
-            if self.ones.is_empty() {
-                self.ones.resize(line.len(), 0);
-            }
-            assert_eq!(self.ones.len(), line.len());
-
-            for (idx, b) in line.into_iter().enumerate() {
-                match b {
-                    Bit::Zero => self.zeros[idx] += 1,
-                    Bit::One => self.ones[idx] += 1,
-                }
-            }
-        }
+    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
+        value.parse_lines(str::parse::<Line>).collect()
     }
 }
 
-impl FromIterator<Line> for DiagnosticBuilder {
-    fn from_iter<T: IntoIterator<Item = Line>>(iter: T) -> Self {
-        let mut v = Self::default();
-        v.extend(iter);
-        v
-    }
-}
+impl Solution for Answer {
+    type Err = Infallible;
 
-impl From<DiagnosticBuilder> for Diagnostic {
-    fn from(builder: DiagnosticBuilder) -> Self {
-        let gamma: Line = builder
+    fn try_into_answer(self) -> Result<isize, Self::Err> {
+        let gamma: Line = self
             .zeros
             .into_iter()
-            .zip(builder.ones)
+            .zip(self.ones)
             .map(|(zeros, ones)| if zeros <= ones { Bit::One } else { Bit::Zero })
             .collect();
         let epsilon = !gamma.clone();
-        Self { gamma, epsilon }
+        let gamma: usize = gamma.into();
+        let epsilon: usize = epsilon.into();
+        Ok((gamma * epsilon) as isize)
     }
 }
 
-fn main() {
-    let result = read::<Line, Diagnostic>().unwrap();
-    println!("result = {}", result);
+impl FromIterator<Line> for Answer {
+    fn from_iter<T: IntoIterator<Item = Line>>(iter: T) -> Self {
+        let mut v = Self::default();
+        for line in iter {
+            if v.zeros.is_empty() {
+                v.zeros.resize(line.len(), 0);
+            }
+            assert_eq!(v.zeros.len(), line.len());
+
+            if v.ones.is_empty() {
+                v.ones.resize(line.len(), 0);
+            }
+            assert_eq!(v.ones.len(), line.len());
+
+            for (idx, b) in line.into_iter().enumerate() {
+                match b {
+                    Bit::Zero => v.zeros[idx] += 1,
+                    Bit::One => v.ones[idx] += 1,
+                }
+            }
+        }
+        v
+    }
 }
 
 mod test {
     #[test]
     fn test_example() {
-        let input = include_str!("../../inputs/example");
-        let res = aoc::test::<super::Line, super::Diagnostic>(input).unwrap();
-        assert_eq!(res, 198)
+        assert_eq!(
+            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
+            198
+        )
     }
 
     #[test]
     fn test_live() {
-        let input = include_str!("../../inputs/live");
-        let res = aoc::test::<super::Line, super::Diagnostic>(input).unwrap();
-        assert_eq!(res, 4103154)
+        assert_eq!(
+            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
+            4103154
+        )
     }
 }

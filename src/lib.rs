@@ -1,120 +1,193 @@
-use std::ffi::OsString;
 use std::fmt::Debug;
-use std::fs::File;
-use std::io::{BufRead, BufReader, Read};
-use std::str::FromStr;
+use std::io::BufRead;
 
-use structopt::StructOpt;
 use thiserror::Error;
 
-#[derive(Debug, Error)]
-pub enum Error<P, C>
+mod y2021;
+
+type StringProblem<'a> = Problem<&'a [u8]>;
+
+pub fn solve<'a, S>(s: &'a str) -> Result<isize>
 where
-    P: FromStr,
-    <P as FromStr>::Err: std::error::Error + 'static,
-    C: TryIntoAnswer,
-    <C as TryIntoAnswer>::Err: std::error::Error + 'static,
+    S: Solution + TryFrom<StringProblem<'a>, Error = Error>,
+    <S as Solution>::Err: std::error::Error + 'static,
 {
-    #[error("an error occured while reading from source: {0}")]
+    let p: Problem<_> = s.as_bytes().into();
+    let s: S = p.try_into()?;
+    s.try_into_answer().map_err(Error::from_answer)
+}
+
+pub type Result<T> = std::result::Result<T, Error>;
+
+#[derive(Debug, Error)]
+pub enum Error {
+    #[error("an error occurred reading from input: {0}")]
     IO(#[from] std::io::Error),
 
-    #[error("an error occured while parsing the input line {0:?}: {1}")]
-    Parse(String, #[source] P::Err),
+    #[error("an error ocurred parsing the input: {0}")]
+    Parse(#[source] Box<dyn std::error::Error>),
 
-    #[error("an error occured while generating the answer: {0}")]
-    Answer(#[source] C::Err),
+    #[error("the input ended unexpectedly")]
+    UnexpectedEndOfInput,
+
+    #[error("expected an empty line but found {0:?}")]
+    ExpectedEmptyLine(String),
+
+    #[error("an error occurred while generating the solution: {0}")]
+    IntoSolution(#[source] Box<dyn std::error::Error>),
+
+    #[error("an error occurred while generating the answer from the solution: {0}")]
+    IntoAnswer(#[source] Box<dyn std::error::Error>),
 }
 
-pub trait TryIntoAnswer {
-    type Err;
+impl Error {
+    pub fn from_parse<E: std::error::Error + 'static>(e: E) -> Self {
+        Self::Parse(Box::new(e))
+    }
 
-    fn try_into_answer(self) -> Result<isize, Self::Err>;
-}
+    pub fn from_solution<E: std::error::Error + 'static>(e: E) -> Self {
+        Self::IntoSolution(Box::new(e))
+    }
 
-pub trait IntoAnswer {
-    fn into_answer(self) -> isize;
-}
+    pub fn from_answer<E: std::error::Error + 'static>(e: E) -> Self {
+        Self::IntoAnswer(Box::new(e))
+    }
 
-impl<T: IntoAnswer> TryIntoAnswer for T {
-    type Err = &'static dyn std::error::Error;
-
-    fn try_into_answer(self) -> Result<isize, Self::Err> {
-        Ok(self.into_answer())
+    pub fn from_empty_line(s: String) -> Result<()> {
+        if s.is_empty() {
+            Ok(())
+        } else {
+            Err(Self::ExpectedEmptyLine(s))
+        }
     }
 }
 
-impl<P, C> TryIntoAnswer for Result<C, Error<P, C>>
-where
-    P: FromStr,
-    <P as FromStr>::Err: std::error::Error + 'static,
-    C: TryIntoAnswer,
-    <C as TryIntoAnswer>::Err: std::error::Error + 'static,
-{
-    type Err = Error<P, C>;
+pub trait Solution {
+    type Err;
 
-    fn try_into_answer(self) -> Result<isize, Error<P, C>> {
-        match self {
-            Ok(v) => v.try_into_answer().map_err(Error::Answer),
+    fn try_into_answer(self) -> std::result::Result<isize, Self::Err>;
+}
+
+pub struct Problem<R: BufRead>(R);
+
+impl<R: BufRead> From<R> for Problem<R> {
+    fn from(r: R) -> Self {
+        Self(r)
+    }
+}
+
+impl<R: BufRead> Problem<R> {
+    pub fn expect_map_line<F, V, E>(&mut self, sep: &str, f: F) -> Result<Vec<V>>
+    where
+        F: FnMut(&str) -> std::result::Result<V, E>,
+        E: std::error::Error + 'static,
+    {
+        self.map_line(sep, f).ok_or(Error::UnexpectedEndOfInput)?
+    }
+
+    pub fn expect_parse_line<F, V, E>(&mut self, f: F) -> Result<V>
+    where
+        F: FnOnce(&str) -> std::result::Result<V, E>,
+        E: std::error::Error + 'static,
+    {
+        self.parse_line(f).ok_or(Error::UnexpectedEndOfInput)?
+    }
+
+    pub fn expect_take_line(&mut self) -> Result<String> {
+        self.take_line().ok_or(Error::UnexpectedEndOfInput)?
+    }
+
+    pub fn expect_empty_line(&mut self) -> Result<()> {
+        match self.expect_take_line() {
+            Ok(v) => Error::from_empty_line(v),
+            Err(v) => Err(v),
+        }
+    }
+
+    pub fn map_line<F, V, E>(&mut self, sep: &str, f: F) -> Option<Result<Vec<V>>>
+    where
+        F: FnMut(&str) -> std::result::Result<V, E>,
+        E: std::error::Error + 'static,
+    {
+        self.parse_line(|v| v.split(sep).map(f).collect())
+    }
+
+    pub fn parse_line<F, V, E>(&mut self, f: F) -> Option<Result<V>>
+    where
+        F: FnOnce(&str) -> std::result::Result<V, E>,
+        E: std::error::Error + 'static,
+    {
+        match self.take_line() {
+            None => None,
+            Some(Ok(v)) => Some((f)(&v).map_err(Error::from_parse)),
+            Some(Err(v)) => Some(Err(v)),
+        }
+    }
+
+    pub fn parse_lines<F, V, E>(self, f: F) -> impl Iterator<Item = Result<V>>
+    where
+        F: FnMut(&str) -> std::result::Result<V, E>,
+        E: std::error::Error + 'static,
+    {
+        ParseLines {
+            problem: self,
+            parser: f,
+        }
+    }
+
+    pub fn take_line(&mut self) -> Option<Result<String>> {
+        let mut buf = String::new();
+        match self.read_line(&mut buf) {
+            Ok(0) => None,
+            Ok(_) => Some(Ok(buf)),
+            Err(v) => Some(Err(v)),
+        }
+    }
+
+    fn read_line(&mut self, buf: &mut String) -> Result<usize> {
+        match self.0.read_line(buf).map_err(Error::IO) {
+            Ok(0) => Ok(0),
+            Ok(v) => {
+                if buf.ends_with('\n') {
+                    buf.pop();
+                    if buf.ends_with('\r') {
+                        buf.pop();
+                    }
+                }
+                Ok(v)
+            }
             Err(e) => Err(e),
         }
     }
 }
 
-fn map_line<P, C>(line: std::io::Result<String>) -> Result<P, Error<P, C>>
-where
-    P: FromStr,
-    <P as FromStr>::Err: std::error::Error + 'static,
-    C: TryIntoAnswer,
-    <C as TryIntoAnswer>::Err: std::error::Error + 'static,
-{
-    match line {
-        Ok(line) => match line.parse() {
-            Ok(v) => Ok(v),
-            Err(e) => Err(Error::Parse(line, e)),
-        },
-        Err(e) => Err(Error::IO(e)),
+impl<R: BufRead> Iterator for Problem<R> {
+    type Item = Result<String>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.take_line()
     }
 }
 
-pub fn answer_from_read<R, P, C>(read: R) -> Result<isize, Error<P, C>>
+struct ParseLines<R, F, V, E>
 where
-    R: Read,
-    P: FromStr,
-    <P as FromStr>::Err: std::error::Error + 'static,
-    C: FromIterator<P> + TryIntoAnswer,
-    <C as TryIntoAnswer>::Err: std::error::Error + 'static,
+    R: BufRead,
+    F: FnMut(&str) -> std::result::Result<V, E>,
+    E: std::error::Error + 'static,
 {
-    BufReader::new(read)
-        .lines()
-        .map(map_line)
-        .collect::<Result<C, Error<P, C>>>()
-        .try_into_answer()
+    problem: Problem<R>,
+    parser: F,
 }
 
-#[derive(StructOpt)]
-struct Args {
-    /// Input file to parse.
-    path: OsString,
-}
-
-pub fn read<P, C>() -> Result<isize, Error<P, C>>
+impl<R, F, V, E> Iterator for ParseLines<R, F, V, E>
 where
-    P: FromStr,
-    <P as FromStr>::Err: std::error::Error + 'static,
-    C: FromIterator<P> + TryIntoAnswer,
-    <C as TryIntoAnswer>::Err: std::error::Error + 'static,
+    R: BufRead,
+    F: FnMut(&str) -> std::result::Result<V, E>,
+    E: std::error::Error + 'static,
 {
-    let args = Args::from_args();
-    println!("opening {:?}", args.path);
-    answer_from_read(File::open(args.path)?)
-}
+    type Item = Result<V>;
 
-pub fn test<P, C>(input: &str) -> Result<isize, Error<P, C>>
-where
-    P: FromStr,
-    <P as FromStr>::Err: std::error::Error + 'static,
-    C: FromIterator<P> + TryIntoAnswer,
-    <C as TryIntoAnswer>::Err: std::error::Error + 'static,
-{
-    answer_from_read(input.as_bytes())
+    fn next(&mut self) -> Option<Self::Item> {
+        self.problem.parse_line(&mut self.parser)
+    }
 }
