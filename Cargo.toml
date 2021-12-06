@@ -8,8 +8,11 @@ version = "0.1.0"
 
 [dependencies]
 anyhow = "1.0.51"
+derive_more = "0.99.17"
 enum-utils = "0.1.2"
 iterator-ext = "0.2.0"
+itertools = "0.10.1"
 maplit = "1.0.2"
+nom = "7.1.0"
 structopt = "0.3.25"
 thiserror = "1.0.30"

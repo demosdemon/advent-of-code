@@ -1,4 +1,5 @@
-pub(crate) mod d01;
-pub(crate) mod d02;
-pub(crate) mod d03;
-pub(crate) mod d04;
+pub mod d01;
+pub mod d02;
+pub mod d03;
+pub mod d04;
+pub mod d05;
