@@ -74,8 +74,8 @@ use crate::{Error, Problem, Solution};
 
 use super::line::Line;
 
-#[derive(Default, Debug, macros::Problem)]
-#[problem(example = 230, live = 4245351)]
+#[derive(Default, Debug, macros::Answer)]
+#[answer(example = 230, live = 4245351)]
 pub struct Answer(Vec<Line>);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {

@@ -13,8 +13,8 @@ use crate::{Error, Problem, Solution};
 
 use super::Ocean;
 
-#[derive(macros::Problem)]
-#[problem(example = 26984457539, live = 1710623015163)]
+#[derive(macros::Answer)]
+#[answer(example = 26984457539, live = 1710623015163)]
 struct Answer(Ocean);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {

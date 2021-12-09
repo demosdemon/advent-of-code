@@ -67,8 +67,8 @@ use std::io::BufRead;
 
 use crate::{Error, Problem, Solution};
 
-#[derive(macros::Problem)]
-#[problem(example = 7, live = 1722)]
+#[derive(macros::Answer)]
+#[answer(example = 7, live = 1722)]
 pub struct Answer(isize);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {

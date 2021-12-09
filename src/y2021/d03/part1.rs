@@ -57,8 +57,8 @@ use crate::{Error, Problem, Solution};
 use super::bit::Bit;
 use super::line::Line;
 
-#[derive(Default, Debug, macros::Problem)]
-#[problem(example = 198, live = 4103154)]
+#[derive(Default, Debug, macros::Answer)]
+#[answer(example = 198, live = 4103154)]
 pub struct Answer {
     pub zeros: Vec<usize>,
     pub ones: Vec<usize>,

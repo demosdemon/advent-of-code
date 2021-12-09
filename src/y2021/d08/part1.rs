@@ -96,8 +96,8 @@ use crate::{Error, Problem, Solution};
 
 use super::Line;
 
-#[derive(macros::Problem)]
-#[problem(example = 26, live = 421)]
+#[derive(macros::Answer)]
+#[answer(example = 26, live = 421)]
 struct Answer(Vec<Line>);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {

@@ -74,8 +74,8 @@ use crate::{Error as ProblemError, Problem, Solution};
 
 use super::Error;
 
-#[derive(Debug, macros::Problem)]
-#[problem(example = 4512, live = 2745)]
+#[derive(Debug, macros::Answer)]
+#[answer(example = 4512, live = 2745)]
 struct Answer(super::builder::SolutionBuilder);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {

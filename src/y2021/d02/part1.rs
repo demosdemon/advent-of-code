@@ -47,8 +47,8 @@ use crate::{Error, Problem, Solution};
 
 use super::Direction;
 
-#[derive(Default, Debug, macros::Problem)]
-#[problem(example = 150, live = 1714950)]
+#[derive(Default, Debug, macros::Answer)]
+#[answer(example = 150, live = 1714950)]
 pub struct Answer {
     horizontal: isize,
     depth: isize,

@@ -10,7 +10,7 @@ use syn::{
 
 #[derive(Builder)]
 #[builder(pattern = "owned")]
-struct ProblemAttribute {
+struct AnswerAttribute {
     #[builder(setter(into, strip_option), default)]
     example_input: Option<Lit>,
     example_output: Lit,
@@ -21,9 +21,9 @@ struct ProblemAttribute {
     live_output: Option<Lit>,
 }
 
-impl ProblemAttribute {
+impl AnswerAttribute {
     fn from_meta_list(ml: MetaList) -> Self {
-        let mut builder = ProblemAttributeBuilder::default();
+        let mut builder = AnswerAttributeBuilder::default();
         for nested_meta in ml.nested {
             match nested_meta {
                 NestedMeta::Meta(m) => match m {
@@ -54,24 +54,24 @@ impl ProblemAttribute {
 
 #[derive(Builder)]
 #[builder(pattern = "owned")]
-pub struct ProblemBuilder<'derive> {
+pub struct AnswerBuilder<'derive> {
     input: &'derive DeriveInput,
     #[allow(unused)]
     sdata: &'derive DataStruct,
     // attrs: Vec<Meta>,
 }
 
-impl<'derive> ProblemBuilder<'derive> {
+impl<'derive> AnswerBuilder<'derive> {
     fn test_module_ident(&self) -> Ident {
         let name = self.input.ident.unraw().to_string().to_snake_case();
         let name = format!("test_{}", name);
         Ident::new(&name, self.input.ident.span())
     }
 
-    fn get_attribute(&self) -> Option<ProblemAttribute> {
+    fn get_attribute(&self) -> Option<AnswerAttribute> {
         let meta = if let Some(meta) = (&self.input.attrs)
             .into_iter()
-            .filter(|m| m.path.is_ident("problem"))
+            .filter(|m| m.path.is_ident("answer"))
             .map(|m| m.parse_meta().unwrap_or_else(|err| abort!(m.span(), err)))
             .next()
         {
@@ -90,7 +90,7 @@ impl<'derive> ProblemBuilder<'derive> {
             }
         };
 
-        Some(ProblemAttribute::from_meta_list(list))
+        Some(AnswerAttribute::from_meta_list(list))
     }
 
     pub fn build(self) -> proc_macro2::TokenStream {
@@ -98,7 +98,7 @@ impl<'derive> ProblemBuilder<'derive> {
         let module = self.test_module_ident();
         let attr = self
             .get_attribute()
-            .expect_or_abort("need a #[problem(...)] attribute");
+            .expect_or_abort("need an #[answer(...)] attribute");
 
         let example_input = attr
             .example_input

@@ -23,8 +23,8 @@ use crate::{Error as ProblemError, Problem, Solution};
 use super::matrix::Board;
 use super::Error;
 
-#[derive(Debug, macros::Problem)]
-#[problem(example = 1924, live = 6594)]
+#[derive(Debug, macros::Answer)]
+#[answer(example = 1924, live = 6594)]
 struct Answer(super::builder::SolutionBuilder);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {

@@ -36,9 +36,9 @@ use crate::{Error, Problem, Solution};
 
 use super::Ocean;
 
-#[derive(derive_more::IntoIterator, macros::Problem)]
+#[derive(derive_more::IntoIterator, macros::Answer)]
 #[into_iterator(ref)]
-#[problem(example = 168, live = 96361606)]
+#[answer(example = 168, live = 96361606)]
 struct Answer(Ocean);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {

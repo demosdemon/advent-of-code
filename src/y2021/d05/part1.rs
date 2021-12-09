@@ -143,8 +143,8 @@ impl<'a> Extend<&'a super::Line> for Board {
     }
 }
 
-#[derive(Debug, macros::Problem)]
-#[problem(example = 5, live = 4873)]
+#[derive(Debug, macros::Answer)]
+#[answer(example = 5, live = 4873)]
 struct Answer(super::SolutionBuilder);
 
 impl Answer {
