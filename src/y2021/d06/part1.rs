@@ -72,9 +72,11 @@
     days?
 */
 
-use std::{convert::Infallible, io::BufRead};
+use std::io::BufRead;
 
-use crate::{Error, Problem, Solution};
+use crate::errors::Error;
+use crate::problem::Problem;
+use crate::IntoAnswer;
 
 use super::Ocean;
 
@@ -90,10 +92,8 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     }
 }
 
-impl Solution for Answer {
-    type Err = Infallible;
-
-    fn try_into_answer(self) -> Result<isize, Self::Err> {
-        Ok(self.0.count(80) as isize)
+impl IntoAnswer for Answer {
+    fn into_answer(self) -> isize {
+        self.0.count(80) as isize
     }
 }

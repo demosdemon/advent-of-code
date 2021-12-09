@@ -57,9 +57,11 @@
     four-digit output values. What do you get if you add up all of the output values?
 */
 
-use std::{convert::Infallible, io::BufRead};
+use std::io::BufRead;
 
-use crate::{Error, Problem, Solution};
+use crate::errors::Error;
+use crate::problem::Problem;
+use crate::IntoAnswer;
 
 use super::Line;
 
@@ -70,7 +72,7 @@ struct Answer(Vec<Line>);
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     type Error = Error;
 
-    fn try_from(value: crate::Problem<R>) -> Result<Self, Self::Error> {
+    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
         Ok(Self(
             value
                 .parse_lines(str::parse::<Line>)
@@ -79,10 +81,8 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     }
 }
 
-impl Solution for Answer {
-    type Err = Infallible;
-
-    fn try_into_answer(self) -> std::result::Result<isize, Self::Err> {
-        Ok(self.0.into_iter().map(|v| v.consume()).sum::<usize>() as isize)
+impl IntoAnswer for Answer {
+    fn into_answer(self) -> isize {
+        self.0.into_iter().map(|v| v.consume()).sum::<usize>() as isize
     }
 }

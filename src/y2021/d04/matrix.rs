@@ -63,13 +63,13 @@ pub struct Board {
 }
 
 impl Board {
-    pub fn new(tiles: Vec<Tile>) -> crate::Result<Self> {
+    pub fn new(tiles: Vec<Tile>) -> crate::errors::Result<Self> {
         let len = tiles.len();
         let sqrt = (len as f32).sqrt();
 
         #[allow(clippy::float_cmp)]
         if sqrt.trunc() != sqrt {
-            return Err(crate::Error::from_parse(Error::InvalidTileLength(
+            return Err(crate::errors::Error::from_parse(Error::InvalidTileLength(
                 len, sqrt,
             )));
         }
@@ -89,7 +89,7 @@ impl Board {
                 value_map,
             })
         } else {
-            Err(crate::Error::from_parse(Error::DuplicateTiles(
+            Err(crate::errors::Error::from_parse(Error::DuplicateTiles(
                 dupes.len(),
                 dupes
                     .into_iter()
@@ -101,12 +101,14 @@ impl Board {
     }
 
     #[cfg(test)]
-    fn from_tile_iter(tiles: impl Iterator<Item = Tile>) -> crate::Result<Self> {
+    fn from_tile_iter(tiles: impl Iterator<Item = Tile>) -> crate::errors::Result<Self> {
         Self::new(tiles.into_iter().collect())
     }
 
     #[cfg(test)]
-    fn from_into_tile_iter<T: Into<Tile>>(tiles: impl Iterator<Item = T>) -> crate::Result<Self> {
+    fn from_into_tile_iter<T: Into<Tile>>(
+        tiles: impl Iterator<Item = T>,
+    ) -> crate::errors::Result<Self> {
         Self::from_tile_iter(tiles.map(Into::into))
     }
 

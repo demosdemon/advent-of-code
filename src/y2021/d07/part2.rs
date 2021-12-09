@@ -30,9 +30,11 @@
     align to that position?
 */
 
-use std::{convert::Infallible, io::BufRead};
+use std::io::BufRead;
 
-use crate::{Error, Problem, Solution};
+use crate::errors::Error;
+use crate::problem::Problem;
+use crate::IntoAnswer;
 
 use super::Ocean;
 
@@ -49,13 +51,11 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     }
 }
 
-impl Solution for Answer {
-    type Err = Infallible;
-
-    fn try_into_answer(self) -> Result<isize, Self::Err> {
-        Ok(self.0.solve(|a, b| {
+impl IntoAnswer for Answer {
+    fn into_answer(self) -> isize {
+        self.0.solve(|a, b| {
             let d = (b - a).abs();
             (d * (d + 1)) / 2
-        }))
+        })
     }
 }

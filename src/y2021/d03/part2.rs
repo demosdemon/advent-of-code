@@ -67,10 +67,11 @@
     binary.)
 */
 
-use std::convert::Infallible;
 use std::io::BufRead;
 
-use crate::{Error, Problem, Solution};
+use crate::errors::Error;
+use crate::problem::Problem;
+use crate::IntoAnswer;
 
 use super::line::Line;
 
@@ -92,10 +93,8 @@ impl FromIterator<Line> for Answer {
     }
 }
 
-impl Solution for Answer {
-    type Err = Infallible;
-
-    fn try_into_answer(self) -> Result<isize, Self::Err> {
+impl IntoAnswer for Answer {
+    fn into_answer(self) -> isize {
         let lines = self.0;
         let bits = lines[0].len();
         let mut o2: Vec<&Line> = lines.iter().collect();
@@ -118,6 +117,6 @@ impl Solution for Answer {
 
         let o2_rating: usize = o2.into_iter().next().unwrap().to_owned().into();
         let co2_rating: usize = co2.into_iter().next().unwrap().to_owned().into();
-        Ok((o2_rating * co2_rating) as isize)
+        (o2_rating * co2_rating) as isize
     }
 }

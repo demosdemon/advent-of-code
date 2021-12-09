@@ -9,6 +9,9 @@ use std::str::FromStr;
 
 use nom::Finish;
 
+use crate::errors::Error;
+use crate::problem::Problem;
+
 #[derive(Debug, derive_more::IntoIterator)]
 #[into_iterator(owned, ref)]
 pub struct SolutionBuilder(Vec<Line>);
@@ -23,10 +26,10 @@ impl SolutionBuilder {
     }
 }
 
-impl<R: BufRead> TryFrom<crate::Problem<R>> for SolutionBuilder {
-    type Error = crate::Error;
+impl<R: BufRead> TryFrom<Problem<R>> for SolutionBuilder {
+    type Error = Error;
 
-    fn try_from(value: crate::Problem<R>) -> Result<Self, Self::Error> {
+    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
         Ok(Self(
             value
                 .parse_lines(str::parse::<Line>)

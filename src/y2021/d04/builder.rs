@@ -1,5 +1,8 @@
 use std::io::BufRead;
 
+use crate::errors::Error;
+use crate::problem::Problem;
+
 use super::matrix::{Board, Tile};
 
 #[derive(Debug)]
@@ -8,10 +11,10 @@ pub struct SolutionBuilder {
 
     pub boards: Vec<Board>,
 }
-struct BoardReader<R: BufRead>(crate::Problem<R>);
+struct BoardReader<R: BufRead>(Problem<R>);
 
 impl<R: BufRead> Iterator for BoardReader<R> {
-    type Item = Result<Board, crate::Error>;
+    type Item = Result<Board, Error>;
 
     fn next(&mut self) -> Option<Self::Item> {
         let mut tiles: Vec<Tile> = Vec::new();
@@ -23,7 +26,7 @@ impl<R: BufRead> Iterator for BoardReader<R> {
                     for atom in line.split_ascii_whitespace() {
                         match atom.parse() {
                             Ok(v) => tiles.push(v),
-                            Err(err) => return Some(Err(crate::Error::from_parse(err))),
+                            Err(err) => return Some(Err(Error::from_parse(err))),
                         }
                     }
                 }
@@ -39,10 +42,10 @@ impl<R: BufRead> Iterator for BoardReader<R> {
     }
 }
 
-impl<R: BufRead> TryFrom<crate::Problem<R>> for SolutionBuilder {
-    type Error = crate::Error;
+impl<R: BufRead> TryFrom<Problem<R>> for SolutionBuilder {
+    type Error = Error;
 
-    fn try_from(mut value: crate::Problem<R>) -> Result<Self, Self::Error> {
+    fn try_from(mut value: Problem<R>) -> Result<Self, Self::Error> {
         let pulls: Vec<u8> = value.expect_map_line(",", str::parse)?;
         value.expect_empty_line()?;
 

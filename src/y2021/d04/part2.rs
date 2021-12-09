@@ -18,7 +18,9 @@
 
 use std::io::BufRead;
 
-use crate::{Error as ProblemError, Problem, Solution};
+use crate::errors::Error as ProblemError;
+use crate::problem::Problem;
+use crate::TryIntoAnswer;
 
 use super::matrix::Board;
 use super::Error;
@@ -35,7 +37,7 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     }
 }
 
-impl Solution for Answer {
+impl TryIntoAnswer for Answer {
     type Err = Error;
 
     fn try_into_answer(self) -> Result<isize, Self::Err> {

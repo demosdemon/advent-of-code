@@ -45,10 +45,11 @@
     the previous sum?
 */
 
-use std::convert::Infallible;
 use std::io::BufRead;
 
-use crate::{Error, Problem, Solution};
+use crate::errors::Error;
+use crate::problem::Problem;
+use crate::IntoAnswer;
 
 #[derive(macros::Answer)]
 #[answer(example = 5, live = 1748)]
@@ -71,10 +72,8 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     }
 }
 
-impl Solution for Answer {
-    type Err = Infallible;
-
-    fn try_into_answer(self) -> Result<isize, Self::Err> {
-        Ok(self.0)
+impl IntoAnswer for Answer {
+    fn into_answer(self) -> isize {
+        self.0
     }
 }

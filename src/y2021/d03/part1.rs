@@ -49,10 +49,11 @@
     submarine? (Be sure to represent your answer in decimal, not binary.)
 */
 
-use std::convert::Infallible;
 use std::io::BufRead;
 
-use crate::{Error, Problem, Solution};
+use crate::errors::Error;
+use crate::problem::Problem;
+use crate::IntoAnswer;
 
 use super::bit::Bit;
 use super::line::Line;
@@ -72,10 +73,8 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     }
 }
 
-impl Solution for Answer {
-    type Err = Infallible;
-
-    fn try_into_answer(self) -> Result<isize, Self::Err> {
+impl IntoAnswer for Answer {
+    fn into_answer(self) -> isize {
         let gamma: Line = self
             .zeros
             .into_iter()
@@ -85,7 +84,7 @@ impl Solution for Answer {
         let epsilon = !gamma.clone();
         let gamma: usize = gamma.into();
         let epsilon: usize = epsilon.into();
-        Ok((gamma * epsilon) as isize)
+        (gamma * epsilon) as isize
     }
 }
 

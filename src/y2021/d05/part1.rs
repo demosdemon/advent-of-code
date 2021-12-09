@@ -60,7 +60,9 @@ use std::fmt::Display;
 use std::io::BufRead;
 use std::ops::{Index, IndexMut};
 
-use crate::{Error, Problem, Solution};
+use crate::errors::Error;
+use crate::problem::Problem;
+use crate::IntoAnswer;
 
 #[derive(Debug)]
 struct Board {
@@ -163,12 +165,10 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     }
 }
 
-impl Solution for Answer {
-    type Err = Error;
-
-    fn try_into_answer(self) -> std::result::Result<isize, Self::Err> {
+impl IntoAnswer for Answer {
+    fn into_answer(self) -> isize {
         let board = self.into_board();
-        Ok(board.hits.iter().filter(|v| **v >= 2).count() as isize)
+        board.hits.iter().filter(|v| **v >= 2).count() as isize
     }
 }
 
@@ -176,7 +176,7 @@ mod test {
     #[test]
     fn test_display() {
         let example = include_str!("inputs/example");
-        let problem = crate::Problem(example.as_bytes());
+        let problem: crate::problem::Problem<_> = example.as_bytes().into();
         let answer: super::Answer = problem.try_into().unwrap();
         let board = answer.into_board();
         assert_eq!(board.width, 10);

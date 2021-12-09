@@ -37,10 +37,11 @@
     multiply your final horizontal position by your final depth?
 */
 
-use std::convert::Infallible;
 use std::io::BufRead;
 
-use crate::{Error, Problem, Solution};
+use crate::errors::Error;
+use crate::problem::Problem;
+use crate::IntoAnswer;
 
 use super::Direction;
 
@@ -60,11 +61,9 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     }
 }
 
-impl Solution for Answer {
-    type Err = Infallible;
-
-    fn try_into_answer(self) -> Result<isize, Self::Err> {
-        Ok(self.horizontal * self.depth)
+impl IntoAnswer for Answer {
+    fn into_answer(self) -> isize {
+        self.horizontal * self.depth
     }
 }
 

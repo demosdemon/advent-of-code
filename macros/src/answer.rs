@@ -1,22 +1,23 @@
 use derive_builder::Builder;
 use heck::SnakeCase;
-use proc_macro2::{Ident, Span};
+use proc_macro2::{Ident, Span, TokenStream};
 use proc_macro_error::{abort, abort_call_site, OptionExt};
 use quote::quote;
-use syn::{
-    ext::IdentExt, spanned::Spanned, DataStruct, DeriveInput, Lit, LitStr, Meta, MetaList,
-    NestedMeta,
-};
+use syn::ext::IdentExt;
+use syn::spanned::Spanned;
+use syn::{DataStruct, DeriveInput, Lit, LitStr, Meta, MetaList, NestedMeta};
 
 #[derive(Builder)]
 #[builder(pattern = "owned")]
 struct AnswerAttribute {
     #[builder(setter(into, strip_option), default)]
     example_input: Option<Lit>,
+
     example_output: Lit,
 
     #[builder(setter(into, strip_option), default)]
     live_input: Option<Lit>,
+
     #[builder(setter(into, strip_option), default)]
     live_output: Option<Lit>,
 }
@@ -28,17 +29,17 @@ impl AnswerAttribute {
             match nested_meta {
                 NestedMeta::Meta(m) => match m {
                     Meta::NameValue(nv) => match nv.path.get_ident() {
-                        Some(ident) if ident == "example" => {
-                            builder = builder.example_output(nv.lit)
-                        }
-                        Some(ident) if ident == "example_input" => {
-                            builder = builder.example_input(nv.lit)
-                        }
-                        Some(ident) if ident == "live" => builder = builder.live_output(nv.lit),
-                        Some(ident) if ident == "live_input" => {
-                            builder = builder.live_input(nv.lit)
-                        }
-                        _ => abort!(nv.span(), "expected an ident"),
+                        Some(ident) => match ident.to_string().as_ref() {
+                            "example" => builder = builder.example_output(nv.lit),
+                            "example_input" => builder = builder.example_input(nv.lit),
+                            "live" => builder = builder.live_output(nv.lit),
+                            "live_input" => builder = builder.live_input(nv.lit),
+                            _ => abort!(
+                                ident.span(),
+                                "expected on of example, example_input, live, live_input"
+                            ),
+                        },
+                        None => abort!(nv.span(), "expected an ident"),
                     },
                     _ => abort!(m.span(), "only a name-value pair expected here"),
                 },
@@ -52,16 +53,15 @@ impl AnswerAttribute {
     }
 }
 
-#[derive(Builder)]
-#[builder(pattern = "owned")]
-pub struct AnswerBuilder<'derive> {
+#[derive(derive_more::Constructor)]
+pub struct Answer<'derive> {
     input: &'derive DeriveInput,
+
     #[allow(unused)]
     sdata: &'derive DataStruct,
-    // attrs: Vec<Meta>,
 }
 
-impl<'derive> AnswerBuilder<'derive> {
+impl<'derive> Answer<'derive> {
     fn test_module_ident(&self) -> Ident {
         let name = self.input.ident.unraw().to_string().to_snake_case();
         let name = format!("test_{}", name);
@@ -93,7 +93,7 @@ impl<'derive> AnswerBuilder<'derive> {
         Some(AnswerAttribute::from_meta_list(list))
     }
 
-    pub fn build(self) -> proc_macro2::TokenStream {
+    pub fn build(self) -> TokenStream {
         let struct_name = &self.input.ident;
         let module = self.test_module_ident();
         let attr = self
