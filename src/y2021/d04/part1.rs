@@ -74,7 +74,8 @@ use crate::{Error as ProblemError, Problem, Solution};
 
 use super::Error;
 
-#[derive(Debug)]
+#[derive(Debug, macros::Problem)]
+#[problem(example = 4512, live = 2745)]
 struct Answer(super::builder::SolutionBuilder);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
@@ -101,23 +102,5 @@ impl Solution for Answer {
             }
         }
         Err(Error::InvalidSolution)
-    }
-}
-
-mod test {
-    #[test]
-    fn test_example() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
-            4512
-        )
-    }
-
-    #[test]
-    fn test_live() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
-            2745
-        )
     }
 }

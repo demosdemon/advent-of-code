@@ -1,0 +1,148 @@
+use derive_builder::Builder;
+use heck::SnakeCase;
+use proc_macro2::{Ident, Span};
+use proc_macro_error::{abort, abort_call_site, OptionExt};
+use quote::quote;
+use syn::{
+    ext::IdentExt, spanned::Spanned, DataStruct, DeriveInput, Lit, LitStr, Meta, MetaList,
+    NestedMeta,
+};
+
+#[derive(Builder)]
+#[builder(pattern = "owned")]
+struct ProblemAttribute {
+    #[builder(setter(into, strip_option), default)]
+    example_input: Option<Lit>,
+    example_output: Lit,
+
+    #[builder(setter(into, strip_option), default)]
+    live_input: Option<Lit>,
+    #[builder(setter(into, strip_option), default)]
+    live_output: Option<Lit>,
+}
+
+impl ProblemAttribute {
+    fn from_meta_list(ml: MetaList) -> Self {
+        let mut builder = ProblemAttributeBuilder::default();
+        for nested_meta in ml.nested {
+            match nested_meta {
+                NestedMeta::Meta(m) => match m {
+                    Meta::NameValue(nv) => match nv.path.get_ident() {
+                        Some(ident) if ident == "example" => {
+                            builder = builder.example_output(nv.lit)
+                        }
+                        Some(ident) if ident == "example_input" => {
+                            builder = builder.example_input(nv.lit)
+                        }
+                        Some(ident) if ident == "live" => builder = builder.live_output(nv.lit),
+                        Some(ident) if ident == "live_input" => {
+                            builder = builder.live_input(nv.lit)
+                        }
+                        _ => abort!(nv.span(), "expected an ident"),
+                    },
+                    _ => abort!(m.span(), "only a name-value pair expected here"),
+                },
+                NestedMeta::Lit(l) => abort!(l.span(), "literal was not expected here"),
+            }
+        }
+        match builder.build() {
+            Ok(v) => v,
+            Err(e) => abort_call_site!(e),
+        }
+    }
+}
+
+#[derive(Builder)]
+#[builder(pattern = "owned")]
+pub struct ProblemBuilder<'derive> {
+    input: &'derive DeriveInput,
+    #[allow(unused)]
+    sdata: &'derive DataStruct,
+    // attrs: Vec<Meta>,
+}
+
+impl<'derive> ProblemBuilder<'derive> {
+    fn test_module_ident(&self) -> Ident {
+        let name = self.input.ident.unraw().to_string().to_snake_case();
+        let name = format!("test_{}", name);
+        Ident::new(&name, self.input.ident.span())
+    }
+
+    fn get_attribute(&self) -> Option<ProblemAttribute> {
+        let meta = if let Some(meta) = (&self.input.attrs)
+            .into_iter()
+            .filter(|m| m.path.is_ident("problem"))
+            .map(|m| m.parse_meta().unwrap_or_else(|err| abort!(m.span(), err)))
+            .next()
+        {
+            meta
+        } else {
+            return None;
+        };
+
+        let span = meta.span();
+
+        let list = match meta {
+            Meta::Path(_) => abort!(span, "empty attribute is not allowed."),
+            Meta::List(list) => list,
+            Meta::NameValue(_) => {
+                abort!(span, "attribute does not support name-value format here.")
+            }
+        };
+
+        Some(ProblemAttribute::from_meta_list(list))
+    }
+
+    pub fn build(self) -> proc_macro2::TokenStream {
+        let struct_name = &self.input.ident;
+        let module = self.test_module_ident();
+        let attr = self
+            .get_attribute()
+            .expect_or_abort("need a #[problem(...)] attribute");
+
+        let example_input = attr
+            .example_input
+            .unwrap_or_else(|| Lit::Str(LitStr::new("inputs/example", Span::call_site())));
+
+        let example_output = attr.example_output;
+
+        let live_input = attr
+            .live_input
+            .unwrap_or_else(|| Lit::Str(LitStr::new("inputs/live", Span::call_site())));
+
+        let live_output = attr.live_output;
+
+        let example_impl = quote! {
+            #[test]
+            fn test_example() {
+                assert_eq!(
+                    crate::solve::<super::#struct_name>(include_str!(#example_input)).unwrap(),
+                    #example_output,
+                );
+            }
+        };
+
+        let live_impl = match live_output {
+            Some(lit) => {
+                quote! {
+                    #[test]
+                    fn test_live() {
+                        assert_eq!(
+                            crate::solve::<super::#struct_name>(include_str!(#live_input)).unwrap(),
+                            #lit,
+                        );
+                    }
+                }
+            }
+            None => quote! {},
+        };
+
+        quote! {
+            #[cfg(test)]
+            mod #module {
+                #example_impl
+                #live_impl
+            }
+        }
+    }
+}

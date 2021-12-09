@@ -57,7 +57,8 @@ use crate::{Error, Problem, Solution};
 use super::bit::Bit;
 use super::line::Line;
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, macros::Problem)]
+#[problem(example = 198, live = 4103154)]
 pub struct Answer {
     pub zeros: Vec<usize>,
     pub ones: Vec<usize>,
@@ -110,23 +111,5 @@ impl FromIterator<Line> for Answer {
             }
         }
         v
-    }
-}
-
-mod test {
-    #[test]
-    fn test_example() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
-            198
-        )
-    }
-
-    #[test]
-    fn test_live() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
-            4103154
-        )
     }
 }

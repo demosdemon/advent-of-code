@@ -36,8 +36,9 @@ use crate::{Error, Problem, Solution};
 
 use super::Ocean;
 
-#[derive(derive_more::IntoIterator)]
+#[derive(derive_more::IntoIterator, macros::Problem)]
 #[into_iterator(ref)]
+#[problem(example = 168, live = 96361606)]
 struct Answer(Ocean);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
@@ -56,23 +57,5 @@ impl Solution for Answer {
             let d = (b - a).abs();
             (d * (d + 1)) / 2
         }))
-    }
-}
-
-mod test {
-    #[test]
-    fn test_example() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
-            168
-        )
-    }
-
-    #[test]
-    fn test_live() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
-            96361606
-        )
     }
 }

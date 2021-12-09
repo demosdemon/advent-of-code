@@ -74,7 +74,8 @@ use crate::{Error, Problem, Solution};
 
 use super::line::Line;
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, macros::Problem)]
+#[problem(example = 230, live = 4245351)]
 pub struct Answer(Vec<Line>);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
@@ -118,23 +119,5 @@ impl Solution for Answer {
         let o2_rating: usize = o2.into_iter().next().unwrap().to_owned().into();
         let co2_rating: usize = co2.into_iter().next().unwrap().to_owned().into();
         Ok((o2_rating * co2_rating) as isize)
-    }
-}
-
-mod test {
-    #[test]
-    fn test_example() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
-            230
-        )
-    }
-
-    #[test]
-    fn test_live() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
-            4245351
-        )
     }
 }

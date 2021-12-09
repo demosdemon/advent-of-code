@@ -96,6 +96,8 @@ use crate::{Error, Problem, Solution};
 
 use super::Line;
 
+#[derive(macros::Problem)]
+#[problem(example = 26, live = 421)]
 struct Answer(Vec<Line>);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
@@ -124,23 +126,5 @@ impl Solution for Answer {
                     .count()
             })
             .sum::<usize>() as isize)
-    }
-}
-
-mod test {
-    #[test]
-    fn test_example() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
-            26
-        )
-    }
-
-    #[test]
-    fn test_live() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
-            421
-        )
     }
 }

@@ -23,7 +23,8 @@ use crate::{Error as ProblemError, Problem, Solution};
 use super::matrix::Board;
 use super::Error;
 
-#[derive(Debug)]
+#[derive(Debug, macros::Problem)]
+#[problem(example = 1924, live = 6594)]
 struct Answer(super::builder::SolutionBuilder);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
@@ -69,23 +70,5 @@ impl Bingo {
             }
         }
         None
-    }
-}
-
-mod test {
-    #[test]
-    fn test_example() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
-            1924
-        )
-    }
-
-    #[test]
-    fn test_live() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
-            6594
-        )
     }
 }

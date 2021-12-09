@@ -47,7 +47,8 @@ use crate::{Error, Problem, Solution};
 
 use super::Direction;
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, macros::Problem)]
+#[problem(example = 150, live = 1714950)]
 pub struct Answer {
     horizontal: isize,
     depth: isize,
@@ -82,23 +83,5 @@ impl FromIterator<Direction> for Answer {
         }
 
         pos
-    }
-}
-
-mod test {
-    #[test]
-    fn test_example() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
-            150
-        );
-    }
-
-    #[test]
-    fn test_live() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
-            1714950
-        );
     }
 }

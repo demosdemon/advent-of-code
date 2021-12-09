@@ -50,6 +50,8 @@ use std::io::BufRead;
 
 use crate::{Error, Problem, Solution};
 
+#[derive(macros::Problem)]
+#[problem(example = 5, live = 1748)]
 pub struct Answer(isize);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
@@ -74,23 +76,5 @@ impl Solution for Answer {
 
     fn try_into_answer(self) -> Result<isize, Self::Err> {
         Ok(self.0)
-    }
-}
-
-mod test {
-    #[test]
-    fn test_example() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
-            5
-        );
-    }
-
-    #[test]
-    fn test_live() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
-            1748
-        );
     }
 }

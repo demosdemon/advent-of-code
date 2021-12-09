@@ -143,7 +143,8 @@ impl<'a> Extend<&'a super::Line> for Board {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, macros::Problem)]
+#[problem(example = 5, live = 4873)]
 struct Answer(super::SolutionBuilder);
 
 impl Answer {
@@ -196,21 +197,5 @@ mod test {
 222111....
 "
         );
-    }
-
-    #[test]
-    fn test_example() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/example")).unwrap(),
-            5
-        )
-    }
-
-    #[test]
-    fn test_live() {
-        assert_eq!(
-            crate::solve::<super::Answer>(include_str!("inputs/live")).unwrap(),
-            4873
-        )
     }
 }
