@@ -143,7 +143,7 @@ mod test {
     #[test]
     fn test_display() {
         let example = include_str!("inputs/example");
-        let problem: crate::problem::Problem<_> = example.as_bytes().into();
+        let problem = crate::problem::Problem::new(example.as_bytes());
         let answer: super::Answer = problem.try_into().unwrap();
         let board = answer.into_board();
         assert_eq!(board.width, 10);

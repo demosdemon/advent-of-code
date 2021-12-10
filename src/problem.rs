@@ -2,21 +2,8 @@ use std::io::BufRead;
 
 use crate::errors::{Error, Result};
 
+#[derive(derive_more::Constructor)]
 pub struct Problem<R: BufRead>(R);
-
-pub trait TryFromProblem<R: BufRead> {
-    type Err;
-
-    fn try_from_problem(problem: Problem<R>) -> std::result::Result<Self, Self::Err>
-    where
-        Self: Sized;
-}
-
-impl<R: BufRead> From<R> for Problem<R> {
-    fn from(r: R) -> Self {
-        Self(r)
-    }
-}
 
 impl<R: BufRead> Problem<R> {
     pub fn expect_map_line<F, V, E>(&mut self, sep: &str, f: F) -> Result<Vec<V>>

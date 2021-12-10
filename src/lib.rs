@@ -27,7 +27,7 @@ where
     S: TryIntoAnswer + TryFrom<StringProblem<'a>, Error = errors::Error>,
     <S as TryIntoAnswer>::Err: std::error::Error + 'static,
 {
-    let p: problem::Problem<_> = s.as_bytes().into();
+    let p = problem::Problem::new(s.as_bytes());
     let s: S = p.try_into()?;
     s.try_into_answer().map_err(errors::Error::from_answer)
 }
