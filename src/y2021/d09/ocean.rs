@@ -74,19 +74,15 @@ impl Ocean {
 
 impl<S: AsRef<str>> Extend<S> for Ocean {
     fn extend<T: IntoIterator<Item = S>>(&mut self, iter: T) {
-        for line in iter {
+        iter.into_iter().for_each(|line| {
             let line = line.as_ref();
             if self.width == 0 {
                 self.width = line.len();
             } else {
                 assert_eq!(self.width, line.len());
             }
-            let iter = line.chars().map(|c| (c as u8) - 48).map(|v| {
-                assert!(v < 10);
-                v
-            });
-            self.matrix.extend(iter)
-        }
+            self.matrix.extend(line.chars().map(crate::chardigit))
+        });
     }
 }
 

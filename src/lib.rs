@@ -31,3 +31,7 @@ where
     let s: S = p.try_into()?;
     s.try_into_answer().map_err(errors::Error::from_answer)
 }
+
+fn chardigit(c: char) -> u8 {
+    (c as u8) - 48
+}
