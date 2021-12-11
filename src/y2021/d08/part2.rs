@@ -69,15 +69,17 @@ use super::Line;
 #[answer(example = 61229, live = 986163)]
 struct Answer(Vec<Line>);
 
+impl FromIterator<super::Line> for Answer {
+    fn from_iter<T: IntoIterator<Item = super::Line>>(iter: T) -> Self {
+        Self(iter.into_iter().collect())
+    }
+}
+
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     type Error = Error;
 
     fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        Ok(Self(
-            value
-                .parse_lines(str::parse::<Line>)
-                .collect::<Result<Vec<_>, _>>()?,
-        ))
+        value.parse_lines(str::parse).collect()
     }
 }
 

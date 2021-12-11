@@ -49,13 +49,17 @@ use super::Ocean;
 #[answer(example = 15, live = 528)]
 struct Answer(Ocean);
 
+impl<S: AsRef<str>> FromIterator<S> for Answer {
+    fn from_iter<T: IntoIterator<Item = S>>(iter: T) -> Self {
+        Self(iter.into_iter().collect())
+    }
+}
+
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     type Error = Error;
 
     fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        let mut ocean = Ocean::default();
-        ocean.extend(value.collect::<Result<Vec<_>, _>>()?.into_iter());
-        Ok(Self(ocean))
+        value.collect()
     }
 }
 

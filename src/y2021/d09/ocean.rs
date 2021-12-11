@@ -89,3 +89,11 @@ impl<S: AsRef<str>> Extend<S> for Ocean {
         }
     }
 }
+
+impl<S: AsRef<str>> FromIterator<S> for Ocean {
+    fn from_iter<T: IntoIterator<Item = S>>(iter: T) -> Self {
+        let mut ocean = Ocean::default();
+        ocean.extend(iter);
+        ocean
+    }
+}

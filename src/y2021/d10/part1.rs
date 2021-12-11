@@ -87,13 +87,17 @@ use crate::IntoAnswer;
 #[answer(example = 26397, live = 392139)]
 struct Answer(Vec<super::Line>);
 
+impl FromIterator<super::Line> for Answer {
+    fn from_iter<T: IntoIterator<Item = super::Line>>(iter: T) -> Self {
+        Self(iter.into_iter().collect())
+    }
+}
+
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     type Error = Error;
 
     fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        Ok(Self(
-            value.parse_lines(str::parse).collect::<Result<_, _>>()?,
-        ))
+        value.parse_lines(str::parse).collect()
     }
 }
 
