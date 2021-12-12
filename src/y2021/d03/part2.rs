@@ -77,13 +77,13 @@ use super::line::Line;
 
 #[derive(Default, Debug, macros::Answer)]
 #[answer(example = 230, live = 4245351)]
-pub struct Answer(Vec<Line>);
+struct Answer(Vec<Line>);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     type Error = Error;
 
     fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        value.parse_lines(str::parse::<Line>).collect()
+        value.parse_lines(str::parse).collect()
     }
 }
 
@@ -93,30 +93,62 @@ impl FromIterator<Line> for Answer {
     }
 }
 
+#[derive(derive_more::Deref, derive_more::IntoIterator)]
+struct Lines<'a>(Vec<&'a Line>);
+
+impl<'a> Lines<'a> {
+    fn filter(self, bit: usize, value: super::bit::Bit) -> Self {
+        self.into_iter().filter(|v| v[bit] == value).collect()
+    }
+
+    fn filter_ceiling(self, bit: usize) -> Self {
+        if self.len() > 1 {
+            let ceil = self.ceiling(bit);
+            self.filter(bit, ceil)
+        } else {
+            self
+        }
+    }
+
+    fn filter_floor(self, bit: usize) -> Self {
+        if self.len() > 1 {
+            let ceil = self.ceiling(bit);
+            self.filter(bit, !ceil)
+        } else {
+            self
+        }
+    }
+
+    fn ceiling(&self, bit: usize) -> super::bit::Bit {
+        self.iter().map(|v| v[bit]).collect::<Line>().ceiling()
+    }
+
+    fn only(self) -> &'a Line {
+        assert_eq!(self.len(), 1);
+        self[0]
+    }
+}
+
+impl<'a> FromIterator<&'a Line> for Lines<'a> {
+    fn from_iter<T: IntoIterator<Item = &'a Line>>(iter: T) -> Self {
+        Self(iter.into_iter().collect())
+    }
+}
+
 impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
         let lines = self.0;
         let bits = lines[0].len();
-        let mut o2: Vec<&Line> = lines.iter().collect();
-        let mut co2: Vec<&Line> = lines.iter().collect();
+        let mut o2 = lines.iter().collect::<Lines>();
+        let mut co2 = lines.iter().collect::<Lines>();
 
-        for idx in 0..=bits {
-            if o2.len() > 1 {
-                let ceil = o2.iter().map(|v| v[idx]).collect::<Line>().ceiling();
-                o2 = o2.into_iter().filter(|v| v[idx] == ceil).collect();
-            }
-
-            if co2.len() > 1 {
-                let floor = !co2.iter().map(|v| v[idx]).collect::<Line>().ceiling();
-                co2 = co2.into_iter().filter(|v| v[idx] == floor).collect();
-            }
+        for bit in 0..=bits {
+            o2 = o2.filter_ceiling(bit);
+            co2 = co2.filter_floor(bit);
         }
 
-        assert_eq!(o2.len(), 1);
-        assert_eq!(co2.len(), 1);
-
-        let o2_rating: usize = o2.into_iter().next().unwrap().to_owned().into();
-        let co2_rating: usize = co2.into_iter().next().unwrap().to_owned().into();
+        let o2_rating: usize = o2.only().into();
+        let co2_rating: usize = co2.only().into();
         (o2_rating * co2_rating) as isize
     }
 }

@@ -1,5 +1,5 @@
-pub mod part1;
-pub mod part2;
+mod part1;
+mod part2;
 
 use std::num::ParseIntError;
 use std::str::FromStr;
@@ -7,7 +7,7 @@ use std::str::FromStr;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
-pub enum Error {
+enum Error {
     #[error("invalid input: {0}")]
     InvalidInput(String),
 
@@ -19,7 +19,7 @@ pub enum Error {
 }
 
 #[derive(Debug)]
-pub enum Direction {
+enum Direction {
     Forward(isize),
     Up(isize),
     Down(isize),

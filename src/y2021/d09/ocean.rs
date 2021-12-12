@@ -1,4 +1,4 @@
-use std::collections::{HashSet, LinkedList};
+use std::collections::{BTreeSet, LinkedList};
 
 const AROUND_THE_BLOCK: [(isize, isize); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 
@@ -22,24 +22,23 @@ impl Ocean {
     }
 
     pub fn basins(&self) -> Vec<(usize, usize)> {
-        let mut basins = Vec::new();
-        for (root, &root_value) in self.iter_low_points() {
-            let mut basin = HashSet::new();
-            let mut queue = LinkedList::new();
-            queue.push_back((root, root_value));
-            while let Some((point, point_value)) = queue.pop_front() {
-                if basin.insert(point) {
-                    for (idx, &adj_value) in self.iter_surrounding(point) {
-                        if adj_value < 9 && point_value < adj_value {
-                            queue.push_back((idx, adj_value));
+        self.iter_low_points()
+            .map(|(root, &root_value)| {
+                let mut basin = BTreeSet::new();
+                let mut queue = LinkedList::new();
+                queue.push_back((root, root_value));
+                while let Some((point, point_value)) = queue.pop_front() {
+                    if basin.insert(point) {
+                        for (idx, &adj_value) in self.iter_surrounding(point) {
+                            if adj_value < 9 && point_value < adj_value {
+                                queue.push_back((idx, adj_value));
+                            }
                         }
                     }
                 }
-            }
-            basins.push((root, basin.len()));
-        }
-
-        basins
+                (root, basin.len())
+            })
+            .collect()
     }
 
     pub fn iter_low_points(&self) -> impl Iterator<Item = (usize, &u8)> {
@@ -54,35 +53,32 @@ impl Ocean {
         AROUND_THE_BLOCK
             .iter()
             .map(move |&(dx, dy)| (x as isize + dx, y as isize + dy))
-            .filter(|&(x, y)| {
-                x >= 0 && x < self.width as isize && y >= 0 && y < self.depth() as isize
+            .filter(|(x, y)| {
+                (0..self.width as isize).contains(x) && (0..self.depth() as isize).contains(y)
             })
             .map(|(x, y)| self.pos_to_idx((x as usize, y as usize)))
             .map(|idx| (idx, &self.matrix[idx]))
     }
 
     fn is_low_point(&self, idx: usize, value: u8) -> bool {
-        if value == 9 {
-            return false;
+        match value {
+            0 => true,
+            9 => false,
+            _ => self.iter_surrounding(idx).all(|(_, &v)| value < v),
         }
-        if value == 0 {
-            return true;
-        }
-        self.iter_surrounding(idx).all(|(_, &v)| value < v)
     }
 }
 
 impl<S: AsRef<str>> Extend<S> for Ocean {
     fn extend<T: IntoIterator<Item = S>>(&mut self, iter: T) {
-        iter.into_iter().for_each(|line| {
+        for line in iter {
             let line = line.as_ref();
             if self.width == 0 {
                 self.width = line.len();
-            } else {
-                assert_eq!(self.width, line.len());
             }
+            assert_eq!(self.width, line.len());
             self.matrix.extend(line.chars().map(crate::chardigit))
-        });
+        }
     }
 }
 

@@ -105,14 +105,16 @@ impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
         use super::Line::*;
         let mut res = [0; 4];
-        self.0.into_iter().for_each(|c| match c {
-            Invalid(')') => res[0] += 1,
-            Invalid(']') => res[1] += 1,
-            Invalid('}') => res[2] += 1,
-            Invalid('>') => res[3] += 1,
-            Invalid(_) => panic!("invalid character: {:?}", c),
-            Incomplete(_) => {}
-        });
+        for c in self.0 {
+            match c {
+                Invalid(')') => res[0] += 1,
+                Invalid(']') => res[1] += 1,
+                Invalid('}') => res[2] += 1,
+                Invalid('>') => res[3] += 1,
+                Invalid(_) => panic!("invalid character: {:?}", c),
+                Incomplete(_) => {}
+            }
+        }
         (res[0] * 3) + (res[1] * 57) + (res[2] * 1197) + (res[3] * 25137)
     }
 }

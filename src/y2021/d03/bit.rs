@@ -1,9 +1,9 @@
-use std::ops::Not;
+use std::ops::{Add, Not};
 
 use super::Error;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub enum Bit {
+pub(super) enum Bit {
     Zero = 0,
     One = 1,
 }
@@ -19,11 +19,37 @@ impl Not for Bit {
     }
 }
 
+impl<'a> Add<&'a Bit> for usize {
+    type Output = Self;
+
+    fn add(mut self, rhs: &'a Bit) -> Self::Output {
+        self <<= 1;
+        self += *rhs as Self;
+        self
+    }
+}
+
 impl From<Bit> for bool {
     fn from(bit: Bit) -> Self {
         match bit {
             Bit::Zero => false,
             Bit::One => true,
+        }
+    }
+}
+
+impl From<&Bit> for bool {
+    fn from(value: &Bit) -> Self {
+        value.to_owned().into()
+    }
+}
+
+impl From<bool> for Bit {
+    fn from(value: bool) -> Self {
+        if value {
+            Bit::One
+        } else {
+            Bit::Zero
         }
     }
 }

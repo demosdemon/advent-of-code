@@ -335,7 +335,8 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
 }
 
 impl IntoAnswer for Answer {
-    fn into_answer(mut self) -> isize {
-        (0..100).map(move |_| self.0.tick()).sum::<usize>() as isize
+    fn into_answer(self) -> isize {
+        let mut ocean = self.0;
+        (0..100).map(move |_| ocean.tick()).sum::<usize>() as isize
     }
 }

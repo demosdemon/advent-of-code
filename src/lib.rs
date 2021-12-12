@@ -33,5 +33,6 @@ where
 }
 
 fn chardigit(c: char) -> u8 {
-    (c as u8) - 48
+    const ZERO: u8 = b'0';
+    (c as u8) - ZERO
 }

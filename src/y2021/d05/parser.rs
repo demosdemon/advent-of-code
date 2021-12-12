@@ -1,15 +1,15 @@
 use nom::{
     branch::alt,
     bytes::complete::tag,
-    character::complete::{i32, line_ending},
+    character::complete::{i64, line_ending},
     combinator::eof,
     IResult,
 };
 
 pub(super) fn coordinate(s: &str) -> IResult<&str, super::Coordinate> {
-    let (s, x) = i32(s)?;
+    let (s, x) = i64(s)?;
     let (s, _) = tag(",")(s)?;
-    let (s, y) = i32(s)?;
+    let (s, y) = i64(s)?;
     Ok((s, super::Coordinate::new(x, y)))
 }
 

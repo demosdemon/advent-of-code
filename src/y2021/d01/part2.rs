@@ -51,29 +51,20 @@ use crate::errors::Error;
 use crate::problem::Problem;
 use crate::IntoAnswer;
 
-#[derive(macros::Answer)]
+#[derive(derive_more::Deref, macros::Answer)]
 #[answer(example = 5, live = 1748)]
-pub struct Answer(isize);
+struct Answer(super::Ocean);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     type Error = Error;
 
     fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        Ok(Self(
-            value
-                .parse_lines(str::parse::<isize>)
-                .collect::<Result<Vec<_>, _>>()?
-                // a co-worker of mine pointed out that (A + B + C) < (B + C + D) is equivalent
-                // to A < D, and thus, we just need a sliding window of 4 elements.
-                .windows(4)
-                .filter(|s| s[0] < s[3])
-                .count() as isize,
-        ))
+        Ok(Self(value.try_into()?))
     }
 }
 
 impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
-        self.0
+        self.windows(4).filter(|s| s[0] < s[3]).count() as isize
     }
 }

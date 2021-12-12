@@ -56,8 +56,7 @@ use crate::IntoAnswer;
 
 use super::Ocean;
 
-#[derive(derive_more::IntoIterator, macros::Answer)]
-#[into_iterator(ref)]
+#[derive(macros::Answer)]
 #[answer(example = 37, live = 345197)]
 struct Answer(Ocean);
 

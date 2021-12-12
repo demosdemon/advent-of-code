@@ -69,16 +69,13 @@ impl<'derive> Answer<'derive> {
     }
 
     fn get_attribute(&self) -> Option<AnswerAttribute> {
-        let meta = if let Some(meta) = (&self.input.attrs)
-            .into_iter()
+        let meta = self
+            .input
+            .attrs
+            .iter()
             .filter(|m| m.path.is_ident("answer"))
             .map(|m| m.parse_meta().unwrap_or_else(|err| abort!(m.span(), err)))
-            .next()
-        {
-            meta
-        } else {
-            return None;
-        };
+            .next()?;
 
         let span = meta.span();
 

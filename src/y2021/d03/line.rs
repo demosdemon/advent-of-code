@@ -1,35 +1,24 @@
-use std::ops::{Index, Not};
+use std::ops::{Add, Not};
 use std::str::FromStr;
 
 use super::bit::Bit;
 
-#[derive(Default, Debug, Clone)]
-pub struct Line(Vec<Bit>);
+#[derive(Default, Debug, Clone, derive_more::IntoIterator, derive_more::Index)]
+#[into_iterator(owned, ref)]
+pub(super) struct Line(Vec<Bit>);
 
 impl Line {
     pub fn len(&self) -> usize {
         self.0.len()
     }
 
-    pub fn is_empty(&self) -> bool {
-        self.len() == 0
+    fn partition(self) -> (Line, Line) {
+        self.into_iter().partition(|b| b.into())
     }
 
     pub fn ceiling(self) -> Bit {
-        let (ones, zeros): (Vec<_>, Vec<_>) = self.0.into_iter().partition(|b| b.to_owned().into());
-        if ones.len() < zeros.len() {
-            Bit::Zero
-        } else {
-            Bit::One
-        }
-    }
-}
-
-impl Index<usize> for Line {
-    type Output = Bit;
-
-    fn index(&self, index: usize) -> &Self::Output {
-        &self.0[index]
+        let (ones, zeros) = self.partition();
+        (zeros.len() <= ones.len()).into()
     }
 }
 
@@ -37,18 +26,13 @@ impl Not for Line {
     type Output = Self;
 
     fn not(self) -> Self::Output {
-        Self(self.0.into_iter().map(Not::not).collect())
+        self.into_iter().map(Not::not).collect()
     }
 }
 
-impl From<Line> for usize {
-    fn from(l: Line) -> Self {
-        let mut v = Self::default();
-        for b in l.0 {
-            v <<= 1;
-            v += b as usize;
-        }
-        v
+impl<'a> From<&'a Line> for usize {
+    fn from(v: &'a Line) -> Self {
+        v.into_iter().fold(Self::default(), Add::add)
     }
 }
 
@@ -72,38 +56,18 @@ impl FromStr for Line {
     }
 }
 
-impl IntoIterator for Line {
-    type Item = Bit;
-
-    type IntoIter = ::std::vec::IntoIter<Bit>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.0.into_iter()
-    }
-}
-
-impl IntoIterator for &Line {
-    type Item = Bit;
-
-    type IntoIter = ::std::vec::IntoIter<Bit>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.0.clone().into_iter()
-    }
-}
-
 mod tests {
     #[test]
     fn test_into_usize() {
         use super::Line;
         let l: Line = "11001".parse().unwrap();
-        assert_eq!(usize::from(l), 25 as usize)
+        assert_eq!(usize::from(&l), 25 as usize)
     }
 
     #[test]
     fn test_not() {
         use super::Line;
         let l: Line = "11001".parse().unwrap();
-        assert_eq!(usize::from(!l), 6 as usize);
+        assert_eq!(usize::from(&!l), 6 as usize);
     }
 }

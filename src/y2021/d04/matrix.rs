@@ -6,7 +6,7 @@ use std::str::FromStr;
 use super::Error;
 
 #[derive(Debug, Default)]
-pub struct Tile {
+pub(super) struct Tile {
     /// Value on the bingo board.
     pub(crate) value: u8,
 
@@ -50,12 +50,12 @@ impl Display for Tile {
 }
 
 #[derive(Debug)]
-pub struct Board {
+pub(super) struct Board {
     /// Width & Depth of the board (e.g., 5 for a 5x5 board)
     size: u8,
 
     /// Board tiles in a one dimensional array. [(2, 4)] is located at [2*size + 4]
-    tiles: Box<[Tile]>,
+    tiles: Vec<Tile>,
 
     /// Map of all of the board values. Used to locate a tile within the board faster
     /// scanning the entire board.
@@ -85,7 +85,7 @@ impl Board {
         if dupes.is_empty() {
             Ok(Self {
                 size: sqrt as u8,
-                tiles: tiles.into_boxed_slice(),
+                tiles,
                 value_map,
             })
         } else {
@@ -112,11 +112,10 @@ impl Board {
         Self::from_tile_iter(tiles.map(Into::into))
     }
 
-    pub fn mark(&mut self, value: &u8) -> Option<(u8, u8)> {
-        if let Some(&pos) = self.value_map.get(value) {
-            let idx = self.pos_to_idx(pos as u8);
+    pub fn mark(&mut self, value: u8) -> Option<(u8, u8)> {
+        if let Some(&pos) = self.value_map.get(&value) {
             self.tiles[pos].marked = true;
-            Some(idx)
+            Some(self.pos_to_idx(pos as u8))
         } else {
             None
         }
@@ -251,7 +250,7 @@ mod test {
 "
         );
 
-        assert_eq!(board.mark(&7).unwrap(), (2, 1));
+        assert_eq!(board.mark(7).unwrap(), (2, 1));
 
         assert_eq!(
             format!("{}", board),

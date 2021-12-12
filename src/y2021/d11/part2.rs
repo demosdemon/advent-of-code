@@ -65,13 +65,16 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
 }
 
 impl IntoAnswer for Answer {
-    fn into_answer(mut self) -> isize {
-        let mut tick = 0;
-        loop {
-            tick += 1;
-            if self.0.tick() == 100 {
-                return tick;
-            }
-        }
+    fn into_answer(self) -> isize {
+        let mut ocean = self.0;
+        (1..)
+            .find_map(|tick| {
+                if ocean.tick() == 100 {
+                    Some(tick)
+                } else {
+                    None
+                }
+            })
+            .unwrap()
     }
 }

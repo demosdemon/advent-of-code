@@ -66,13 +66,12 @@ pub enum Segment {
     G,
 }
 
-#[derive(Debug, Hash, PartialEq, Eq, PartialOrd, Ord, derive_more::Index, derive_more::Deref)]
+#[derive(Debug, Hash, PartialEq, Eq, PartialOrd, Ord, derive_more::Deref)]
 pub struct Digit(BTreeSet<Segment>);
 
 #[derive(
     Debug, derive_more::Index, derive_more::IndexMut, derive_more::From, derive_more::IntoIterator,
 )]
-#[into_iterator(ref)]
 pub struct Signal([Digit; parser::SIGNAL_DIGITS]);
 
 impl Signal {
@@ -144,7 +143,6 @@ impl Signal {
 #[derive(
     Debug, derive_more::Index, derive_more::IndexMut, derive_more::From, derive_more::IntoIterator,
 )]
-#[into_iterator(ref)]
 pub struct Output([Digit; parser::OUTPUT_DIGITS]);
 
 #[derive(Debug, derive_more::Constructor)]
@@ -153,17 +151,13 @@ pub struct Line {
     pub output: Output,
 }
 
-impl Line {
-    pub fn consume(self) -> usize {
-        let digit_map = self.signal.consume();
-
-        let mut res: usize = 0;
-        for d in self.output {
-            res *= 10;
-            res += digit_map.get(&d).unwrap();
-        }
-
-        res
+impl From<Line> for usize {
+    fn from(value: Line) -> usize {
+        let digit_map = value.signal.consume();
+        value
+            .output
+            .into_iter()
+            .fold(0, |prev, next| (prev * 10) + digit_map.get(&next).unwrap())
     }
 }
 

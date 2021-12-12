@@ -68,28 +68,20 @@ use crate::errors::Error;
 use crate::problem::Problem;
 use crate::IntoAnswer;
 
-#[derive(macros::Answer)]
+#[derive(derive_more::Deref, macros::Answer)]
 #[answer(example = 7, live = 1722)]
-pub struct Answer(isize);
+struct Answer(super::Ocean);
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     type Error = Error;
 
     fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        Ok(Self(
-            value
-                .parse_lines(str::parse::<isize>)
-                .collect::<Result<Vec<_>, _>>()
-                .map_err(Error::from_parse)?
-                .windows(2)
-                .filter(|s| s[0] < s[1])
-                .count() as isize,
-        ))
+        Ok(Self(value.try_into()?))
     }
 }
 
 impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
-        self.0
+        self.windows(2).filter(|s| s[0] < s[1]).count() as isize
     }
 }

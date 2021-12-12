@@ -125,23 +125,21 @@ impl<'a> IndexMut<&'a super::Coordinate> for Board {
     }
 }
 
-impl<'a> Extend<&'a super::Line> for Board {
-    fn extend<T: IntoIterator<Item = &'a super::Line>>(&mut self, iter: T) {
-        for line in iter {
-            let min = std::cmp::min(&line.0, &line.1);
-            let max = std::cmp::max(&line.0, &line.1);
-            if min.x == max.x {
-                for y in min.y..=max.y {
-                    self[&super::Coordinate::new(min.x, y)] += 1;
-                }
-            } else if min.y == max.y {
-                for x in min.x..=max.x {
-                    self[&super::Coordinate::new(x, min.y)] += 1;
-                }
-            } else {
-                assert!(line.is_diagonal());
-            }
+impl Extend<super::Coordinate> for Board {
+    fn extend<T: IntoIterator<Item = super::Coordinate>>(&mut self, iter: T) {
+        for coord in iter {
+            self[&coord] += 1;
         }
+    }
+}
+
+impl Extend<super::Line> for Board {
+    fn extend<T: IntoIterator<Item = super::Line>>(&mut self, iter: T) {
+        self.extend(
+            iter.into_iter()
+                .filter(|l| !l.is_diagonal())
+                .flat_map(|l| l.into_iter().map(|l| l.0)),
+        );
     }
 }
 
@@ -152,7 +150,7 @@ struct Answer(super::SolutionBuilder);
 impl Answer {
     pub fn into_board(self) -> Board {
         let mut board = Board::new(self.0.max_x() as usize + 1, self.0.max_y() as usize + 1);
-        board.extend(self.0 .0.iter());
+        board.extend(self.0 .0);
         board
     }
 }

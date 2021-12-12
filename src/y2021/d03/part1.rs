@@ -51,6 +51,8 @@
 
 use std::io::BufRead;
 
+use itertools::Itertools;
+
 use crate::errors::Error;
 use crate::problem::Problem;
 use crate::IntoAnswer;
@@ -60,55 +62,64 @@ use super::line::Line;
 
 #[derive(Default, Debug, macros::Answer)]
 #[answer(example = 198, live = 4103154)]
-pub struct Answer {
+struct Answer {
     pub zeros: Vec<usize>,
     pub ones: Vec<usize>,
+}
+
+impl Answer {
+    fn assert_len(&mut self, len: usize) {
+        if self.zeros.is_empty() {
+            self.zeros.resize(len, 0);
+        }
+        assert_eq!(self.zeros.len(), len);
+
+        if self.ones.is_empty() {
+            self.ones.resize(len, 0);
+        }
+        assert_eq!(self.ones.len(), len);
+    }
 }
 
 impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     type Error = Error;
 
     fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        value.parse_lines(str::parse::<Line>).collect()
+        value.parse_lines(str::parse).collect()
     }
 }
 
 impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
-        let gamma: Line = self
-            .zeros
-            .into_iter()
-            .zip(self.ones)
-            .map(|(zeros, ones)| if zeros <= ones { Bit::One } else { Bit::Zero })
+        let gamma: Line = itertools::zip(self.zeros, self.ones)
+            .map(|(zeros, ones)| zeros <= ones)
+            .map_into::<Bit>()
             .collect();
         let epsilon = !gamma.clone();
-        let gamma: usize = gamma.into();
-        let epsilon: usize = epsilon.into();
+        let gamma: usize = (&gamma).into();
+        let epsilon: usize = (&epsilon).into();
         (gamma * epsilon) as isize
+    }
+}
+
+impl Extend<Line> for Answer {
+    fn extend<T: IntoIterator<Item = Line>>(&mut self, iter: T) {
+        for line in iter {
+            self.assert_len(line.len());
+            for (idx, b) in line.into_iter().enumerate() {
+                match b {
+                    Bit::Zero => self.zeros[idx] += 1,
+                    Bit::One => self.ones[idx] += 1,
+                }
+            }
+        }
     }
 }
 
 impl FromIterator<Line> for Answer {
     fn from_iter<T: IntoIterator<Item = Line>>(iter: T) -> Self {
         let mut v = Self::default();
-        for line in iter {
-            if v.zeros.is_empty() {
-                v.zeros.resize(line.len(), 0);
-            }
-            assert_eq!(v.zeros.len(), line.len());
-
-            if v.ones.is_empty() {
-                v.ones.resize(line.len(), 0);
-            }
-            assert_eq!(v.ones.len(), line.len());
-
-            for (idx, b) in line.into_iter().enumerate() {
-                match b {
-                    Bit::Zero => v.zeros[idx] += 1,
-                    Bit::One => v.ones[idx] += 1,
-                }
-            }
-        }
+        v.extend(iter);
         v
     }
 }

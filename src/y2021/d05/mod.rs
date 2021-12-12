@@ -7,6 +7,7 @@ use std::io::BufRead;
 use std::ops::Add;
 use std::str::FromStr;
 
+use itertools::Itertools;
 use nom::Finish;
 
 use crate::errors::Error;
@@ -14,14 +15,14 @@ use crate::problem::Problem;
 
 #[derive(Debug, derive_more::IntoIterator)]
 #[into_iterator(owned, ref)]
-pub struct SolutionBuilder(Vec<Line>);
+struct SolutionBuilder(Vec<Line>);
 
 impl SolutionBuilder {
-    fn max_x(&self) -> i32 {
+    fn max_x(&self) -> i64 {
         self.into_iter().map(Line::max_x).max().unwrap_or(0)
     }
 
-    fn max_y(&self) -> i32 {
+    fn max_y(&self) -> i64 {
         self.into_iter().map(Line::max_y).max().unwrap_or(0)
     }
 }
@@ -30,36 +31,24 @@ impl<R: BufRead> TryFrom<Problem<R>> for SolutionBuilder {
     type Error = Error;
 
     fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        Ok(Self(
-            value
-                .parse_lines(str::parse::<Line>)
-                .collect::<Result<Vec<_>, _>>()?,
-        ))
+        Ok(Self(value.parse_lines(str::parse).try_collect()?))
     }
 }
 
 #[derive(Debug, PartialEq, Clone, derive_more::Display)]
 #[display(fmt = "{} -> {}", _0, _1)]
-pub struct Line(Coordinate, Coordinate);
+struct Line(Coordinate, Coordinate);
 
 impl Line {
-    pub fn x(&self) -> (i32, i32) {
-        (self.0.x, self.1.x)
-    }
-
-    pub fn y(&self) -> (i32, i32) {
-        (self.0.y, self.1.y)
-    }
-
-    fn max_x(&self) -> i32 {
+    fn max_x(&self) -> i64 {
         std::cmp::max(self.0.x, self.1.x)
     }
 
-    fn max_y(&self) -> i32 {
+    fn max_y(&self) -> i64 {
         std::cmp::max(self.0.y, self.1.y)
     }
 
-    pub fn angle(&self) -> i32 {
+    pub fn angle(&self) -> i64 {
         self.0.angle(&self.1)
     }
 
@@ -71,24 +60,38 @@ impl Line {
         self.0 != self.1 && (self.angle() % 45) == 0
     }
 
-    pub fn incr(&self) -> Line {
+    fn incr(self) -> Line {
         assert!(self.is_valid());
         let a = &self.0;
         let b = &self.1;
-        if a.x == b.x {
-            if a.y < b.y {
-                Line(a.incr_y(), b.clone())
-            } else {
-                Line(a.decr_y(), b.clone())
+        Line(a + b, b.clone())
+    }
+}
+
+impl IntoIterator for Line {
+    type Item = Line;
+
+    type IntoIter = LineIterator;
+
+    fn into_iter(self) -> Self::IntoIter {
+        LineIterator(Some(self))
+    }
+}
+
+struct LineIterator(Option<Line>);
+
+impl Iterator for LineIterator {
+    type Item = Line;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.0.take() {
+            Some(line) => {
+                if line.is_valid() {
+                    self.0.replace(line.clone().incr());
+                }
+                Some(line)
             }
-        } else if a.y == b.y {
-            if a.x < b.x {
-                Line(a.incr_x(), b.clone())
-            } else {
-                Line(a.decr_x(), b.clone())
-            }
-        } else {
-            Line(a + b, b.clone())
+            None => None,
         }
     }
 }
@@ -111,9 +114,9 @@ impl FromStr for Line {
     Debug, PartialEq, Eq, PartialOrd, Ord, Clone, derive_more::Display, derive_more::Constructor,
 )]
 #[display(fmt = "{},{}", x, y)]
-pub struct Coordinate {
-    x: i32,
-    y: i32,
+struct Coordinate {
+    x: i64,
+    y: i64,
 }
 
 impl<'a> Add<&'a Coordinate> for &'a Coordinate {
@@ -128,27 +131,11 @@ impl<'a> Add<&'a Coordinate> for &'a Coordinate {
 }
 
 impl Coordinate {
-    pub fn angle(&self, rhs: &Coordinate) -> i32 {
+    pub fn angle(&self, rhs: &Coordinate) -> i64 {
         ((rhs.y as f64) - (self.y as f64))
             .atan2((rhs.x as f64) - (self.x as f64))
             .to_degrees()
-            .abs() as i32
-    }
-
-    pub fn incr_x(&self) -> Coordinate {
-        Coordinate::new(self.x + 1, self.y)
-    }
-
-    pub fn incr_y(&self) -> Coordinate {
-        Coordinate::new(self.x, self.y + 1)
-    }
-
-    pub fn decr_x(&self) -> Coordinate {
-        Coordinate::new(self.x - 1, self.y)
-    }
-
-    pub fn decr_y(&self) -> Coordinate {
-        Coordinate::new(self.x, self.y - 1)
+            .abs() as i64
     }
 }
 

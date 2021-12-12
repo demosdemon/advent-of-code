@@ -51,6 +51,8 @@
 
 use std::io::BufRead;
 
+use itertools::Itertools;
+
 use crate::errors::Error;
 use crate::problem::Problem;
 use crate::IntoAnswer;
@@ -77,14 +79,13 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
 
 impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
-        let mut basins = self
-            .0
+        self.0
             .basins()
             .into_iter()
             .map(|(_, v)| v)
-            .collect::<Vec<_>>();
-        basins.sort_unstable();
-        basins.reverse();
-        basins.into_iter().take(3).fold(1, |a, b| a * b as isize)
+            .sorted_unstable()
+            .rev()
+            .take(3)
+            .fold(1, |a, b| a * b as isize)
     }
 }

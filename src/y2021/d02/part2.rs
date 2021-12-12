@@ -38,6 +38,8 @@
 */
 
 use std::io::BufRead;
+use std::iter::Sum;
+use std::ops::AddAssign;
 
 use crate::errors::Error;
 use crate::problem::Problem;
@@ -47,17 +49,32 @@ use super::Direction;
 
 #[derive(Default, Debug, macros::Answer)]
 #[answer(example = 900, live = 1281977850)]
-pub struct Answer {
+struct Answer {
     aim: isize,
     horizontal: isize,
     depth: isize,
 }
 
-impl<R: BufRead> TryFrom<Problem<R>> for Answer {
-    type Error = Error;
+impl AddAssign<Direction> for Answer {
+    fn add_assign(&mut self, rhs: Direction) {
+        match rhs {
+            Direction::Forward(v) => {
+                self.horizontal += v;
+                self.depth += self.aim * v;
+            }
+            Direction::Up(v) => self.aim -= v,
+            Direction::Down(v) => self.aim += v,
+        }
+    }
+}
 
-    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        value.parse_lines(str::parse::<Direction>).collect()
+impl Sum<Direction> for Answer {
+    fn sum<I: Iterator<Item = Direction>>(iter: I) -> Self {
+        let mut new = Self::default();
+        for dir in iter {
+            new += dir
+        }
+        new
     }
 }
 
@@ -69,19 +86,14 @@ impl IntoAnswer for Answer {
 
 impl FromIterator<Direction> for Answer {
     fn from_iter<T: IntoIterator<Item = Direction>>(iter: T) -> Self {
-        let mut pos = Answer::default();
+        iter.into_iter().sum()
+    }
+}
 
-        for dir in iter {
-            match dir {
-                Direction::Forward(v) => {
-                    pos.horizontal += v;
-                    pos.depth += pos.aim * v;
-                }
-                Direction::Up(v) => pos.aim -= v,
-                Direction::Down(v) => pos.aim += v,
-            }
-        }
+impl<R: BufRead> TryFrom<Problem<R>> for Answer {
+    type Error = Error;
 
-        pos
+    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
+        value.parse_lines(str::parse).collect()
     }
 }

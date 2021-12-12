@@ -6,11 +6,12 @@ use crate::problem::Problem;
 use super::matrix::{Board, Tile};
 
 #[derive(Debug)]
-pub struct SolutionBuilder {
+pub(super) struct SolutionBuilder {
     pub pulls: Vec<u8>,
 
     pub boards: Vec<Board>,
 }
+
 struct BoardReader<R: BufRead>(Problem<R>);
 
 impl<R: BufRead> Iterator for BoardReader<R> {
@@ -34,11 +35,7 @@ impl<R: BufRead> Iterator for BoardReader<R> {
             }
         }
 
-        if tiles.is_empty() {
-            None
-        } else {
-            Some(Board::new(tiles))
-        }
+        (!tiles.is_empty()).then(|| Board::new(tiles))
     }
 }
 

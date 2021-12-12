@@ -67,7 +67,7 @@ impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
         self.0
             .iter_low_points()
-            .map(|(_, v)| ((*v) + 1) as usize)
-            .sum::<usize>() as isize
+            .map(|(_, &v)| (v + 1) as isize)
+            .sum::<isize>()
     }
 }

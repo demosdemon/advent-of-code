@@ -59,6 +59,8 @@
 
 use std::io::BufRead;
 
+use itertools::Itertools;
+
 use crate::errors::Error;
 use crate::problem::Problem;
 use crate::IntoAnswer;
@@ -85,6 +87,6 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
 
 impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
-        self.0.into_iter().map(|v| v.consume()).sum::<usize>() as isize
+        self.0.into_iter().map_into::<usize>().sum::<usize>() as isize
     }
 }

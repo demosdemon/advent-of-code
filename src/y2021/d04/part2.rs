@@ -18,12 +18,13 @@
 
 use std::io::BufRead;
 
+use itertools::Itertools;
+
 use crate::errors::Error as ProblemError;
 use crate::problem::Problem;
-use crate::TryIntoAnswer;
+use crate::IntoAnswer;
 
 use super::matrix::Board;
-use super::Error;
 
 #[derive(Debug, macros::Answer)]
 #[answer(example = 1924, live = 6594)]
@@ -37,18 +38,14 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     }
 }
 
-impl TryIntoAnswer for Answer {
-    type Err = Error;
-
-    fn try_into_answer(self) -> Result<isize, Self::Err> {
-        let pulls = self.0.pulls;
-        let mut boards = Bingo(self.0.boards);
-        for pull in pulls {
-            if let Some(v) = boards.mark(&pull) {
-                return Ok(v);
-            }
-        }
-        Err(Error::InvalidSolution)
+impl IntoAnswer for Answer {
+    fn into_answer(self) -> isize {
+        let mut bingo = Bingo(self.0.boards);
+        self.0
+            .pulls
+            .into_iter()
+            .find_map(|pull| bingo.mark(pull))
+            .unwrap()
     }
 }
 
@@ -56,21 +53,24 @@ impl TryIntoAnswer for Answer {
 struct Bingo(Vec<Board>);
 
 impl Bingo {
-    pub fn mark(&mut self, value: &u8) -> Option<isize> {
-        let mut won = Vec::new();
-        for (idx, board) in self.0.iter_mut().enumerate() {
-            if let Some((row, col)) = board.mark(value) {
-                if board.bingo_row(row) || board.bingo_column(col) {
-                    won.push(idx);
-                }
-            }
-        }
-        for won in won.into_iter().rev() {
-            let b = self.0.remove(won);
-            if self.0.is_empty() {
-                return Some(b.sum() * *value as isize);
-            }
-        }
-        None
+    pub fn mark(&mut self, pull: u8) -> Option<isize> {
+        self.0
+            .iter_mut()
+            .enumerate()
+            .filter_map(|(idx, board)| {
+                board
+                    .mark(pull)
+                    .map(|(row, col)| {
+                        (board.bingo_row(row) || board.bingo_column(col)).then(|| idx)
+                    })
+                    .flatten()
+            })
+            .collect_vec()
+            .into_iter()
+            .rev()
+            .find_map(|won| {
+                let b = self.0.remove(won);
+                self.0.is_empty().then(|| b.sum() * pull as isize)
+            })
     }
 }

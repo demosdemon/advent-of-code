@@ -11,7 +11,7 @@ impl Ocean {
         F: FnMut(isize, isize) -> isize,
     {
         self.range()
-            .map(|a| (&self).into_iter().map(|b| (cost)(a, *b)).sum())
+            .map(|a| (&self).into_iter().map(|&b| (cost)(a, b)).sum())
             .min()
             .unwrap_or_default()
     }

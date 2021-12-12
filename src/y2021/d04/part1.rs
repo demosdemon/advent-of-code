@@ -72,9 +72,7 @@ use std::io::BufRead;
 
 use crate::errors::Error as ProblemError;
 use crate::problem::Problem;
-use crate::TryIntoAnswer;
-
-use super::Error;
+use crate::IntoAnswer;
 
 #[derive(Debug, macros::Answer)]
 #[answer(example = 4512, live = 2745)]
@@ -88,21 +86,22 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
     }
 }
 
-impl TryIntoAnswer for Answer {
-    type Err = Error;
-
-    fn try_into_answer(self) -> Result<isize, Self::Err> {
-        let pulls = self.0.pulls;
-        let mut boards = self.0.boards;
-        for pull in pulls.iter() {
-            for board in boards.iter_mut() {
-                if let Some((row, col)) = board.mark(pull) {
-                    if board.bingo_row(row) || board.bingo_column(col) {
-                        return Ok(board.sum() * *pull as isize);
-                    }
-                }
-            }
-        }
-        Err(Error::InvalidSolution)
+impl IntoAnswer for Answer {
+    fn into_answer(mut self) -> isize {
+        self.0
+            .pulls
+            .into_iter()
+            .find_map(|pull| {
+                self.0.boards.iter_mut().find_map(|board| {
+                    board
+                        .mark(pull)
+                        .map(|(row, col)| {
+                            (board.bingo_row(row) || board.bingo_column(col))
+                                .then(|| board.sum() * pull as isize)
+                        })
+                        .flatten()
+                })
+            })
+            .unwrap()
     }
 }

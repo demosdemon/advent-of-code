@@ -13,7 +13,4 @@ enum Error {
 
     #[error("expected all tiles to be unique, found {0} duplicates: {1}")]
     DuplicateTiles(usize, String),
-
-    #[error("solver did not compute a solution")]
-    InvalidSolution,
 }

@@ -67,15 +67,9 @@ pub fn line(s: &str) -> IResult<&str, super::Line> {
 }
 
 #[cfg(test)]
-fn parse_lines(s: &str) -> IResult<&str, Vec<super::Line>> {
-    use nom::multi::many1;
-    many1(line)(s)
-}
-
-#[cfg(test)]
 mod test {
     #[test]
     fn test_parse_example_no_panic() {
-        super::parse_lines(include_str!("inputs/example")).unwrap();
+        nom::multi::many1(super::line)(include_str!("inputs/example")).unwrap();
     }
 }

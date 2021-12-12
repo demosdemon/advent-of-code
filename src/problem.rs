@@ -98,17 +98,15 @@ impl<R: BufRead> Iterator for Problem<R> {
     }
 }
 
-struct ParseLines<R, F, V, E>
+struct ParseLines<R, F>
 where
     R: BufRead,
-    F: FnMut(&str) -> std::result::Result<V, E>,
-    E: std::error::Error + 'static,
 {
     problem: Problem<R>,
     parser: F,
 }
 
-impl<R, F, V, E> Iterator for ParseLines<R, F, V, E>
+impl<R, F, V, E> Iterator for ParseLines<R, F>
 where
     R: BufRead,
     F: FnMut(&str) -> std::result::Result<V, E>,

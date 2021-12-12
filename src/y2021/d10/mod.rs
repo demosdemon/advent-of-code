@@ -20,7 +20,7 @@ impl Line {
                         ']' => 2,
                         '}' => 3,
                         '>' => 4,
-                        _ => 0,
+                        _ => unreachable!(),
                     }
             })),
             Line::Invalid(_) => None,

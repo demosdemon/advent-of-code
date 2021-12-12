@@ -99,16 +99,17 @@ impl<'a> IndexMut<&'a super::Coordinate> for Board {
     }
 }
 
-impl<'a> Extend<&'a super::Line> for Board {
-    fn extend<T: IntoIterator<Item = &'a super::Line>>(&mut self, iter: T) {
-        for line in iter {
-            let mut line = line.clone();
-            self[&line.0] += 1;
-            while line.is_valid() {
-                line = line.incr();
-                self[&line.0] += 1;
-            }
+impl Extend<super::Coordinate> for Board {
+    fn extend<T: IntoIterator<Item = super::Coordinate>>(&mut self, iter: T) {
+        for coord in iter {
+            self[&coord] += 1;
         }
+    }
+}
+
+impl Extend<super::Line> for Board {
+    fn extend<T: IntoIterator<Item = super::Line>>(&mut self, iter: T) {
+        self.extend(iter.into_iter().flat_map(|l| l.into_iter().map(|l| l.0)));
     }
 }
 
@@ -119,7 +120,7 @@ struct Answer(super::SolutionBuilder);
 impl Answer {
     pub fn into_board(self) -> Board {
         let mut board = Board::new(self.0.max_x() as usize + 1, self.0.max_y() as usize + 1);
-        board.extend(self.0 .0.iter());
+        board.extend(self.0 .0);
         board
     }
 }

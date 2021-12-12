@@ -60,6 +60,8 @@
 
 use std::io::BufRead;
 
+use itertools::Itertools;
+
 use crate::errors::Error;
 use crate::problem::Problem;
 use crate::IntoAnswer;
@@ -84,11 +86,7 @@ impl<R: BufRead> TryFrom<Problem<R>> for Answer {
 
 impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
-        let mut scores = self
-            .0
-            .into_iter()
-            .filter_map(|l| l.score())
-            .collect::<Vec<_>>();
+        let mut scores = self.0.into_iter().filter_map(|l| l.score()).collect_vec();
         scores.sort_unstable();
         scores[(scores.len() / 2)]
     }
