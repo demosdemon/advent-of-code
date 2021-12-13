@@ -49,13 +49,9 @@
     submarine? (Be sure to represent your answer in decimal, not binary.)
 */
 
-use std::io::BufRead;
-
 use itertools::Itertools;
 
-use crate::errors::Error;
-use crate::problem::Problem;
-use crate::IntoAnswer;
+use crate::{Error, IntoAnswer, ParseProblem, Problem};
 
 use super::bit::Bit;
 use super::line::Line;
@@ -81,11 +77,11 @@ impl Answer {
     }
 }
 
-impl<R: BufRead> TryFrom<Problem<R>> for Answer {
+impl ParseProblem for Answer {
     type Error = Error;
 
-    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        value.parse_lines(str::parse).collect()
+    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
+        problem.parse_lines(str::parse).collect()
     }
 }
 

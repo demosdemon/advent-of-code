@@ -19,20 +19,16 @@ cat >./src/y2021/$1/part1.rs <<"EOF"
 
 */
 
-use std::io::BufRead;
-
-use crate::errors::Error;
-use crate::problem::Problem;
-use crate::IntoAnswer;
+use crate::{Error, IntoAnswer, ParseProblem, Problem};
 
 #[derive(Default, Debug, macros::Answer)]
 #[answer(example = 0, live = 0)]
 struct Answer;
 
-impl<R: BufRead> TryFrom<Problem<R>> for Answer {
+impl ParseProblem for Answer {
     type Error = Error;
 
-    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
+    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
         todo!()
     }
 }

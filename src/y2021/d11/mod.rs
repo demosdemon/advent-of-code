@@ -2,13 +2,10 @@ pub mod part1;
 pub mod part2;
 
 use std::collections::LinkedList;
-use std::io::BufRead;
 
-use iterator_ext::IteratorExt;
 use itertools::Itertools;
 
-use crate::errors::Error;
-use crate::problem::Problem;
+use crate::{Error, ParseProblem, Problem};
 
 const AROUND_THE_BLOCK: [(isize, isize); 8] = [
     (-1, -1),
@@ -121,14 +118,14 @@ impl FromIterator<u8> for Ocean {
     }
 }
 
-impl<R: BufRead> TryFrom<Problem<R>> for Ocean {
+impl ParseProblem for Ocean {
     type Error = Error;
 
-    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        value
-            .into_iter()
-            .and_then(|s| Ok(s.chars().map(crate::chardigit).collect_vec()))
-            .try_flatten()
-            .collect()
+    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
+        Ok(problem
+            .slice()
+            .lines()
+            .flat_map(|s| s.chars().map(crate::chardigit))
+            .collect())
     }
 }

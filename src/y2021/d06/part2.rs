@@ -7,11 +7,7 @@
     lanternfish!
 */
 
-use std::io::BufRead;
-
-use crate::errors::Error;
-use crate::problem::Problem;
-use crate::IntoAnswer;
+use crate::{Error, IntoAnswer, ParseProblem, Problem};
 
 use super::Ocean;
 
@@ -19,11 +15,11 @@ use super::Ocean;
 #[answer(example = 26984457539, live = 1710623015163)]
 struct Answer(Ocean);
 
-impl<R: BufRead> TryFrom<Problem<R>> for Answer {
+impl ParseProblem for Answer {
     type Error = Error;
 
-    fn try_from(mut value: Problem<R>) -> Result<Self, Self::Error> {
-        Ok(Self(Ocean(value.expect_map_line(",", str::parse)?)))
+    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
+        Ok(Self(Ocean(problem.expect_map_line(",", str::parse)?)))
     }
 }
 

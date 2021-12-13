@@ -1,7 +1,6 @@
-use std::io::BufRead;
+use itertools::Itertools;
 
-use crate::errors::Error;
-use crate::problem::Problem;
+use crate::{Error, ParseProblem, Problem};
 
 use super::matrix::{Board, Tile};
 
@@ -12,9 +11,9 @@ pub(super) struct SolutionBuilder {
     pub boards: Vec<Board>,
 }
 
-struct BoardReader<R: BufRead>(Problem<R>);
+struct BoardReader<'a, 'b>(&'b mut Problem<'a>);
 
-impl<R: BufRead> Iterator for BoardReader<R> {
+impl<'a, 'b> Iterator for BoardReader<'a, 'b> {
     type Item = Result<Board, Error>;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -22,8 +21,8 @@ impl<R: BufRead> Iterator for BoardReader<R> {
         loop {
             match self.0.take_line() {
                 None => break,
-                Some(Ok(line)) if line.is_empty() => break,
-                Some(Ok(line)) => {
+                Some(line) if line.is_empty() => break,
+                Some(line) => {
                     for atom in line.split_ascii_whitespace() {
                         match atom.parse() {
                             Ok(v) => tiles.push(v),
@@ -31,7 +30,6 @@ impl<R: BufRead> Iterator for BoardReader<R> {
                         }
                     }
                 }
-                Some(Err(err)) => return Some(Err(err)),
             }
         }
 
@@ -39,16 +37,16 @@ impl<R: BufRead> Iterator for BoardReader<R> {
     }
 }
 
-impl<R: BufRead> TryFrom<Problem<R>> for SolutionBuilder {
+impl ParseProblem for SolutionBuilder {
     type Error = Error;
 
-    fn try_from(mut value: Problem<R>) -> Result<Self, Self::Error> {
-        let pulls: Vec<u8> = value.expect_map_line(",", str::parse)?;
-        value.expect_empty_line()?;
+    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
+        let pulls: Vec<u8> = problem.expect_map_line(",", str::parse)?;
+        problem.expect_empty_line()?;
 
         Ok(Self {
             pulls,
-            boards: BoardReader(value).collect::<Result<_, _>>()?,
+            boards: BoardReader(problem).try_collect()?,
         })
     }
 }

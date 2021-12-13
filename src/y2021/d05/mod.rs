@@ -3,15 +3,13 @@ pub mod part2;
 
 mod parser;
 
-use std::io::BufRead;
 use std::ops::Add;
 use std::str::FromStr;
 
 use itertools::Itertools;
 use nom::Finish;
 
-use crate::errors::Error;
-use crate::problem::Problem;
+use crate::{Error, ParseProblem, Problem};
 
 #[derive(Debug, derive_more::IntoIterator)]
 #[into_iterator(owned, ref)]
@@ -27,11 +25,11 @@ impl SolutionBuilder {
     }
 }
 
-impl<R: BufRead> TryFrom<Problem<R>> for SolutionBuilder {
+impl ParseProblem for SolutionBuilder {
     type Error = Error;
 
-    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        Ok(Self(value.parse_lines(str::parse).try_collect()?))
+    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
+        Ok(Self(problem.parse_lines(str::parse).try_collect()?))
     }
 }
 

@@ -16,9 +16,6 @@ pub enum Error {
 
     #[error("an error occurred while generating the solution: {0}")]
     IntoSolution(#[source] Box<dyn std::error::Error>),
-
-    #[error("an error occurred while generating the answer from the solution: {0}")]
-    IntoAnswer(#[source] Box<dyn std::error::Error>),
 }
 
 impl Error {
@@ -28,10 +25,6 @@ impl Error {
 
     pub fn from_solution<E: std::error::Error + 'static>(e: E) -> Self {
         Self::IntoSolution(Box::new(e))
-    }
-
-    pub fn from_answer<E: std::error::Error + 'static>(e: E) -> Self {
-        Self::IntoAnswer(Box::new(e))
     }
 
     pub fn from_empty_line(s: String) -> Result<()> {

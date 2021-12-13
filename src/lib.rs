@@ -1,35 +1,30 @@
 pub mod errors;
 pub mod problem;
+
 mod y2021;
+
+pub use errors::Error;
+pub use problem::Problem;
+
+pub trait ParseProblem {
+    type Error;
+
+    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error>
+    where
+        Self: Sized;
+}
 
 pub trait IntoAnswer {
     fn into_answer(self) -> isize;
 }
 
-pub trait TryIntoAnswer {
-    type Err;
-
-    fn try_into_answer(self) -> std::result::Result<isize, Self::Err>;
-}
-
-impl<T: IntoAnswer> TryIntoAnswer for T {
-    type Err = std::convert::Infallible;
-
-    fn try_into_answer(self) -> std::result::Result<isize, Self::Err> {
-        Ok(self.into_answer())
-    }
-}
-
-type StringProblem<'a> = problem::Problem<&'a [u8]>;
-
-pub fn solve<'a, S>(s: &'a str) -> errors::Result<isize>
+pub fn solve<S>(s: &str) -> Result<isize, S::Error>
 where
-    S: TryIntoAnswer + TryFrom<StringProblem<'a>, Error = errors::Error>,
-    <S as TryIntoAnswer>::Err: std::error::Error + 'static,
+    S: ParseProblem + IntoAnswer,
 {
-    let p = problem::Problem::new(s.as_bytes());
-    let s: S = p.try_into()?;
-    s.try_into_answer().map_err(errors::Error::from_answer)
+    let mut p = problem::Problem::new(s);
+    let s = S::parse_problem(&mut p)?;
+    Ok(s.into_answer())
 }
 
 fn chardigit(c: char) -> u8 {

@@ -16,25 +16,22 @@
     Figure out which board will win last. Once it wins, what would its final score be?
 */
 
-use std::io::BufRead;
-
 use itertools::Itertools;
 
-use crate::errors::Error as ProblemError;
-use crate::problem::Problem;
-use crate::IntoAnswer;
+use crate::{Error, IntoAnswer, ParseProblem, Problem};
 
+use super::builder::SolutionBuilder;
 use super::matrix::Board;
 
 #[derive(Debug, macros::Answer)]
 #[answer(example = 1924, live = 6594)]
-struct Answer(super::builder::SolutionBuilder);
+struct Answer(SolutionBuilder);
 
-impl<R: BufRead> TryFrom<Problem<R>> for Answer {
-    type Error = ProblemError;
+impl ParseProblem for Answer {
+    type Error = Error;
 
-    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        Ok(Self(value.try_into()?))
+    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
+        Ok(Self(SolutionBuilder::parse_problem(problem)?))
     }
 }
 

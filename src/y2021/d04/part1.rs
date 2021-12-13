@@ -68,21 +68,19 @@
     What will your final score be if you choose that board?
 */
 
-use std::io::BufRead;
+use crate::{Error, IntoAnswer, ParseProblem, Problem};
 
-use crate::errors::Error as ProblemError;
-use crate::problem::Problem;
-use crate::IntoAnswer;
+use super::builder::SolutionBuilder;
 
 #[derive(Debug, macros::Answer)]
 #[answer(example = 4512, live = 2745)]
-struct Answer(super::builder::SolutionBuilder);
+struct Answer(SolutionBuilder);
 
-impl<R: BufRead> TryFrom<Problem<R>> for Answer {
-    type Error = ProblemError;
+impl ParseProblem for Answer {
+    type Error = Error;
 
-    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        Ok(Self(value.try_into()?))
+    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
+        Ok(Self(SolutionBuilder::parse_problem(problem)?))
     }
 }
 

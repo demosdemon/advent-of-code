@@ -31,12 +31,11 @@
 */
 
 use std::fmt::Display;
-use std::io::BufRead;
 use std::ops::{Index, IndexMut};
 
-use crate::errors::Error;
-use crate::problem::Problem;
-use crate::IntoAnswer;
+use crate::{Error, IntoAnswer, ParseProblem, Problem};
+
+use super::SolutionBuilder;
 
 #[derive(Debug)]
 struct Board {
@@ -115,7 +114,7 @@ impl Extend<super::Line> for Board {
 
 #[derive(Debug, macros::Answer)]
 #[answer(example = 12, live = 19472)]
-struct Answer(super::SolutionBuilder);
+struct Answer(SolutionBuilder);
 
 impl Answer {
     pub fn into_board(self) -> Board {
@@ -125,11 +124,11 @@ impl Answer {
     }
 }
 
-impl<R: BufRead> TryFrom<Problem<R>> for Answer {
+impl ParseProblem for Answer {
     type Error = Error;
 
-    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        Ok(Self(value.try_into()?))
+    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
+        Ok(Self(SolutionBuilder::parse_problem(problem)?))
     }
 }
 
@@ -140,12 +139,16 @@ impl IntoAnswer for Answer {
     }
 }
 
+#[cfg(test)]
 mod test {
+    use super::Answer;
+    use crate::{ParseProblem, Problem};
+
     #[test]
     fn test_display() {
         let example = include_str!("inputs/example");
-        let problem = crate::problem::Problem::new(example.as_bytes());
-        let answer: super::Answer = problem.try_into().unwrap();
+        let mut problem = Problem::new(example);
+        let answer = Answer::parse_problem(&mut problem).unwrap();
         let board = answer.into_board();
         assert_eq!(board.width, 10);
         assert_eq!(board.depth, 10);

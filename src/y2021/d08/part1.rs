@@ -90,11 +90,7 @@
     In the output values, how many times do digits 1, 4, 7, or 8 appear?
 */
 
-use std::io::BufRead;
-
-use crate::errors::Error;
-use crate::problem::Problem;
-use crate::IntoAnswer;
+use crate::{Error, IntoAnswer, ParseProblem, Problem};
 
 use super::Line;
 
@@ -108,11 +104,11 @@ impl FromIterator<super::Line> for Answer {
     }
 }
 
-impl<R: BufRead> TryFrom<Problem<R>> for Answer {
+impl ParseProblem for Answer {
     type Error = Error;
 
-    fn try_from(value: Problem<R>) -> Result<Self, Self::Error> {
-        value.parse_lines(str::parse).collect()
+    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
+        problem.parse_lines(str::parse).collect()
     }
 }
 
