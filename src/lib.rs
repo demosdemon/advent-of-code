@@ -15,10 +15,12 @@ pub trait ParseProblem {
 }
 
 pub trait IntoAnswer {
-    fn into_answer(self) -> isize;
+    type Output: PartialEq;
+
+    fn into_answer(self) -> Self::Output;
 }
 
-pub fn solve<S>(s: &str) -> Result<isize, S::Error>
+pub fn solve<S>(s: &str) -> Result<S::Output, S::Error>
 where
     S: ParseProblem + IntoAnswer,
 {

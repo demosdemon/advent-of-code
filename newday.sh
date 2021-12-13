@@ -34,7 +34,9 @@ impl ParseProblem for Answer {
 }
 
 impl IntoAnswer for Answer {
-    fn into_answer(self) -> isize {
+    type Output = isize;
+
+    fn into_answer(self) -> Self::Output {
         todo!()
     }
 }

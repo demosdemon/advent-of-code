@@ -86,6 +86,8 @@ impl ParseProblem for Answer {
 }
 
 impl IntoAnswer for Answer {
+    type Output = isize;
+
     fn into_answer(self) -> isize {
         let gamma: Line = itertools::zip(self.zeros, self.ones)
             .map(|(zeros, ones)| zeros <= ones)

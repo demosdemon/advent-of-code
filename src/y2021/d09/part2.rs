@@ -74,6 +74,8 @@ impl ParseProblem for Answer {
 }
 
 impl IntoAnswer for Answer {
+    type Output = isize;
+
     fn into_answer(self) -> isize {
         self.0
             .basins()

@@ -81,6 +81,8 @@ impl ParseProblem for Answer {
 }
 
 impl IntoAnswer for Answer {
+    type Output = isize;
+
     fn into_answer(self) -> isize {
         let mut scores = self.0.into_iter().filter_map(|l| l.score()).collect_vec();
         scores.sort_unstable();

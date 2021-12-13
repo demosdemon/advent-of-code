@@ -77,6 +77,8 @@ impl ParseProblem for Answer {
 }
 
 impl IntoAnswer for Answer {
+    type Output = isize;
+
     fn into_answer(self) -> isize {
         self.windows(2).filter(|s| s[0] < s[1]).count() as isize
     }

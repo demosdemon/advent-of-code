@@ -36,6 +36,8 @@ impl ParseProblem for Answer {
 }
 
 impl IntoAnswer for Answer {
+    type Output = isize;
+
     fn into_answer(self) -> isize {
         let mut bingo = Bingo(self.0.boards);
         self.0

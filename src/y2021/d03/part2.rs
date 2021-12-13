@@ -132,6 +132,8 @@ impl<'a> FromIterator<&'a Line> for Lines<'a> {
 }
 
 impl IntoAnswer for Answer {
+    type Output = isize;
+
     fn into_answer(self) -> isize {
         let lines = self.0;
         let bits = lines[0].len();

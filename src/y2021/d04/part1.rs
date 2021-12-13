@@ -85,6 +85,8 @@ impl ParseProblem for Answer {
 }
 
 impl IntoAnswer for Answer {
+    type Output = isize;
+
     fn into_answer(mut self) -> isize {
         self.0
             .pulls

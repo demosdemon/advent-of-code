@@ -98,6 +98,8 @@ impl ParseProblem for Answer {
 }
 
 impl IntoAnswer for Answer {
+    type Output = isize;
+
     fn into_answer(self) -> isize {
         use super::Line::*;
         let mut res = [0; 4];

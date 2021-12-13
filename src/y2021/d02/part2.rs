@@ -76,6 +76,8 @@ impl Sum<Direction> for Answer {
 }
 
 impl IntoAnswer for Answer {
+    type Output = isize;
+
     fn into_answer(self) -> isize {
         self.horizontal * self.depth
     }

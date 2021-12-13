@@ -133,6 +133,8 @@ impl ParseProblem for Answer {
 }
 
 impl IntoAnswer for Answer {
+    type Output = isize;
+
     fn into_answer(self) -> isize {
         let board = self.into_board();
         board.hits.iter().filter(|v| **v >= 2).count() as isize
