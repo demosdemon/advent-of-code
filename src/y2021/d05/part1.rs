@@ -72,15 +72,10 @@ struct Board {
 
 impl Board {
     pub fn new(width: usize, depth: usize) -> Self {
-        let size = width * depth;
         Self {
             width,
             depth,
-            hits: {
-                let mut v = Vec::with_capacity(size);
-                v.resize_with(size, Default::default);
-                v.into_boxed_slice()
-            },
+            hits: vec![0; width * depth].into_boxed_slice(),
         }
     }
 

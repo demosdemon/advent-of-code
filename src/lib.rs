@@ -31,5 +31,6 @@ where
 
 fn chardigit(c: char) -> u8 {
     const ZERO: u8 = b'0';
+    assert!(c.is_ascii_digit());
     (c as u8) - ZERO
 }
