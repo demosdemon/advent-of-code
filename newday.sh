@@ -12,7 +12,7 @@ touch ./src/y2021/$1/inputs/{live,example}
 echo "mod $1;" >> ./src/y2021/mod.rs
 
 echo "mod part1;" >> ./src/y2021/$1/mod.rs
-echo "mod part2;" >> ./src/y2021/$1/mod.rs
+echo "// mod part2;" >> ./src/y2021/$1/mod.rs
 
 cat >./src/y2021/$1/part1.rs <<"EOF"
 /*
