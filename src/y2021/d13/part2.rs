@@ -9,13 +9,15 @@ use crate::IntoAnswer;
 
 #[derive(Debug, derive_more::FromStr, macros::Answer)]
 #[answer(
-    example = "#####
+    example = "
+#####
 #...#
 #...#
 #...#
 #####
 ",
-    live = "####...##..##..#..#...##..##...##..#..#
+    live = "
+####...##..##..#..#...##..##...##..#..#
 #.......#.#..#.#..#....#.#..#.#..#.#..#
 ###.....#.#..#.####....#.#....#..#.####
 #.......#.####.#..#....#.#.##.####.#..#
@@ -31,8 +33,8 @@ impl IntoAnswer for Answer {
     fn into_answer(self) -> String {
         let matrix: super::Matrix = self.0.coordinates.iter().collect();
         let matrix = self.0.folds.iter().fold(matrix, |prev, fold| prev + fold);
-        let s = matrix.to_string();
-        println!("{}", &s);
+        let s = format!("\n{}", matrix);
+        println!("{}", s);
         s
     }
 }
