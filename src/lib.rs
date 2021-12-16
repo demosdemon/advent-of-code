@@ -53,12 +53,12 @@ macro_rules! tests_for_problem {
 #[macro_export(crate)]
 macro_rules! derive_FromStr_for_FromIterator {
     ($t:ty, $v:ty) => {
-        impl ::std::str::FromStr for $t {
-            type Err = <$v as ::std::str::FromStr>::Err;
+        impl ::core::str::FromStr for $t {
+            type Err = <$v as ::core::str::FromStr>::Err;
             #[inline]
             fn from_str(
                 s: &str,
-            ) -> ::std::result::Result<Self, <Self as ::std::str::FromStr>::Err> {
+            ) -> ::core::result::Result<Self, <Self as ::core::str::FromStr>::Err> {
                 s.lines().map(str::parse::<$v>).collect()
             }
         }
@@ -68,9 +68,9 @@ macro_rules! derive_FromStr_for_FromIterator {
 #[macro_export(crate)]
 macro_rules! derive_FromIterator {
     ($t:ty, $v:ty) => {
-        impl ::std::iter::FromIterator<$v> for $t {
+        impl ::core::iter::FromIterator<$v> for $t {
             #[inline]
-            fn from_iter<T: ::std::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
+            fn from_iter<T: ::core::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
                 Self(iter.into_iter().collect())
             }
         }
@@ -80,9 +80,9 @@ macro_rules! derive_FromIterator {
 #[macro_export(crate)]
 macro_rules! derive_Extend {
     ($t:ty, $v:ty) => {
-        impl ::std::iter::Extend<$v> for $t {
+        impl ::core::iter::Extend<$v> for $t {
             #[inline]
-            fn extend<T: ::std::iter::IntoIterator<Item = $v>>(&mut self, iter: T) {
+            fn extend<T: ::core::iter::IntoIterator<Item = $v>>(&mut self, iter: T) {
                 self.0.extend(iter)
             }
         }
@@ -92,8 +92,8 @@ macro_rules! derive_Extend {
 #[macro_export(crate)]
 macro_rules! derive_FromIterator_for_Extend {
     ($t:ty, $v:ty) => {
-        impl ::std::iter::FromIterator<$v> for $t {
-            fn from_iter<T: ::std::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
+        impl ::core::iter::FromIterator<$v> for $t {
+            fn from_iter<T: ::core::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
                 let mut v = Self::default();
                 v.extend(iter);
                 v
@@ -105,9 +105,9 @@ macro_rules! derive_FromIterator_for_Extend {
 #[macro_export(crate)]
 macro_rules! derive_Sum_for_AddAssign {
     ($t:ty, $v:ty) => {
-        impl ::std::iter::Sum<$v> for $t {
+        impl ::core::iter::Sum<$v> for $t {
             #[inline]
-            fn sum<I: ::std::iter::IntoIterator<Item = $v>>(iter: I) -> Self {
+            fn sum<I: ::core::iter::IntoIterator<Item = $v>>(iter: I) -> Self {
                 let mut new = Self::default();
                 for dir in iter {
                     new += dir
@@ -121,9 +121,9 @@ macro_rules! derive_Sum_for_AddAssign {
 #[macro_export(crate)]
 macro_rules! derive_FromIterator_for_Sum {
     ($t:ty, $v:ty) => {
-        impl ::std::iter::FromIterator<$v> for $t {
+        impl ::core::iter::FromIterator<$v> for $t {
             #[inline]
-            fn from_iter<T: ::std::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
+            fn from_iter<T: ::core::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
                 iter.into_iter().sum()
             }
         }
@@ -133,10 +133,10 @@ macro_rules! derive_FromIterator_for_Sum {
 #[macro_export(crate)]
 macro_rules! derive_FromStr_for_nom {
     ($t:ty, $f:path) => {
-        impl ::std::str::FromStr for $t {
+        impl ::core::str::FromStr for $t {
             type Err = ::nom::error::Error<String>;
             #[inline]
-            fn from_str(s: &str) -> ::std::result::Result<Self, Self::Err> {
+            fn from_str(s: &str) -> ::core::result::Result<Self, Self::Err> {
                 match ::nom::Finish::finish(($f)(s)) {
                     Ok((_, v)) => Ok(v),
                     Err(::nom::error::Error { input, code }) => Err(::nom::error::Error {
