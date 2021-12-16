@@ -63,8 +63,6 @@ use crate::IntoAnswer;
 
 use super::Line;
 
-#[derive(macros::Answer)]
-#[answer(example = 61229, live = 986163)]
 struct Answer(Vec<Line>);
 
 crate::derive_FromIterator!(Answer, Line);
@@ -76,4 +74,12 @@ impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
         self.0.into_iter().map_into::<usize>().sum::<usize>() as isize
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 61229,
+        live => 986163,
+    });
 }

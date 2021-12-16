@@ -6,28 +6,8 @@ use std::fmt::{Display, Write};
 use std::ops::Add;
 use std::str::FromStr;
 
+use anyhow::{anyhow, Context, Error};
 use itertools::Itertools;
-
-#[derive(Debug, thiserror::Error)]
-enum Error {
-    #[error("coordinate missing comma; got {0}")]
-    CoordinateMissingComma(String),
-
-    #[error("unable to parse coordinate integer; got {1}")]
-    CoordinateParseInt(#[source] std::num::ParseIntError, String),
-
-    #[error("fold instructions missing an equal sign; got {0}")]
-    FoldMissingEqual(String),
-
-    #[error("unable to parse integer in fold instructions; got {1}")]
-    FoldParseInt(#[source] std::num::ParseIntError, String),
-
-    #[error("fold instruction did not match known pattern; got {0}")]
-    FoldParsePattern(String),
-
-    #[error("unexpected end of input")]
-    EndOfInput,
-}
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, derive_more::Display)]
 #[display(fmt = "{},{}\n", _0, _1)]
@@ -78,12 +58,12 @@ impl FromStr for Coordinate {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (a, b) = s
             .split_once(',')
-            .ok_or_else(|| Error::CoordinateMissingComma(s.to_owned()))?;
+            .with_context(|| format!("splitting {} on `,`", s))?;
         Ok(Self(
             a.parse()
-                .map_err(|e| Error::CoordinateParseInt(e, s.to_owned()))?,
+                .with_context(|| format!("parsing {} into an int", a))?,
             b.parse()
-                .map_err(|e| Error::CoordinateParseInt(e, s.to_owned()))?,
+                .with_context(|| format!("parsing {} into an int", b))?,
         ))
     }
 }
@@ -103,14 +83,14 @@ impl FromStr for Fold {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (a, b) = s
             .split_once('=')
-            .ok_or_else(|| Error::FoldMissingEqual(s.to_owned()))?;
+            .with_context(|| format!("splitting {} on `=`", s))?;
         let b = b
             .parse()
-            .map_err(|e| Error::FoldParseInt(e, s.to_owned()))?;
+            .with_context(|| format!("parsing {} into an int", b))?;
         match a {
             "fold along x" => Ok(Fold::X(b)),
             "fold along y" => Ok(Fold::Y(b)),
-            _ => Err(Error::FoldParsePattern(s.to_string())),
+            _ => Err(anyhow!("invalid fold instructions: {}", s)),
         }
     }
 }
@@ -141,7 +121,7 @@ impl FromStr for Instructions {
         let mut lines = s.lines();
         let mut coordinates = Vec::new();
         loop {
-            let line = lines.next().ok_or(Error::EndOfInput)?;
+            let line = lines.next().context("reading coordinates from input")?;
             if line.is_empty() {
                 break;
             }

@@ -7,19 +7,10 @@ version = "0.1.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# anyhow = "1.0.51"
+anyhow = "1.0.51"
 derive_more = "0.99.17"
-# enum-utils = "0.1.2"
 iterator-ext = "0.2.0"
 itertools = "0.10.1"
-macros = {path = "./macros"}
 maplit = "1.0.2"
 nom = "7.1.0"
-# petgraph = "0.6.0"
-# structopt = "0.3.25"
-thiserror = "1.0.30"
-
-[workspace]
-members = [
-  "macros",
-]
+paste = "1.0.6"

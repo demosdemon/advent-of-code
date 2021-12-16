@@ -4,6 +4,8 @@ use std::convert::Infallible;
 use std::fmt::Display;
 use std::str::FromStr;
 
+use anyhow::{Context, Error};
+
 #[derive(Debug)]
 enum EdgeType {
     Big,
@@ -215,18 +217,15 @@ pub(super) struct Ocean {
 }
 
 impl FromStr for Ocean {
-    type Err = super::Error;
+    type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let edges = s
             .lines()
-            .map(|l| {
-                l.split_once('-')
-                    .ok_or_else(|| super::Error::Hyphen(l.to_owned()))
-            })
+            .map(|l| l.split_once('-').context("splitting on hyphen separator"))
             .collect::<Result<Edges, _>>()?;
-        let head = edges.names.find("start").ok_or(super::Error::Start)?;
-        let tail = edges.names.find("end").ok_or(super::Error::End)?;
+        let head = edges.names.find("start").context("finding `start` node")?;
+        let tail = edges.names.find("end").context("finding `end` node")?;
         Ok(Self {
             names: edges.names.0.into_iter().map(|n| n.to_owned()).collect(),
             edges: edges.edges,

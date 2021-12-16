@@ -1,6 +1,6 @@
 use std::ops::{Add, Not};
 
-use super::Error;
+use anyhow::{anyhow, Error, Result};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub(super) enum Bit {
@@ -57,11 +57,11 @@ impl From<bool> for Bit {
 impl TryFrom<char> for Bit {
     type Error = Error;
 
-    fn try_from(value: char) -> Result<Self, Self::Error> {
+    fn try_from(value: char) -> Result<Self> {
         match value {
             '0' => Ok(Self::Zero),
             '1' => Ok(Self::One),
-            _ => Err(Error::InvalidBit(value)),
+            _ => Err(anyhow!("invalid bit char; got {}", value)),
         }
     }
 }

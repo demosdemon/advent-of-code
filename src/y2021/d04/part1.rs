@@ -72,8 +72,7 @@ use crate::IntoAnswer;
 
 use super::builder::SolutionBuilder;
 
-#[derive(Debug, derive_more::FromStr, macros::Answer)]
-#[answer(example = 4512, live = 2745)]
+#[derive(Debug, derive_more::FromStr)]
 struct Answer(SolutionBuilder);
 
 impl IntoAnswer for Answer {
@@ -96,4 +95,12 @@ impl IntoAnswer for Answer {
             })
             .unwrap()
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 4512,
+        live => 2745,
+    });
 }

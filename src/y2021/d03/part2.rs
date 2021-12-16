@@ -71,8 +71,7 @@ use crate::IntoAnswer;
 
 use super::line::Line;
 
-#[derive(Default, Debug, macros::Answer)]
-#[answer(example = 230, live = 4245351)]
+#[derive(Default, Debug)]
 struct Answer(Vec<Line>);
 
 crate::derive_FromStr_for_FromIterator!(Answer, Line);
@@ -138,4 +137,12 @@ impl IntoAnswer for Answer {
         let co2_rating: usize = co2.only().into();
         (o2_rating * co2_rating) as isize
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 230,
+        live => 4245351,
+    });
 }

@@ -59,8 +59,7 @@
 
 use crate::IntoAnswer;
 
-#[derive(Debug, derive_more::FromStr, macros::Answer)]
-#[answer(example = 40, live = 562)]
+#[derive(Debug, derive_more::FromStr)]
 struct Answer(super::Cave);
 
 impl IntoAnswer for Answer {
@@ -69,4 +68,12 @@ impl IntoAnswer for Answer {
     fn into_answer(self) -> Self::Output {
         self.0.cost().unwrap() as isize
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 40,
+        live => 562,
+    });
 }

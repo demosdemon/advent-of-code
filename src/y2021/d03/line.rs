@@ -1,6 +1,8 @@
 use std::ops::{Add, Not};
 use std::str::FromStr;
 
+use anyhow::{Error, Result};
+
 use super::bit::Bit;
 
 #[derive(Default, Debug, Clone, derive_more::IntoIterator, derive_more::Index)]
@@ -40,9 +42,9 @@ impl<'a> From<&'a Line> for usize {
 }
 
 impl FromStr for Line {
-    type Err = super::Error;
+    type Err = Error;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    fn from_str(s: &str) -> Result<Self> {
         s.chars().map(TryFrom::try_from).collect()
     }
 }

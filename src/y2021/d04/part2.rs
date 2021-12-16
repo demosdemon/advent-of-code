@@ -23,8 +23,7 @@ use crate::IntoAnswer;
 use super::builder::SolutionBuilder;
 use super::matrix::Board;
 
-#[derive(Debug, derive_more::FromStr, macros::Answer)]
-#[answer(example = 1924, live = 6594)]
+#[derive(Debug, derive_more::FromStr)]
 struct Answer(SolutionBuilder);
 
 impl IntoAnswer for Answer {
@@ -64,4 +63,12 @@ impl Bingo {
                 self.0.is_empty().then(|| b.sum() * pull as isize)
             })
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 1924,
+        live => 6594,
+    });
 }

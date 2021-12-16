@@ -5,16 +5,9 @@ mod bit;
 
 use std::str::FromStr;
 
-use bit::{Bit, BitVector, Error as BitError};
+use anyhow::{Context, Error};
 
-#[derive(Debug, thiserror::Error)]
-enum Error {
-    #[error("an error occured parsing the input: {0}")]
-    Parse(#[from] BitError),
-
-    #[error("unable to parse input")]
-    NoInput,
-}
+use bit::{Bit, BitVector};
 
 #[derive(Debug)]
 struct Version([Bit; 3]);
@@ -197,6 +190,6 @@ impl FromStr for Packet {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut bv = BitVector::from_str(s)?;
-        Packet::read(&mut bv).ok_or(Error::NoInput)
+        Packet::read(&mut bv).context("parsing packet from input")
     }
 }

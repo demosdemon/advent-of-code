@@ -56,8 +56,7 @@ use crate::IntoAnswer;
 use super::bit::Bit;
 use super::line::Line;
 
-#[derive(Default, Debug, macros::Answer)]
-#[answer(example = 198, live = 4103154)]
+#[derive(Default, Debug)]
 struct Answer {
     pub zeros: Vec<usize>,
     pub ones: Vec<usize>,
@@ -107,4 +106,12 @@ impl Extend<Line> for Answer {
             }
         }
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 198,
+        live => 4103154,
+    });
 }

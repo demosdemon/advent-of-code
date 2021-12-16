@@ -40,15 +40,11 @@
     your final depth?
 */
 
-use std::iter::Sum;
 use std::ops::AddAssign;
-
-use crate::IntoAnswer;
 
 use super::Direction;
 
-#[derive(Default, Debug, macros::Answer)]
-#[answer(example = 150, live = 1714950)]
+#[derive(Default, Debug)]
 struct Answer {
     horizontal: isize,
     depth: isize,
@@ -68,10 +64,18 @@ impl AddAssign<Direction> for Answer {
     }
 }
 
-impl IntoAnswer for Answer {
+impl crate::IntoAnswer for Answer {
     type Output = isize;
 
     fn into_answer(self) -> isize {
         self.horizontal * self.depth
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 150,
+        live => 1714950,
+    });
 }

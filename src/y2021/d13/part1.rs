@@ -136,8 +136,7 @@
 
 use crate::IntoAnswer;
 
-#[derive(Debug, derive_more::FromStr, macros::Answer)]
-#[answer(example = 17, live = 785)]
+#[derive(Debug, derive_more::FromStr)]
 struct Answer(super::Instructions);
 
 impl IntoAnswer for Answer {
@@ -148,4 +147,12 @@ impl IntoAnswer for Answer {
         let matrix = matrix + &self.0.folds[0];
         matrix.len() as isize
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 17,
+        live => 785,
+    });
 }

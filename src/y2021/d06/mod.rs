@@ -1,18 +1,11 @@
 mod part1;
 mod part2;
 
-use std::{num::ParseIntError, str::FromStr};
+use std::str::FromStr;
+
+use anyhow::{Context, Error, Result};
 
 use itertools::Itertools;
-
-#[derive(Debug, thiserror::Error)]
-enum Error {
-    #[error("unexpected end of input")]
-    EndOfInput,
-
-    #[error("unable to parse fuel rating; got {0}; err {1}")]
-    Parse(String, #[source] ParseIntError),
-}
 
 struct Ocean(Vec<u8>);
 
@@ -24,11 +17,11 @@ impl FromStr for Ocean {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         s.lines()
             .next()
-            .ok_or(Error::EndOfInput)?
+            .context("readling input line")?
             .split(',')
             .map(str::parse)
             .try_collect()
-            .map_err(|e| Error::Parse(s.to_owned(), e))
+            .context("parsing input values")
     }
 }
 

@@ -62,8 +62,7 @@ use itertools::Itertools;
 
 use crate::IntoAnswer;
 
-#[derive(Default, Debug, macros::Answer)]
-#[answer(example = 288957, live = 4001832844)]
+#[derive(Default, Debug)]
 struct Answer(Vec<super::Line>);
 
 crate::derive_FromIterator!(Answer, super::Line);
@@ -77,4 +76,12 @@ impl IntoAnswer for Answer {
         scores.sort_unstable();
         scores[(scores.len() / 2)]
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 288957,
+        live => 4001832844,
+    });
 }

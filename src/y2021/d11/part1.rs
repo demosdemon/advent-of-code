@@ -318,8 +318,7 @@
 
 use crate::IntoAnswer;
 
-#[derive(Debug, derive_more::FromStr, macros::Answer)]
-#[answer(example = 1656, live = 1729)]
+#[derive(Debug, derive_more::FromStr)]
 struct Answer(super::Ocean);
 
 impl IntoAnswer for Answer {
@@ -329,4 +328,12 @@ impl IntoAnswer for Answer {
         let mut ocean = self.0;
         (0..100).map(move |_| ocean.tick()).sum::<usize>() as isize
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 1656,
+        live => 1729,
+    });
 }

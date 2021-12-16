@@ -150,25 +150,7 @@
 
 use crate::IntoAnswer;
 
-#[derive(Debug, derive_more::FromStr, macros::Answer)]
-#[answer(
-    example_a = 6,
-    example_b = 9,
-    example_c = 14,
-    example_d = 16,
-    example_e = 12,
-    example_f = 23,
-    example_g = 31,
-    example_h = 14,
-    example_i = 8,
-    example_j = 15,
-    example_k = 11,
-    example_l = 13,
-    example_m = 19,
-    example_n = 16,
-    example_o = 20,
-    live = 886
-)]
+#[derive(Debug, derive_more::FromStr)]
 struct Answer(super::Packet);
 
 impl IntoAnswer for Answer {
@@ -177,4 +159,26 @@ impl IntoAnswer for Answer {
     fn into_answer(self) -> Self::Output {
         self.0.version_sum() as isize
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example_a => 6,
+        example_b => 9,
+        example_c => 14,
+        example_d => 16,
+        example_e => 12,
+        example_f => 23,
+        example_g => 31,
+        example_h => 14,
+        example_i => 8,
+        example_j => 15,
+        example_k => 11,
+        example_l => 13,
+        example_m => 19,
+        example_n => 16,
+        example_o => 20,
+        live => 886,
+    });
 }

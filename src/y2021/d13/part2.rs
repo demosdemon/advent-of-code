@@ -7,24 +7,7 @@
 */
 use crate::IntoAnswer;
 
-#[derive(Debug, derive_more::FromStr, macros::Answer)]
-#[answer(
-    example = "
-#####
-#...#
-#...#
-#...#
-#####
-",
-    live = "
-####...##..##..#..#...##..##...##..#..#
-#.......#.#..#.#..#....#.#..#.#..#.#..#
-###.....#.#..#.####....#.#....#..#.####
-#.......#.####.#..#....#.#.##.####.#..#
-#....#..#.#..#.#..#.#..#.#..#.#..#.#..#
-#.....##..#..#.#..#..##...###.#..#.#..#
-"
-)]
+#[derive(Debug, derive_more::FromStr)]
 struct Answer(super::Instructions);
 
 impl IntoAnswer for Answer {
@@ -33,8 +16,16 @@ impl IntoAnswer for Answer {
     fn into_answer(self) -> String {
         let matrix: super::Matrix = self.0.coordinates.iter().collect();
         let matrix = self.0.folds.iter().fold(matrix, |prev, fold| prev + fold);
-        let s = format!("\n{}", matrix);
+        let s = format!("{}", matrix);
         println!("{}", s);
         s
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => include_str!("outputs/example"),
+        live => include_str!("outputs/live"),
+    });
 }

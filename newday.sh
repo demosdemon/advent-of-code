@@ -19,15 +19,10 @@ cat >./src/y2021/$1/part1.rs <<"EOF"
 
 */
 
-use std::str::FromStr;
-
-use crate::IntoAnswer;
-
-#[derive(Debug, macros::Answer)]
-#[answer(example = 0 /*, live = 0 */)]
+#[derive(Debug)]
 struct Answer;
 
-impl FromStr for Answer {
+impl std::str::FromStr for Answer {
     type Err = std::convert::Infallible;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -35,12 +30,20 @@ impl FromStr for Answer {
     }
 }
 
-impl IntoAnswer for Answer {
+impl crate::IntoAnswer for Answer {
     type Output = isize;
 
     fn into_answer(self) -> Self::Output {
         todo!()
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 0,
+        // live => 1714950,
+    });
 }
 EOF
 

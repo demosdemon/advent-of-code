@@ -37,15 +37,13 @@
     multiply your final horizontal position by your final depth?
 */
 
-use std::iter::Sum;
 use std::ops::AddAssign;
 
 use crate::IntoAnswer;
 
 use super::Direction;
 
-#[derive(Default, Debug, macros::Answer)]
-#[answer(example = 900, live = 1281977850)]
+#[derive(Default, Debug)]
 struct Answer {
     aim: isize,
     horizontal: isize,
@@ -75,4 +73,12 @@ impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
         self.horizontal * self.depth
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 900,
+        live => 1281977850,
+    });
 }

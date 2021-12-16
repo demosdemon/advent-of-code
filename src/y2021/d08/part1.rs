@@ -94,8 +94,6 @@ use crate::IntoAnswer;
 
 use super::Line;
 
-#[derive(macros::Answer)]
-#[answer(example = 26, live = 421)]
 struct Answer(Vec<Line>);
 
 crate::derive_FromIterator!(Answer, Line);
@@ -115,4 +113,12 @@ impl IntoAnswer for Answer {
             })
             .sum::<usize>() as isize
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 26,
+        live => 421,
+    });
 }

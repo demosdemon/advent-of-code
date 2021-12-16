@@ -3,7 +3,7 @@ use std::fmt::{Debug, Display};
 use std::num::ParseIntError;
 use std::str::FromStr;
 
-use super::Error;
+use anyhow::{anyhow, Result};
 
 #[derive(Debug, Default)]
 pub(super) struct Tile {
@@ -63,13 +63,17 @@ pub(super) struct Board {
 }
 
 impl Board {
-    pub fn new(tiles: Vec<Tile>) -> Result<Self, Error> {
+    pub fn new(tiles: Vec<Tile>) -> Result<Self> {
         let len = tiles.len();
         let sqrt = (len as f32).sqrt();
 
         #[allow(clippy::float_cmp)]
         if sqrt.trunc() != sqrt {
-            return Err(Error::InvalidTileLength(len, sqrt));
+            return Err(anyhow!(
+                "expected input to be a perfect squre; len = {}; sqrt = {}",
+                len,
+                sqrt
+            ));
         }
 
         let mut value_map = HashMap::with_capacity(len);
@@ -87,7 +91,8 @@ impl Board {
                 value_map,
             })
         } else {
-            Err(Error::DuplicateTiles(
+            Err(anyhow!(
+                "found {} duplicate tiles: {}",
                 dupes.len(),
                 dupes
                     .into_iter()
@@ -99,12 +104,12 @@ impl Board {
     }
 
     #[cfg(test)]
-    fn from_tile_iter(tiles: impl Iterator<Item = Tile>) -> Result<Self, Error> {
+    fn from_tile_iter(tiles: impl Iterator<Item = Tile>) -> Result<Self> {
         Self::new(tiles.into_iter().collect())
     }
 
     #[cfg(test)]
-    fn from_into_tile_iter<T: Into<Tile>>(tiles: impl Iterator<Item = T>) -> Result<Self, Error> {
+    fn from_into_tile_iter<T: Into<Tile>>(tiles: impl Iterator<Item = T>) -> Result<Self> {
         Self::from_tile_iter(tiles.map(Into::into))
     }
 

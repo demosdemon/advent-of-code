@@ -48,8 +48,7 @@
 
 use crate::IntoAnswer;
 
-#[derive(Debug, derive_more::FromStr, macros::Answer)]
-#[answer(example = 195, live = 237)]
+#[derive(Debug, derive_more::FromStr)]
 struct Answer(super::Ocean);
 
 impl IntoAnswer for Answer {
@@ -61,4 +60,12 @@ impl IntoAnswer for Answer {
             .find_map(|tick| (ocean.tick() == 100).then(|| tick))
             .unwrap()
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 195,
+        live => 237,
+    });
 }

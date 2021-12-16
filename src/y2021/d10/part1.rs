@@ -79,8 +79,7 @@
 
 use crate::IntoAnswer;
 
-#[derive(Default, Debug, macros::Answer)]
-#[answer(example = 26397, live = 392139)]
+#[derive(Default, Debug)]
 struct Answer(Vec<super::Line>);
 
 crate::derive_FromIterator!(Answer, super::Line);
@@ -104,4 +103,12 @@ impl IntoAnswer for Answer {
         }
         (res[0] * 3) + (res[1] * 57) + (res[2] * 1197) + (res[3] * 25137)
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 26397,
+        live => 392139,
+    });
 }

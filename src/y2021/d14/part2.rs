@@ -15,8 +15,7 @@
 
 use crate::IntoAnswer;
 
-#[derive(Debug, derive_more::FromStr, macros::Answer)]
-#[answer(example = 2188189693529, live = 1976896901756)]
+#[derive(Debug, derive_more::FromStr)]
 struct Answer(super::Instructions);
 
 impl IntoAnswer for Answer {
@@ -25,4 +24,12 @@ impl IntoAnswer for Answer {
     fn into_answer(self) -> Self::Output {
         (0..40).fold(self.0, |i, _| i.step()).score()
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 2188189693529,
+        live => 1976896901756,
+    });
 }

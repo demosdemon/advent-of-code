@@ -22,6 +22,34 @@ fn chardigit(c: char) -> u8 {
     (c as u8) - ZERO
 }
 
+fn expect_empty_line<S: AsRef<str>>(s: S) -> anyhow::Result<()> {
+    let s = s.as_ref();
+    if s.is_empty() {
+        Ok(())
+    } else {
+        Err(anyhow::anyhow!("expected an empty line; got {}", s))
+    }
+}
+
+#[macro_export(crate)]
+macro_rules! tests_for_problem {
+    ($t:ty, {
+        $(
+            $test_case:ident => $expected:expr,
+        )*
+    }) => {
+        paste::paste! {
+            $(
+                #[test]
+                fn [<test_ $test_case>]() {
+                    let input = include_str!(concat!("inputs/", stringify!($test_case)));
+                    assert_eq!(crate::solve::<$t>(input).unwrap(), $expected);
+                }
+            )*
+        }
+    };
+}
+
 #[macro_export(crate)]
 macro_rules! derive_FromStr_for_FromIterator {
     ($t:ty, $v:ty) => {
@@ -40,9 +68,9 @@ macro_rules! derive_FromStr_for_FromIterator {
 #[macro_export(crate)]
 macro_rules! derive_FromIterator {
     ($t:ty, $v:ty) => {
-        impl FromIterator<$v> for $t {
+        impl ::std::iter::FromIterator<$v> for $t {
             #[inline]
-            fn from_iter<T: IntoIterator<Item = $v>>(iter: T) -> Self {
+            fn from_iter<T: ::std::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
                 Self(iter.into_iter().collect())
             }
         }
@@ -52,9 +80,9 @@ macro_rules! derive_FromIterator {
 #[macro_export(crate)]
 macro_rules! derive_Extend {
     ($t:ty, $v:ty) => {
-        impl Extend<$v> for $t {
+        impl ::std::iter::Extend<$v> for $t {
             #[inline]
-            fn extend<T: IntoIterator<Item = $v>>(&mut self, iter: T) {
+            fn extend<T: ::std::iter::IntoIterator<Item = $v>>(&mut self, iter: T) {
                 self.0.extend(iter)
             }
         }
@@ -64,8 +92,8 @@ macro_rules! derive_Extend {
 #[macro_export(crate)]
 macro_rules! derive_FromIterator_for_Extend {
     ($t:ty, $v:ty) => {
-        impl FromIterator<$v> for $t {
-            fn from_iter<T: IntoIterator<Item = $v>>(iter: T) -> Self {
+        impl ::std::iter::FromIterator<$v> for $t {
+            fn from_iter<T: ::std::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
                 let mut v = Self::default();
                 v.extend(iter);
                 v
@@ -77,9 +105,9 @@ macro_rules! derive_FromIterator_for_Extend {
 #[macro_export(crate)]
 macro_rules! derive_Sum_for_AddAssign {
     ($t:ty, $v:ty) => {
-        impl Sum<$v> for $t {
+        impl ::std::iter::Sum<$v> for $t {
             #[inline]
-            fn sum<I: Iterator<Item = $v>>(iter: I) -> Self {
+            fn sum<I: ::std::iter::IntoIterator<Item = $v>>(iter: I) -> Self {
                 let mut new = Self::default();
                 for dir in iter {
                     new += dir
@@ -93,9 +121,9 @@ macro_rules! derive_Sum_for_AddAssign {
 #[macro_export(crate)]
 macro_rules! derive_FromIterator_for_Sum {
     ($t:ty, $v:ty) => {
-        impl FromIterator<$v> for $t {
+        impl ::std::iter::FromIterator<$v> for $t {
             #[inline]
-            fn from_iter<T: IntoIterator<Item = $v>>(iter: T) -> Self {
+            fn from_iter<T: ::std::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
                 iter.into_iter().sum()
             }
         }
@@ -105,14 +133,13 @@ macro_rules! derive_FromIterator_for_Sum {
 #[macro_export(crate)]
 macro_rules! derive_FromStr_for_nom {
     ($t:ty, $f:path) => {
-        impl FromStr for $t {
-            type Err = nom::error::Error<String>;
+        impl ::std::str::FromStr for $t {
+            type Err = ::nom::error::Error<String>;
             #[inline]
-            fn from_str(s: &str) -> Result<Self, Self::Err> {
-                use nom::Finish;
-                match ($f)(s).finish() {
+            fn from_str(s: &str) -> ::std::result::Result<Self, Self::Err> {
+                match ::nom::Finish::finish(($f)(s)) {
                     Ok((_, v)) => Ok(v),
-                    Err(nom::error::Error { input, code }) => Err(nom::error::Error {
+                    Err(::nom::error::Error { input, code }) => Err(::nom::error::Error {
                         input: input.to_owned(),
                         code,
                     }),

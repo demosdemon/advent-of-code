@@ -4,7 +4,6 @@ mod part2;
 mod parser;
 
 use std::ops::Add;
-use std::str::FromStr;
 
 #[derive(Debug, derive_more::IntoIterator)]
 #[into_iterator(owned, ref)]

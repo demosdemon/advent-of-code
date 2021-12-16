@@ -160,3 +160,21 @@ impl Display for Cave {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_example_multiply() {
+        let example = include_str!("inputs/example")
+            .parse::<super::Cave>()
+            .unwrap()
+            * 5;
+        let example_5x = include_str!("inputs/example_5x")
+            .parse::<super::Cave>()
+            .unwrap();
+        println!("{}", example);
+        println!("{}", example_5x);
+
+        assert_eq!(example.nodes, example_5x.nodes,);
+    }
+}

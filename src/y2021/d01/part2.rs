@@ -47,8 +47,7 @@
 
 use crate::IntoAnswer;
 
-#[derive(derive_more::Deref, derive_more::FromStr, macros::Answer)]
-#[answer(example = 5, live = 1748)]
+#[derive(derive_more::Deref, derive_more::FromStr)]
 struct Answer(super::Ocean);
 
 impl IntoAnswer for Answer {
@@ -57,4 +56,12 @@ impl IntoAnswer for Answer {
     fn into_answer(self) -> isize {
         self.windows(4).filter(|s| s[0] < s[3]).count() as isize
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 5,
+        live => 1748,
+    });
 }

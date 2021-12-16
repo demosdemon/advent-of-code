@@ -136,8 +136,7 @@
 
 use crate::IntoAnswer;
 
-#[derive(Debug, derive_more::FromStr, macros::Answer)]
-#[answer(example = 315, live = 2874)]
+#[derive(Debug, derive_more::FromStr)]
 struct Answer(super::Cave);
 
 impl IntoAnswer for Answer {
@@ -150,15 +149,8 @@ impl IntoAnswer for Answer {
 
 #[cfg(test)]
 mod test {
-    use super::super::Cave;
-
-    #[test]
-    fn test_example_multiply() {
-        let example = include_str!("inputs/example").parse::<Cave>().unwrap() * 5;
-        let example_5x = include_str!("inputs/example_5x").parse::<Cave>().unwrap();
-        println!("{}", example);
-        println!("{}", example_5x);
-
-        assert_eq!(example.nodes, example_5x.nodes,);
-    }
+    crate::tests_for_problem!(super::Answer, {
+        example => 315,
+        live => 2874,
+    });
 }

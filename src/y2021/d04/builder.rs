@@ -2,8 +2,9 @@ use std::str::FromStr;
 
 use itertools::Itertools;
 
+use anyhow::{Context, Error, Result};
+
 use super::matrix::{Board, Tile};
-use super::Error;
 
 #[derive(Debug)]
 pub(super) struct SolutionBuilder {
@@ -19,7 +20,7 @@ where
     I: Iterator<Item = V>,
     V: AsRef<str>,
 {
-    type Item = Result<Board, Error>;
+    type Item = Result<Board>;
 
     fn next(&mut self) -> Option<Self::Item> {
         let mut tiles: Vec<Tile> = Vec::new();
@@ -29,11 +30,9 @@ where
                 Some(l) if l.as_ref().is_empty() => break,
                 Some(l) => {
                     for atom in l.as_ref().split_ascii_whitespace() {
-                        match atom.parse() {
+                        match atom.parse().context("parsing a tile") {
                             Ok(tile) => tiles.push(tile),
-                            Err(err) => {
-                                return Some(Err(Error::BoardInt(l.as_ref().to_owned(), err)))
-                            }
+                            Err(err) => return Some(Err(err)),
                         }
                     }
                 }
@@ -49,16 +48,16 @@ impl FromStr for SolutionBuilder {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut lines = s.lines();
-        let pulls = lines.next().ok_or(Error::EndOfInput)?;
+        let pulls = lines.next().context("reading pulls line")?;
         let pulls = pulls
             .split(',')
             .map(str::parse)
             .try_collect()
-            .map_err(|e| Error::ParsePulls(pulls.to_owned(), e))?;
+            .context("parsing pulls")?;
         lines
             .next()
-            .ok_or(Error::EndOfInput)
-            .and_then(Error::from_empty_line)?;
+            .context("reading empty line separator")
+            .and_then(crate::expect_empty_line)?;
         Ok(Self {
             pulls,
             boards: BoardReader(lines).try_collect()?,

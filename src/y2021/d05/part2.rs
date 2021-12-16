@@ -107,8 +107,7 @@ impl Extend<super::Line> for Board {
     }
 }
 
-#[derive(Debug, derive_more::FromStr, macros::Answer)]
-#[answer(example = 12, live = 19472)]
+#[derive(Debug, derive_more::FromStr)]
 struct Answer(SolutionBuilder);
 
 impl Answer {
@@ -131,6 +130,11 @@ impl IntoAnswer for Answer {
 #[cfg(test)]
 mod test {
     use super::Answer;
+
+    crate::tests_for_problem!(Answer, {
+        example => 12,
+        live => 19472,
+    });
 
     #[test]
     fn test_display() {

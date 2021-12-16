@@ -4,22 +4,8 @@ mod part2;
 use std::collections::BTreeMap;
 use std::str::FromStr;
 
+use anyhow::{anyhow, Context, Error};
 use itertools::Itertools;
-
-#[derive(Debug, thiserror::Error)]
-enum Error {
-    #[error("Invalid insertion rule; missing the arrow separator; got {0}")]
-    MissingArrow(String),
-
-    #[error("Invalid insertion rule; expected two bytes; got {0}")]
-    ExpectedTwoBytes(String),
-
-    #[error("Invalid insertion rule; expected one byte; got {0}")]
-    ExpectedOneByte(String),
-
-    #[error("Reached an unexpected end of input")]
-    UnexpectedEndOfInput,
-}
 
 #[derive(Debug)]
 struct InsertionRule {
@@ -39,14 +25,21 @@ impl FromStr for InsertionRule {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (lhs, rhs) = s
             .split_once(" -> ")
-            .ok_or_else(|| Error::MissingArrow(s.to_owned()))?;
+            .with_context(|| format!("splitting {} on ` -> `", s))?;
+
         let lhs = lhs.as_bytes();
         if lhs.len() != 2 {
-            return Err(Error::ExpectedTwoBytes(s.to_owned()));
+            return Err(anyhow!(
+                "expected instructions to start with two bytes; got {}",
+                s
+            ));
         }
         let rhs = rhs.as_bytes();
         if rhs.len() != 1 {
-            return Err(Error::ExpectedOneByte(s.to_owned()));
+            return Err(anyhow!(
+                "expected instructions to end with one byte; got {}",
+                s
+            ));
         }
         Ok(Self {
             matching_pair: (lhs[0], lhs[1]),
@@ -97,7 +90,7 @@ impl FromStr for Instructions {
         let mut lines = s.lines();
         let tuples = lines
             .next()
-            .ok_or(Error::UnexpectedEndOfInput)?
+            .context("reading polymer template from input")?
             .as_bytes()
             .windows(2)
             .map(|slice| (slice[0], slice[1]))
@@ -105,7 +98,10 @@ impl FromStr for Instructions {
                 *map.entry(pair).or_default() += 1;
                 map
             });
-        assert_eq!(lines.next().ok_or(Error::UnexpectedEndOfInput)?, "");
+        lines
+            .next()
+            .context("reading empty line separator")
+            .and_then(crate::expect_empty_line)?;
         Ok(Self {
             tuples,
             rules: lines

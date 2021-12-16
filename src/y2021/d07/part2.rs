@@ -34,8 +34,7 @@ use crate::IntoAnswer;
 
 use super::Ocean;
 
-#[derive(derive_more::FromStr, macros::Answer)]
-#[answer(example = 168, live = 96361606)]
+#[derive(derive_more::FromStr)]
 struct Answer(Ocean);
 
 impl IntoAnswer for Answer {
@@ -47,4 +46,12 @@ impl IntoAnswer for Answer {
             (d * (d + 1)) / 2
         })
     }
+}
+
+#[cfg(test)]
+mod tests {
+    crate::tests_for_problem!(super::Answer, {
+        example => 168,
+        live => 96361606,
+    });
 }
