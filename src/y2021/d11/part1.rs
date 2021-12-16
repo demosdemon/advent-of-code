@@ -316,19 +316,11 @@
     steps. How many total flashes are there after 100 steps?
 */
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
-#[derive(Debug, macros::Answer)]
+#[derive(Debug, derive_more::FromStr, macros::Answer)]
 #[answer(example = 1656, live = 1729)]
 struct Answer(super::Ocean);
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(super::Ocean::parse_problem(problem)?))
-    }
-}
 
 impl IntoAnswer for Answer {
     type Output = isize;

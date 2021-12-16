@@ -40,7 +40,7 @@
 use std::iter::Sum;
 use std::ops::AddAssign;
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
 use super::Direction;
 
@@ -51,6 +51,10 @@ struct Answer {
     horizontal: isize,
     depth: isize,
 }
+
+crate::derive_FromStr_for_FromIterator!(Answer, Direction);
+crate::derive_Sum_for_AddAssign!(Answer, Direction);
+crate::derive_FromIterator_for_Sum!(Answer, Direction);
 
 impl AddAssign<Direction> for Answer {
     fn add_assign(&mut self, rhs: Direction) {
@@ -65,34 +69,10 @@ impl AddAssign<Direction> for Answer {
     }
 }
 
-impl Sum<Direction> for Answer {
-    fn sum<I: Iterator<Item = Direction>>(iter: I) -> Self {
-        let mut new = Self::default();
-        for dir in iter {
-            new += dir
-        }
-        new
-    }
-}
-
 impl IntoAnswer for Answer {
     type Output = isize;
 
     fn into_answer(self) -> isize {
         self.horizontal * self.depth
-    }
-}
-
-impl FromIterator<Direction> for Answer {
-    fn from_iter<T: IntoIterator<Item = Direction>>(iter: T) -> Self {
-        iter.into_iter().sum()
-    }
-}
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        problem.parse_lines(str::parse).collect()
     }
 }

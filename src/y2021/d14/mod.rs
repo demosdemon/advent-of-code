@@ -1,10 +1,10 @@
+mod part1;
+mod part2;
+
 use std::collections::BTreeMap;
 use std::str::FromStr;
 
 use itertools::Itertools;
-
-mod part1;
-mod part2;
 
 #[derive(Debug, thiserror::Error)]
 enum Error {

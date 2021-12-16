@@ -59,7 +59,7 @@
 use std::fmt::Display;
 use std::ops::{Index, IndexMut};
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
 use super::SolutionBuilder;
 
@@ -137,7 +137,7 @@ impl Extend<super::Line> for Board {
     }
 }
 
-#[derive(Debug, macros::Answer)]
+#[derive(Debug, derive_more::FromStr, macros::Answer)]
 #[answer(example = 5, live = 4873)]
 struct Answer(SolutionBuilder);
 
@@ -146,14 +146,6 @@ impl Answer {
         let mut board = Board::new(self.0.max_x() as usize + 1, self.0.max_y() as usize + 1);
         board.extend(self.0 .0);
         board
-    }
-}
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(SolutionBuilder::parse_problem(problem)?))
     }
 }
 
@@ -169,13 +161,11 @@ impl IntoAnswer for Answer {
 #[cfg(test)]
 mod test {
     use super::Answer;
-    use crate::{ParseProblem, Problem};
 
     #[test]
     fn test_display() {
         let example = include_str!("inputs/example");
-        let mut problem = Problem::new(example);
-        let answer = Answer::parse_problem(&mut problem).unwrap();
+        let answer: Answer = example.parse().unwrap();
         let board = answer.into_board();
         assert_eq!(board.width, 10);
         assert_eq!(board.depth, 10);

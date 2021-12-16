@@ -1,8 +1,8 @@
+mod part1;
+mod part2;
+
 use std::convert::Infallible;
 use std::str::FromStr;
-
-pub mod part1;
-pub mod part2;
 
 #[derive(Debug)]
 enum Line {

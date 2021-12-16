@@ -18,22 +18,14 @@
 
 use itertools::Itertools;
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
 use super::builder::SolutionBuilder;
 use super::matrix::Board;
 
-#[derive(Debug, macros::Answer)]
+#[derive(Debug, derive_more::FromStr, macros::Answer)]
 #[answer(example = 1924, live = 6594)]
 struct Answer(SolutionBuilder);
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(SolutionBuilder::parse_problem(problem)?))
-    }
-}
 
 impl IntoAnswer for Answer {
     type Output = isize;

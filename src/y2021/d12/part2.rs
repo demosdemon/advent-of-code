@@ -52,21 +52,13 @@
     Given these new rules, how many paths through this cave system are there?
 */
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
 use super::ocean::Ocean;
 
-#[derive(Default, Debug, macros::Answer)]
+#[derive(Default, Debug, derive_more::FromStr, macros::Answer)]
 #[answer(example_a = 36, example_b = 103, example_c = 3509, live = 128506)]
 struct Answer(Ocean);
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(Ocean::parse_problem(problem)?))
-    }
-}
 
 impl IntoAnswer for Answer {
     type Output = isize;

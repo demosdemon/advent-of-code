@@ -1,11 +1,9 @@
-pub mod part1;
-pub mod part2;
+mod part1;
+mod part2;
 
-use std::collections::LinkedList;
+use std::{collections::LinkedList, convert::Infallible, str::FromStr};
 
 use itertools::Itertools;
-
-use crate::{Error, ParseProblem, Problem};
 
 const AROUND_THE_BLOCK: [(isize, isize); 8] = [
     (-1, -1),
@@ -118,13 +116,11 @@ impl FromIterator<u8> for Ocean {
     }
 }
 
-impl ParseProblem for Ocean {
-    type Error = Error;
+impl FromStr for Ocean {
+    type Err = Infallible;
 
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(problem
-            .slice()
-            .lines()
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(s.lines()
             .flat_map(|s| s.chars().map(crate::chardigit))
             .collect())
     }

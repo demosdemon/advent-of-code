@@ -4,8 +4,6 @@ use std::convert::Infallible;
 use std::fmt::Display;
 use std::str::FromStr;
 
-use crate::ParseProblem;
-
 #[derive(Debug)]
 enum EdgeType {
     Big,
@@ -203,24 +201,6 @@ impl<'a, 'b> Iterator for PathIter<'a, 'b> {
 }
 
 impl Ocean {
-    // pub fn paths(&self, bonus: bool) -> usize {
-    //     let mut stack: LinkedList<(State, usize)> = LinkedList::new();
-    //     stack.push_back(State::new(self, bonus));
-    //     let mut count = 0;
-    //     while let Some((state, cur)) = stack.pop_front() {
-    //         if cur == self.tail {
-    //             count += 1;
-    //             continue;
-    //         }
-    //         for edge in self.edges.get(cur).unwrap() {
-    //             if let Some(state) = state.visit(edge) {
-    //                 stack.push_back(state);
-    //             }
-    //         }
-    //     }
-    //     count
-    // }
-
     pub fn paths(&self, bonus: bool) -> impl Iterator<Item = Path<'_>> {
         PathIter::new(self, bonus)
     }
@@ -234,24 +214,19 @@ pub(super) struct Ocean {
     tail: usize,
 }
 
-impl ParseProblem for Ocean {
-    type Error = crate::Error;
+impl FromStr for Ocean {
+    type Err = super::Error;
 
-    fn parse_problem(problem: &mut crate::Problem<'_>) -> Result<Self, Self::Error> {
-        let edges = problem
-            .parse_lines(|l| {
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let edges = s
+            .lines()
+            .map(|l| {
                 l.split_once('-')
                     .ok_or_else(|| super::Error::Hyphen(l.to_owned()))
             })
             .collect::<Result<Edges, _>>()?;
-        let head = edges
-            .names
-            .find("start")
-            .ok_or_else(|| crate::Error::from_parse(super::Error::Start))?;
-        let tail = edges
-            .names
-            .find("end")
-            .ok_or_else(|| crate::Error::from_parse(super::Error::End))?;
+        let head = edges.names.find("start").ok_or(super::Error::Start)?;
+        let tail = edges.names.find("end").ok_or(super::Error::End)?;
         Ok(Self {
             names: edges.names.0.into_iter().map(|n| n.to_owned()).collect(),
             edges: edges.edges,

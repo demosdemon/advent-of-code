@@ -30,21 +30,13 @@
     align to that position?
 */
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
 use super::Ocean;
 
-#[derive(macros::Answer)]
+#[derive(derive_more::FromStr, macros::Answer)]
 #[answer(example = 168, live = 96361606)]
 struct Answer(Ocean);
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(Ocean(problem.expect_map_line(",", str::parse)?)))
-    }
-}
 
 impl IntoAnswer for Answer {
     type Output = isize;

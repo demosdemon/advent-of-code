@@ -46,19 +46,11 @@
     step during which all octopuses flash?
 */
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
-#[derive(Debug, macros::Answer)]
+#[derive(Debug, derive_more::FromStr, macros::Answer)]
 #[answer(example = 195, live = 237)]
 struct Answer(super::Ocean);
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(super::Ocean::parse_problem(problem)?))
-    }
-}
 
 impl IntoAnswer for Answer {
     type Output = isize;

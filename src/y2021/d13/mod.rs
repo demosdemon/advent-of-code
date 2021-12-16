@@ -1,12 +1,12 @@
+mod part1;
+mod part2;
+
 use std::collections::BTreeSet;
 use std::fmt::{Display, Write};
 use std::ops::Add;
 use std::str::FromStr;
 
 use itertools::Itertools;
-
-mod part1;
-mod part2;
 
 #[derive(Debug, thiserror::Error)]
 enum Error {
@@ -156,6 +156,8 @@ impl FromStr for Instructions {
 
 struct Matrix(BTreeSet<Coordinate>);
 
+crate::derive_FromIterator!(Matrix, Coordinate);
+
 impl Matrix {
     pub fn len(&self) -> usize {
         self.0.len()
@@ -189,12 +191,6 @@ impl<'a> Add<&'a Fold> for Matrix {
 
     fn add(self, rhs: &'a Fold) -> Self::Output {
         self.0.iter().map(|c| c.fold(rhs)).collect()
-    }
-}
-
-impl FromIterator<Coordinate> for Matrix {
-    fn from_iter<T: IntoIterator<Item = Coordinate>>(iter: T) -> Self {
-        Self(iter.into_iter().collect())
     }
 }
 

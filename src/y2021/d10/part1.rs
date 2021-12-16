@@ -77,25 +77,14 @@
     What is the total syntax error score for those errors?
 */
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
 #[derive(Default, Debug, macros::Answer)]
 #[answer(example = 26397, live = 392139)]
 struct Answer(Vec<super::Line>);
 
-impl FromIterator<super::Line> for Answer {
-    fn from_iter<T: IntoIterator<Item = super::Line>>(iter: T) -> Self {
-        Self(iter.into_iter().collect())
-    }
-}
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        problem.parse_lines(str::parse).collect()
-    }
-}
+crate::derive_FromIterator!(Answer, super::Line);
+crate::derive_FromStr_for_FromIterator!(Answer, super::Line);
 
 impl IntoAnswer for Answer {
     type Output = isize;

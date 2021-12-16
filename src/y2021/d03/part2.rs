@@ -67,7 +67,7 @@
     binary.)
 */
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
 use super::line::Line;
 
@@ -75,19 +75,8 @@ use super::line::Line;
 #[answer(example = 230, live = 4245351)]
 struct Answer(Vec<Line>);
 
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        problem.parse_lines(str::parse).collect()
-    }
-}
-
-impl FromIterator<Line> for Answer {
-    fn from_iter<T: IntoIterator<Item = Line>>(iter: T) -> Self {
-        Self(iter.into_iter().collect())
-    }
-}
+crate::derive_FromStr_for_FromIterator!(Answer, Line);
+crate::derive_FromIterator!(Answer, Line);
 
 #[derive(derive_more::Deref, derive_more::IntoIterator)]
 struct Lines<'a>(Vec<&'a Line>);

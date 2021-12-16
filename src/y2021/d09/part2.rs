@@ -51,27 +51,13 @@
 
 use itertools::Itertools;
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
 use super::Ocean;
 
-#[derive(macros::Answer)]
+#[derive(derive_more::FromStr, macros::Answer)]
 #[answer(example = 1134, live = 920448)]
 struct Answer(Ocean);
-
-impl<S: AsRef<str>> FromIterator<S> for Answer {
-    fn from_iter<T: IntoIterator<Item = S>>(iter: T) -> Self {
-        Self(iter.into_iter().collect())
-    }
-}
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(problem.slice().lines().collect())
-    }
-}
 
 impl IntoAnswer for Answer {
     type Output = isize;

@@ -59,7 +59,7 @@
 
 use itertools::Itertools;
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
 use super::Line;
 
@@ -67,19 +67,8 @@ use super::Line;
 #[answer(example = 61229, live = 986163)]
 struct Answer(Vec<Line>);
 
-impl FromIterator<super::Line> for Answer {
-    fn from_iter<T: IntoIterator<Item = super::Line>>(iter: T) -> Self {
-        Self(iter.into_iter().collect())
-    }
-}
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        problem.parse_lines(str::parse).collect()
-    }
-}
+crate::derive_FromIterator!(Answer, Line);
+crate::derive_FromStr_for_FromIterator!(Answer, Line);
 
 impl IntoAnswer for Answer {
     type Output = isize;

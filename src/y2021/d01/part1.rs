@@ -62,19 +62,11 @@
     How many measurements are larger than the previous measurement?
 */
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
-#[derive(derive_more::Deref, macros::Answer)]
+#[derive(derive_more::Deref, derive_more::FromStr, macros::Answer)]
 #[answer(example = 7, live = 1722)]
 struct Answer(super::Ocean);
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(super::Ocean::parse_problem(problem)?))
-    }
-}
 
 impl IntoAnswer for Answer {
     type Output = isize;

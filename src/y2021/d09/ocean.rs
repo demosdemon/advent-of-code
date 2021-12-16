@@ -1,4 +1,6 @@
 use std::collections::{BTreeSet, LinkedList};
+use std::convert::Infallible;
+use std::str::FromStr;
 
 const AROUND_THE_BLOCK: [(isize, isize); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 
@@ -87,5 +89,13 @@ impl<S: AsRef<str>> FromIterator<S> for Ocean {
         let mut ocean = Ocean::default();
         ocean.extend(iter);
         ocean
+    }
+}
+
+impl FromStr for Ocean {
+    type Err = Infallible;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(s.lines().collect())
     }
 }

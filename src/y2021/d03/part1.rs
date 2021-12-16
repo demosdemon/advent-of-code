@@ -51,7 +51,7 @@
 
 use itertools::Itertools;
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
 use super::bit::Bit;
 use super::line::Line;
@@ -62,6 +62,9 @@ struct Answer {
     pub zeros: Vec<usize>,
     pub ones: Vec<usize>,
 }
+
+crate::derive_FromIterator_for_Extend!(Answer, Line);
+crate::derive_FromStr_for_FromIterator!(Answer, Line);
 
 impl Answer {
     fn assert_len(&mut self, len: usize) {
@@ -74,14 +77,6 @@ impl Answer {
             self.ones.resize(len, 0);
         }
         assert_eq!(self.ones.len(), len);
-    }
-}
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        problem.parse_lines(str::parse).collect()
     }
 }
 
@@ -111,13 +106,5 @@ impl Extend<Line> for Answer {
                 }
             }
         }
-    }
-}
-
-impl FromIterator<Line> for Answer {
-    fn from_iter<T: IntoIterator<Item = Line>>(iter: T) -> Self {
-        let mut v = Self::default();
-        v.extend(iter);
-        v
     }
 }

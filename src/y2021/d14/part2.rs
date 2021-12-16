@@ -13,19 +13,11 @@
     common element and subtract the quantity of the least common element?
 */
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
-#[derive(Debug, macros::Answer)]
+#[derive(Debug, derive_more::FromStr, macros::Answer)]
 #[answer(example = 2188189693529, live = 1976896901756)]
 struct Answer(super::Instructions);
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(problem.slice().parse().map_err(Error::from_parse)?))
-    }
-}
 
 impl IntoAnswer for Answer {
     type Output = isize;

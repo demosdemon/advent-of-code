@@ -1,19 +1,17 @@
-pub mod part1;
-pub mod part2;
+mod part1;
+mod part2;
 
 mod parser;
 
 use std::ops::Add;
 use std::str::FromStr;
 
-use itertools::Itertools;
-use nom::Finish;
-
-use crate::{Error, ParseProblem, Problem};
-
 #[derive(Debug, derive_more::IntoIterator)]
 #[into_iterator(owned, ref)]
 struct SolutionBuilder(Vec<Line>);
+
+crate::derive_FromIterator!(SolutionBuilder, Line);
+crate::derive_FromStr_for_FromIterator!(SolutionBuilder, Line);
 
 impl SolutionBuilder {
     fn max_x(&self) -> i64 {
@@ -22,14 +20,6 @@ impl SolutionBuilder {
 
     fn max_y(&self) -> i64 {
         self.into_iter().map(Line::max_y).max().unwrap_or(0)
-    }
-}
-
-impl ParseProblem for SolutionBuilder {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(problem.parse_lines(str::parse).try_collect()?))
     }
 }
 
@@ -78,6 +68,8 @@ impl IntoIterator for Line {
 
 struct LineIterator(Option<Line>);
 
+crate::derive_FromStr_for_nom!(Line, parser::line);
+
 impl Iterator for LineIterator {
     type Item = Line;
 
@@ -94,20 +86,6 @@ impl Iterator for LineIterator {
     }
 }
 
-impl FromStr for Line {
-    type Err = nom::error::Error<String>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match parser::line(s).finish() {
-            Ok((_, v)) => Ok(v),
-            Err(nom::error::Error { input, code }) => Err(nom::error::Error {
-                input: input.to_owned(),
-                code,
-            }),
-        }
-    }
-}
-
 #[derive(
     Debug, PartialEq, Eq, PartialOrd, Ord, Clone, derive_more::Display, derive_more::Constructor,
 )]
@@ -116,6 +94,8 @@ struct Coordinate {
     x: i64,
     y: i64,
 }
+
+crate::derive_FromStr_for_nom!(Coordinate, parser::coordinate);
 
 impl<'a> Add<&'a Coordinate> for &'a Coordinate {
     type Output = Coordinate;
@@ -134,19 +114,5 @@ impl Coordinate {
             .atan2((rhs.x as f64) - (self.x as f64))
             .to_degrees()
             .abs() as i64
-    }
-}
-
-impl FromStr for Coordinate {
-    type Err = nom::error::Error<String>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match parser::coordinate(s).finish() {
-            Ok((_, v)) => Ok(v),
-            Err(nom::error::Error { input, code }) => Err(nom::error::Error {
-                input: input.to_owned(),
-                code,
-            }),
-        }
     }
 }

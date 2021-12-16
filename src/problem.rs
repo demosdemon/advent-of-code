@@ -1,6 +1,6 @@
 use iterator_ext::IteratorExt;
 
-use crate::errors::{Error, Result};
+use crate::Error;
 
 pub struct Problem<'a> {
     input: &'a str,
@@ -17,11 +17,7 @@ impl<'a> Problem<'a> {
         &self.input[pos..]
     }
 
-    pub fn reset(&mut self) {
-        self.pos = 0;
-    }
-
-    pub fn expect_map_line<F, V, E>(&mut self, sep: &'a str, f: F) -> Result<Vec<V>>
+    pub fn expect_map_line<F, V, E>(&mut self, sep: &'a str, f: F) -> Result<Vec<V>, Error>
     where
         F: FnMut(&str) -> std::result::Result<V, E> + 'a,
         E: std::error::Error + 'static,
@@ -29,7 +25,7 @@ impl<'a> Problem<'a> {
         self.map_line(sep, f).ok_or(Error::UnexpectedEndOfInput)?
     }
 
-    pub fn expect_parse_line<F, V, E>(&mut self, f: F) -> Result<V>
+    pub fn expect_parse_line<F, V, E>(&mut self, f: F) -> Result<V, Error>
     where
         F: FnOnce(&str) -> std::result::Result<V, E> + 'a,
         E: std::error::Error + 'static,
@@ -37,18 +33,18 @@ impl<'a> Problem<'a> {
         self.parse_line(f).ok_or(Error::UnexpectedEndOfInput)?
     }
 
-    pub fn expect_take_line(&mut self) -> Result<&'_ str> {
+    pub fn expect_take_line(&mut self) -> Result<&'_ str, Error> {
         self.take_line().ok_or(Error::UnexpectedEndOfInput)
     }
 
-    pub fn expect_empty_line(&mut self) -> Result<()> {
+    pub fn expect_empty_line(&mut self) -> Result<(), Error> {
         match self.expect_take_line() {
-            Ok(v) => Error::from_empty_line(v.to_owned()),
+            Ok(v) => Error::from_empty_line(v),
             Err(v) => Err(v),
         }
     }
 
-    pub fn map_line<F, V, E>(&mut self, sep: &'a str, f: F) -> Option<Result<Vec<V>>>
+    pub fn map_line<F, V, E>(&mut self, sep: &'a str, f: F) -> Option<Result<Vec<V>, Error>>
     where
         F: FnMut(&str) -> std::result::Result<V, E> + 'a,
         E: std::error::Error + 'static,
@@ -56,7 +52,7 @@ impl<'a> Problem<'a> {
         self.parse_line(move |v| v.split(sep).map(f).collect())
     }
 
-    pub fn parse_line<F, V, E>(&mut self, f: F) -> Option<Result<V>>
+    pub fn parse_line<F, V, E>(&mut self, f: F) -> Option<Result<V, Error>>
     where
         F: FnOnce(&str) -> std::result::Result<V, E> + 'a,
         E: std::error::Error + 'static,
@@ -64,7 +60,7 @@ impl<'a> Problem<'a> {
         self.take_line().map(|v| (f)(v).map_err(Error::from_parse))
     }
 
-    pub fn parse_lines<F, V, E>(&'a self, f: F) -> impl Iterator<Item = Result<V>> + '_
+    pub fn parse_lines<F, V, E>(&'a self, f: F) -> impl Iterator<Item = Result<V, Error>> + '_
     where
         F: FnMut(&'a str) -> std::result::Result<V, E> + 'a,
         E: std::error::Error + 'static,

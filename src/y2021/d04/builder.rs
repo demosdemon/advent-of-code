@@ -1,8 +1,9 @@
+use std::str::FromStr;
+
 use itertools::Itertools;
 
-use crate::{Error, ParseProblem, Problem};
-
 use super::matrix::{Board, Tile};
+use super::Error;
 
 #[derive(Debug)]
 pub(super) struct SolutionBuilder {
@@ -11,22 +12,28 @@ pub(super) struct SolutionBuilder {
     pub boards: Vec<Board>,
 }
 
-struct BoardReader<'a, 'b>(&'b mut Problem<'a>);
+struct BoardReader<I>(I);
 
-impl<'a, 'b> Iterator for BoardReader<'a, 'b> {
+impl<I, V> Iterator for BoardReader<I>
+where
+    I: Iterator<Item = V>,
+    V: AsRef<str>,
+{
     type Item = Result<Board, Error>;
 
     fn next(&mut self) -> Option<Self::Item> {
         let mut tiles: Vec<Tile> = Vec::new();
         loop {
-            match self.0.take_line() {
+            match self.0.next() {
                 None => break,
-                Some(line) if line.is_empty() => break,
-                Some(line) => {
-                    for atom in line.split_ascii_whitespace() {
+                Some(l) if l.as_ref().is_empty() => break,
+                Some(l) => {
+                    for atom in l.as_ref().split_ascii_whitespace() {
                         match atom.parse() {
-                            Ok(v) => tiles.push(v),
-                            Err(err) => return Some(Err(Error::from_parse(err))),
+                            Ok(tile) => tiles.push(tile),
+                            Err(err) => {
+                                return Some(Err(Error::BoardInt(l.as_ref().to_owned(), err)))
+                            }
                         }
                     }
                 }
@@ -37,16 +44,24 @@ impl<'a, 'b> Iterator for BoardReader<'a, 'b> {
     }
 }
 
-impl ParseProblem for SolutionBuilder {
-    type Error = Error;
+impl FromStr for SolutionBuilder {
+    type Err = Error;
 
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        let pulls: Vec<u8> = problem.expect_map_line(",", str::parse)?;
-        problem.expect_empty_line()?;
-
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut lines = s.lines();
+        let pulls = lines.next().ok_or(Error::EndOfInput)?;
+        let pulls = pulls
+            .split(',')
+            .map(str::parse)
+            .try_collect()
+            .map_err(|e| Error::ParsePulls(pulls.to_owned(), e))?;
+        lines
+            .next()
+            .ok_or(Error::EndOfInput)
+            .and_then(Error::from_empty_line)?;
         Ok(Self {
             pulls,
-            boards: BoardReader(problem).try_collect()?,
+            boards: BoardReader(lines).try_collect()?,
         })
     }
 }

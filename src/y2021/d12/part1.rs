@@ -115,21 +115,13 @@
     once?
 */
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
 use super::ocean::Ocean;
 
-#[derive(Default, Debug, macros::Answer)]
+#[derive(Default, Debug, derive_more::FromStr, macros::Answer)]
 #[answer(example_a = 10, example_b = 19, example_c = 226, live = 5457)]
 struct Answer(Ocean);
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(Ocean::parse_problem(problem)?))
-    }
-}
 
 impl IntoAnswer for Answer {
     type Output = isize;

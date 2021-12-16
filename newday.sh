@@ -19,16 +19,18 @@ cat >./src/y2021/$1/part1.rs <<"EOF"
 
 */
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use std::str::FromStr;
 
-#[derive(Default, Debug, macros::Answer)]
-#[answer(example = 0, live = 0)]
+use crate::IntoAnswer;
+
+#[derive(Debug, macros::Answer)]
+#[answer(example = 0 /*, live = 0 */)]
 struct Answer;
 
-impl ParseProblem for Answer {
-    type Error = Error;
+impl FromStr for Answer {
+    type Err = std::convert::Infallible;
 
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         todo!()
     }
 }

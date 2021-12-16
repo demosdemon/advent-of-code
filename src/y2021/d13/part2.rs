@@ -5,10 +5,9 @@
 
     What code do you use to activate the infrared thermal imaging camera system?
 */
+use crate::IntoAnswer;
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
-
-#[derive(Debug, macros::Answer)]
+#[derive(Debug, derive_more::FromStr, macros::Answer)]
 #[answer(
     example = "#####
 #...#
@@ -25,16 +24,6 @@ use crate::{Error, IntoAnswer, ParseProblem, Problem};
 "
 )]
 struct Answer(super::Instructions);
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(
-            problem.slice().parse().map_err(crate::Error::from_parse)?,
-        ))
-    }
-}
 
 impl IntoAnswer for Answer {
     type Output = String;

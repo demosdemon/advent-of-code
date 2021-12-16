@@ -57,21 +57,11 @@
     What is the lowest total risk of any path from the top left to the bottom right?
 */
 
-use crate::{Error, IntoAnswer, ParseProblem, Problem};
+use crate::IntoAnswer;
 
-#[derive(Debug, macros::Answer)]
+#[derive(Debug, derive_more::FromStr, macros::Answer)]
 #[answer(example = 40, live = 562)]
 struct Answer(super::Cave);
-
-impl ParseProblem for Answer {
-    type Error = Error;
-
-    fn parse_problem(problem: &mut Problem<'_>) -> Result<Self, Self::Error> {
-        Ok(Self(
-            problem.slice().parse().map_err(crate::Error::from_parse)?,
-        ))
-    }
-}
 
 impl IntoAnswer for Answer {
     type Output = isize;

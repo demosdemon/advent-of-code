@@ -1,12 +1,12 @@
+mod part1;
+mod part2;
+
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 use std::convert::Infallible;
 use std::fmt::Display;
 use std::ops::Mul;
 use std::str::FromStr;
-
-mod part1;
-mod part2;
 
 const AROUND_THE_BLOCK: [(isize, isize); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 

@@ -7,6 +7,9 @@ use super::bit::Bit;
 #[into_iterator(owned, ref)]
 pub(super) struct Line(Vec<Bit>);
 
+crate::derive_FromIterator!(Line, Bit);
+crate::derive_Extend!(Line, Bit);
+
 impl Line {
     pub fn len(&self) -> usize {
         self.0.len()
@@ -33,18 +36,6 @@ impl Not for Line {
 impl<'a> From<&'a Line> for usize {
     fn from(v: &'a Line) -> Self {
         v.into_iter().fold(Self::default(), Add::add)
-    }
-}
-
-impl Extend<Bit> for Line {
-    fn extend<T: IntoIterator<Item = Bit>>(&mut self, iter: T) {
-        self.0.extend(iter)
-    }
-}
-
-impl FromIterator<Bit> for Line {
-    fn from_iter<T: IntoIterator<Item = Bit>>(iter: T) -> Self {
-        Self(iter.into_iter().collect())
     }
 }
 
