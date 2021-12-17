@@ -77,7 +77,7 @@ impl IntoAnswer for Answer {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Answer, {
+    crate::tests_for_answer!(super::Answer, {
         example => 900,
         live => 1281977850,
     });

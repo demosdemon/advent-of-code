@@ -19,21 +19,8 @@ cat >./src/y2021/$1/part1.rs <<"EOF"
 
 */
 
-#[derive(Debug)]
-struct Answer;
-
-impl std::str::FromStr for Answer {
-    type Err = std::convert::Infallible;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        todo!()
-    }
-}
-
-impl crate::IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> Self::Output {
+crate::problem! {
+    struct Answer(input: &super::Ocean) -> isize {
         todo!()
     }
 }
@@ -42,7 +29,7 @@ impl crate::IntoAnswer for Answer {
 mod tests {
     crate::tests_for_problem!(super::Answer, {
         example => 0,
-        // live => 1714950,
+        // live => 0,
     });
 }
 EOF

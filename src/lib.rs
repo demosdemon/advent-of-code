@@ -31,8 +31,73 @@ fn expect_empty_line<S: AsRef<str>>(s: S) -> anyhow::Result<()> {
     }
 }
 
+pub trait Problem {
+    type Input: ::core::str::FromStr;
+
+    type Output: ::core::cmp::PartialEq;
+
+    fn solve(input: &<Self as Problem>::Input) -> <Self as Problem>::Output;
+
+    fn parse_and_solve(
+        input: &str,
+    ) -> ::core::result::Result<
+        <Self as Problem>::Output,
+        <<Self as Problem>::Input as ::core::str::FromStr>::Err,
+    > {
+        let input = input.parse()?;
+        Ok(Self::solve(&input))
+    }
+}
+
+#[macro_export(crate)]
+macro_rules! problem {
+    (
+        struct $name:ident($input_name:ident: &$input_type:ty) -> $output_type:ty $body:block
+    ) => {
+        struct $name;
+
+        impl $crate::Problem for $name {
+            type Input = $input_type;
+
+            type Output = $output_type;
+
+            fn solve($input_name: &$input_type) -> $output_type $body
+        }
+    };
+    (
+        |$input_name:ident: &$input_type:ty| -> $output_type:ty $body:block
+    ) => {
+        $crate::problem!(struct Problem($input_name: &$input_type) -> $output_type $body);
+    };
+    (
+        $name:ident, |$input_name:ident: &$input_type:ty| -> $output_type:ty $body:block
+    ) => {
+        $crate::problem!(struct $name($input_name: &$input_type) -> $output_type $body);
+    };
+}
+
 #[macro_export(crate)]
 macro_rules! tests_for_problem {
+    ($t:ty, {
+        $(
+            $test_case:ident => $expected:expr,
+        )*
+    }) => {
+        paste::paste! {
+            $(
+                #[test]
+                fn [<test_ $test_case>]() {
+                    let input = include_str!(concat!("inputs/", stringify!($test_case)));
+                    let answer = <$t as $crate::Problem>::parse_and_solve(input).unwrap();
+                    assert_eq!(answer, $expected);
+                }
+            )*
+        }
+    };
+}
+
+#[macro_export(crate)]
+macro_rules! tests_for_answer {
     ($t:ty, {
         $(
             $test_case:ident => $expected:expr,

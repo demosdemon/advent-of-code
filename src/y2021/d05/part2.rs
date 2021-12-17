@@ -131,7 +131,7 @@ impl IntoAnswer for Answer {
 mod test {
     use super::Answer;
 
-    crate::tests_for_problem!(Answer, {
+    crate::tests_for_answer!(Answer, {
         example => 12,
         live => 19472,
     });

@@ -45,16 +45,9 @@
     the previous sum?
 */
 
-use crate::IntoAnswer;
-
-#[derive(derive_more::Deref, derive_more::FromStr)]
-struct Answer(super::Ocean);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.windows(4).filter(|s| s[0] < s[3]).count() as isize
+crate::problem! {
+    struct Answer(input: &super::Ocean) -> isize {
+        input.windows(4).filter(|s| s[0] < s[3]).count() as isize
     }
 }
 

@@ -62,16 +62,9 @@
     How many measurements are larger than the previous measurement?
 */
 
-use crate::IntoAnswer;
-
-#[derive(derive_more::Deref, derive_more::FromStr)]
-struct Answer(super::Ocean);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.windows(2).filter(|s| s[0] < s[1]).count() as isize
+crate::problem! {
+    struct Answer(input: &super::Ocean) -> isize {
+        input.windows(2).filter(|s| s[0] < s[1]).count() as isize
     }
 }
 

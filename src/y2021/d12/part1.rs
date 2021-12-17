@@ -135,7 +135,7 @@ impl IntoAnswer for Answer {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Answer, {
+    crate::tests_for_answer!(super::Answer, {
         example_a => 10,
         example_b => 19,
         example_c => 226,

@@ -110,7 +110,7 @@ impl Extend<Line> for Answer {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Answer, {
+    crate::tests_for_answer!(super::Answer, {
         example => 198,
         live => 4103154,
     });
