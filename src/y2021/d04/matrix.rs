@@ -154,10 +154,10 @@ impl Board {
             .step_by(self.size as usize)
     }
 
-    pub fn sum(&self) -> isize {
+    pub fn sum(&self) -> usize {
         self.iter()
             .filter(|t| !t.marked)
-            .map(|t| t.value as isize)
+            .map(|t| t.value as usize)
             .sum()
     }
 }

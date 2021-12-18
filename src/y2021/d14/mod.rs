@@ -125,7 +125,7 @@ impl Instructions {
         Self { tuples, rules }
     }
 
-    pub fn score(&self) -> isize {
+    pub fn score(&self) -> usize {
         let mut a_counts: BTreeMap<u8, usize> = BTreeMap::new();
         let mut b_counts: BTreeMap<u8, usize> = BTreeMap::new();
         for (&(a, b), &count) in self.tuples.iter() {
@@ -145,6 +145,6 @@ impl Instructions {
                 (std::cmp::min(min, cnt), std::cmp::max(max, cnt))
             });
 
-        (max as isize) - (min as isize)
+        max - min
     }
 }

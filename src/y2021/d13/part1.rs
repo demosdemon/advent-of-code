@@ -135,10 +135,10 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::Instructions) -> isize {
+fn problem(input: &super::Instructions) -> usize {
     let matrix: super::Matrix = input.coordinates.iter().collect();
     let matrix = matrix + &input.folds[0];
-    matrix.len() as isize
+    matrix.len()
 }
 
 #[cfg(test)]

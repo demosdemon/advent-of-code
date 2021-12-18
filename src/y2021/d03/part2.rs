@@ -70,7 +70,7 @@
 use super::line::Line;
 
 #[macros::problem]
-fn problem(input: &super::Lines) -> isize {
+fn problem(input: &super::Lines) -> usize {
     let lines = &*input;
     let bits = lines[0].len();
     let mut o2 = lines.iter().collect::<Lines>();
@@ -83,7 +83,7 @@ fn problem(input: &super::Lines) -> isize {
 
     let o2_rating: usize = o2.only().into();
     let co2_rating: usize = co2.only().into();
-    (o2_rating * co2_rating) as isize
+    o2_rating * co2_rating
 }
 
 #[derive(derive_more::Deref, derive_more::IntoIterator)]

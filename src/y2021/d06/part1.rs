@@ -74,7 +74,7 @@
 
 #[macros::problem]
 fn problem(input: &super::Ocean) -> isize {
-    input.count(80) as isize
+    input.count(80)
 }
 
 #[cfg(test)]

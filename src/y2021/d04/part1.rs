@@ -71,7 +71,7 @@
 use super::builder::SolutionBuilder;
 
 #[macros::problem]
-fn problem(input: &SolutionBuilder) -> isize {
+fn problem(input: &SolutionBuilder) -> usize {
     let mut input = input.to_owned();
     input
         .pulls
@@ -82,7 +82,7 @@ fn problem(input: &SolutionBuilder) -> isize {
                     .mark(pull)
                     .map(|(row, col)| {
                         (board.bingo_row(row) || board.bingo_column(col))
-                            .then(|| board.sum() * pull as isize)
+                            .then(|| board.sum() * pull as usize)
                     })
                     .flatten()
             })

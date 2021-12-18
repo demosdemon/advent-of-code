@@ -78,7 +78,7 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::Lines) -> isize {
+fn problem(input: &super::Lines) -> usize {
     use super::Line::*;
     let mut res = [0; 4];
     for c in input {

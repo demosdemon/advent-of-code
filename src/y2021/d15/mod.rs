@@ -59,7 +59,7 @@ fn clamp(v: usize) -> u8 {
     (((v as isize - 1) % 9) + 1) as u8
 }
 
-impl Mul<usize> for Cave {
+impl<'lhs> Mul<usize> for &'lhs Cave {
     type Output = Cave;
 
     fn mul(self, rhs: usize) -> Self::Output {
@@ -167,14 +167,14 @@ mod test {
     fn test_example_multiply() {
         let example = include_str!("inputs/example")
             .parse::<super::Cave>()
-            .unwrap()
-            * 5;
+            .unwrap();
+        let example = (&example) * 5;
         let example_5x = include_str!("inputs/example_5x")
             .parse::<super::Cave>()
             .unwrap();
         println!("{}", example);
         println!("{}", example_5x);
 
-        assert_eq!(example.nodes, example_5x.nodes,);
+        assert_eq!(example.nodes, example_5x.nodes);
     }
 }

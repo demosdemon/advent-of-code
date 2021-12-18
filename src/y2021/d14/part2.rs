@@ -14,7 +14,7 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::Instructions) -> isize {
+fn problem(input: &super::Instructions) -> usize {
     (0..40).fold(input.clone(), |i, _| i.step()).score()
 }
 

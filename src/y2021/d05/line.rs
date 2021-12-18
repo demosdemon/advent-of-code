@@ -5,7 +5,7 @@ use super::coordinate::Coordinate;
 pub(super) struct Line(pub Coordinate, pub Coordinate);
 
 impl Line {
-    pub fn angle(&self) -> i64 {
+    pub fn angle(&self) -> usize {
         self.0.angle(&self.1)
     }
 

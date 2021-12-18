@@ -5,11 +5,11 @@ use std::ops::Add;
 )]
 #[display(fmt = "{},{}", x, y)]
 pub(super) struct Coordinate {
-    pub x: i64,
-    pub y: i64,
+    pub x: isize,
+    pub y: isize,
 }
 
-impl From<Coordinate> for (i64, i64) {
+impl From<Coordinate> for (isize, isize) {
     fn from(c: Coordinate) -> Self {
         (c.x, c.y)
     }
@@ -29,10 +29,10 @@ impl<'a> Add<&'a Coordinate> for &'a Coordinate {
 }
 
 impl Coordinate {
-    pub fn angle(&self, rhs: &Coordinate) -> i64 {
-        ((rhs.y as f64) - (self.y as f64))
-            .atan2((rhs.x as f64) - (self.x as f64))
+    pub fn angle(&self, rhs: &Coordinate) -> usize {
+        ((rhs.y as f32) - (self.y as f32))
+            .atan2((rhs.x as f32) - (self.x as f32))
             .to_degrees()
-            .abs() as i64
+            .abs() as usize
     }
 }

@@ -4,7 +4,7 @@ use super::coordinate::Coordinate;
 use super::line::Line;
 
 #[derive(Debug)]
-pub(super) struct Board(BTreeMap<(i64, i64), usize>);
+pub(super) struct Board(BTreeMap<(isize, isize), usize>);
 
 impl Board {
     pub fn overlaps(&self) -> usize {

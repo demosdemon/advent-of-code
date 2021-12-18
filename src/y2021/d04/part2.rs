@@ -20,7 +20,7 @@ use super::builder::SolutionBuilder;
 use super::matrix::Board;
 
 #[macros::problem]
-fn problem(input: &SolutionBuilder) -> isize {
+fn problem(input: &SolutionBuilder) -> usize {
     let input = input.to_owned();
     let mut bingo = Bingo(input.boards);
     input
@@ -34,7 +34,7 @@ fn problem(input: &SolutionBuilder) -> isize {
 struct Bingo(Vec<Board>);
 
 impl Bingo {
-    pub fn mark(&mut self, pull: u8) -> Option<isize> {
+    pub fn mark(&mut self, pull: u8) -> Option<usize> {
         self.0
             .iter_mut()
             .enumerate()
@@ -51,7 +51,7 @@ impl Bingo {
             .rev()
             .find_map(|won| {
                 let b = self.0.remove(won);
-                self.0.is_empty().then(|| b.sum() * pull as isize)
+                self.0.is_empty().then(|| b.sum() * pull as usize)
             })
     }
 }

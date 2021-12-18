@@ -50,14 +50,14 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::Ocean) -> isize {
+fn problem(input: &super::Ocean) -> usize {
     let mut v = input
         .basins()
         .into_iter()
         .map(|(_, v)| v)
         .collect::<Vec<_>>();
     v.sort_unstable();
-    v.into_iter().rev().take(3).fold(1, |a, b| a * b as isize)
+    v.into_iter().rev().take(3).product()
 }
 
 #[cfg(test)]

@@ -59,9 +59,8 @@
 use super::builder::SolutionBuilder;
 
 #[macros::problem]
-fn problem(input: &SolutionBuilder) -> isize {
-    let b = input.board(|l| !l.is_diagonal());
-    b.overlaps() as isize
+fn problem(input: &SolutionBuilder) -> usize {
+    input.board(|l| !l.is_diagonal()).overlaps()
 }
 
 #[cfg(test)]

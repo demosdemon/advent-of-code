@@ -91,7 +91,7 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::Lines) -> isize {
+fn problem(input: &super::Lines) -> usize {
     input
         .clone()
         .into_iter()
@@ -101,7 +101,7 @@ fn problem(input: &super::Lines) -> isize {
                 .filter(|v| matches!(v.len(), 2 | 4 | 3 | 7))
                 .count()
         })
-        .sum::<usize>() as isize
+        .sum()
 }
 
 #[cfg(test)]

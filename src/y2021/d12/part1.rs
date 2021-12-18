@@ -116,8 +116,8 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::ocean::Ocean) -> isize {
-    input.paths(false).count() as isize
+fn problem(input: &super::ocean::Ocean) -> usize {
+    input.paths(false).count()
 }
 
 #[cfg(test)]

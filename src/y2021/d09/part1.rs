@@ -38,11 +38,11 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::Ocean) -> isize {
+fn problem(input: &super::Ocean) -> usize {
     input
         .iter_low_points()
-        .map(|(_, &v)| (v + 1) as isize)
-        .sum::<isize>()
+        .map(|(_, &v)| (v + 1) as usize)
+        .sum()
 }
 
 #[cfg(test)]

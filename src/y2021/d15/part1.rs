@@ -58,8 +58,8 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::Cave) -> isize {
-    input.cost().unwrap() as isize
+fn problem(input: &super::Cave) -> usize {
+    input.cost().unwrap()
 }
 
 #[cfg(test)]

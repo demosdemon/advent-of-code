@@ -198,8 +198,8 @@
 */
 
 #[macros::problem]
-fn answer(input: &super::Homework) -> isize {
-    super::Sum::solve(input).magnitude() as isize
+fn answer(input: &super::Homework) -> usize {
+    super::Sum::solve(input).magnitude()
 }
 
 #[cfg(test)]

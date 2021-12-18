@@ -53,7 +53,7 @@ use super::bit::Bit;
 use super::line::Line;
 
 #[macros::problem]
-fn problem(input: &super::Lines) -> isize {
+fn problem(input: &super::Lines) -> usize {
     let len = input[0].len();
     let mut zeros = vec![0; len];
     let mut ones = vec![0; len];
@@ -74,7 +74,7 @@ fn problem(input: &super::Lines) -> isize {
     let epsilon = !gamma.clone();
     let gamma: usize = (&gamma).into();
     let epsilon: usize = (&epsilon).into();
-    (gamma * epsilon) as isize
+    gamma * epsilon
 }
 
 #[cfg(test)]

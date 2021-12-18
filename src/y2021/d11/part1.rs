@@ -317,9 +317,9 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::Ocean) -> isize {
+fn problem(input: &super::Ocean) -> usize {
     let mut ocean = input.to_owned();
-    (0..100).map(move |_| ocean.tick()).sum::<usize>() as isize
+    (0..100).map(move |_| ocean.tick()).sum()
 }
 
 #[cfg(test)]

@@ -45,8 +45,8 @@
 */
 
 #[macros::problem]
-fn problem(packet: &super::Packet) -> isize {
-    packet.evaluate() as isize
+fn problem(packet: &super::Packet) -> usize {
+    packet.evaluate()
 }
 
 #[cfg(test)]

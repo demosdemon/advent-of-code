@@ -58,8 +58,8 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::Lines) -> isize {
-    input.clone().into_iter().map(usize::from).sum::<usize>() as isize
+fn problem(input: &super::Lines) -> usize {
+    input.clone().into_iter().map(usize::from).sum()
 }
 
 #[cfg(test)]

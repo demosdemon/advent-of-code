@@ -59,13 +59,14 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::Lines) -> isize {
+fn problem(input: &super::Lines) -> usize {
     let mut scores = input
         .into_iter()
         .filter_map(|l| l.score())
         .collect::<Vec<_>>();
-    scores.sort_unstable();
-    scores[(scores.len() / 2)]
+    let mid = scores.len() / 2;
+    let (_, v, _) = scores.select_nth_unstable(mid);
+    *v
 }
 
 #[cfg(test)]

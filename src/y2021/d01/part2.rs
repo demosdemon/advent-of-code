@@ -46,8 +46,8 @@
 */
 
 #[macros::problem]
-fn answer(input: &super::Ocean) -> isize {
-    input.windows(4).filter(|s| s[0] < s[3]).count() as isize
+fn answer(input: &super::Ocean) -> usize {
+    input.windows(4).filter(|s| s[0] < s[3]).count()
 }
 
 #[cfg(test)]

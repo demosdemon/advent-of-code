@@ -24,8 +24,8 @@ impl FromStr for Ocean {
 }
 
 impl Ocean {
-    pub fn count(&self, days: usize) -> i128 {
-        let mut lanterns = [0i128; 9];
+    pub fn count(&self, days: usize) -> isize {
+        let mut lanterns = [0; 9];
         for &lantern in self.0.iter() {
             assert!(lantern < 9);
             lanterns[lantern as usize] += 1;

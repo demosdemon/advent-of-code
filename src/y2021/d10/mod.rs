@@ -18,7 +18,7 @@ enum Line {
 }
 
 impl Line {
-    fn score(&self) -> Option<isize> {
+    fn score(&self) -> Option<usize> {
         match self {
             Line::Incomplete(v) => Some(v.iter().fold(0, |score, c| {
                 (score * 5)

@@ -149,8 +149,8 @@
 */
 
 #[macros::problem]
-fn problem(packet: &super::Packet) -> isize {
-    packet.version_sum() as isize
+fn problem(packet: &super::Packet) -> usize {
+    packet.version_sum()
 }
 
 #[cfg(test)]

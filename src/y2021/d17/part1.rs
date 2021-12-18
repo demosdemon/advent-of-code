@@ -135,9 +135,9 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::TargetArea) -> isize {
+fn problem(input: &super::TargetArea) -> usize {
     let min_y = input.min_y.abs() as usize;
-    ((min_y * (min_y - 1)) / 2) as isize
+    (min_y * (min_y - 1)) / 2
 }
 
 #[cfg(test)]

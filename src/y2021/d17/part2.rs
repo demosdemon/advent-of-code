@@ -29,8 +29,8 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::TargetArea) -> isize {
-    input.range().count() as isize
+fn problem(input: &super::TargetArea) -> usize {
+    input.range().count()
 }
 
 #[cfg(test)]

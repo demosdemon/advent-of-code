@@ -47,7 +47,7 @@
 */
 
 #[macros::problem]
-fn problem(input: &super::Ocean) -> isize {
+fn problem(input: &super::Ocean) -> usize {
     let mut ocean = input.to_owned();
     (1..)
         .find_map(|tick| (ocean.tick() == 100).then(|| tick))
