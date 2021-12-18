@@ -20,14 +20,14 @@ cat >./src/y2021/$1/part1.rs <<"EOF"
 */
 
 #[macros::problem]
-fn answer(input: &str) -> &str {
-    input
+fn answer(input: &String) -> usize {
+    0
 }
 
 #[cfg(test)]
 mod tests {
     crate::tests_for_problem!(super::Answer, {
-        example => "",
+        example => 0,
         // live => "",
     });
 }
