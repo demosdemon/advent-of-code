@@ -81,18 +81,6 @@ macro_rules! derive_FromIterator {
 }
 
 #[macro_export(crate)]
-macro_rules! derive_Extend {
-    ($t:ty, $v:ty) => {
-        impl ::core::iter::Extend<$v> for $t {
-            #[inline]
-            fn extend<T: ::core::iter::IntoIterator<Item = $v>>(&mut self, iter: T) {
-                self.0.extend(iter)
-            }
-        }
-    };
-}
-
-#[macro_export(crate)]
 macro_rules! derive_FromStr_for_nom {
     ($t:ty, $f:path) => {
         impl ::core::str::FromStr for $t {

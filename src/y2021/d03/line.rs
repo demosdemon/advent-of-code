@@ -10,7 +10,12 @@ use super::bit::Bit;
 pub(super) struct Line(Vec<Bit>);
 
 crate::derive_FromIterator!(Line, Bit);
-crate::derive_Extend!(Line, Bit);
+
+impl<'slice> From<&'slice [Bit]> for Line {
+    fn from(v: &'slice [Bit]) -> Self {
+        v.iter().copied().collect()
+    }
+}
 
 impl Line {
     pub fn len(&self) -> usize {
@@ -18,7 +23,11 @@ impl Line {
     }
 
     fn partition(self) -> (Line, Line) {
-        self.into_iter().partition(|b| b.into())
+        let mut bits = self.0;
+        bits.sort_unstable_by_key(|b| bool::from(b));
+        let mid = bits.partition_point(|b| bool::from(b));
+        let (l, r) = bits.split_at(mid);
+        (l.into(), r.into())
     }
 
     pub fn ceiling(self) -> Bit {
