@@ -7,7 +7,6 @@ use std::ops::Add;
 use std::str::FromStr;
 
 use anyhow::{anyhow, Context, Error};
-use itertools::Itertools;
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, derive_more::Display)]
 #[display(fmt = "{},{}\n", _0, _1)]
@@ -129,7 +128,7 @@ impl FromStr for Instructions {
         }
         Ok(Self {
             coordinates,
-            folds: lines.map(str::parse).try_collect()?,
+            folds: lines.map(str::parse).collect::<Result<_, _>>()?,
         })
     }
 }

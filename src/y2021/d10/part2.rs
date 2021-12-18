@@ -58,29 +58,19 @@
     and sort the scores. What is the middle score?
 */
 
-use itertools::Itertools;
-
-use crate::IntoAnswer;
-
-#[derive(Default, Debug)]
-struct Answer(Vec<super::Line>);
-
-crate::derive_FromIterator!(Answer, super::Line);
-crate::derive_FromStr_for_FromIterator!(Answer, super::Line);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        let mut scores = self.0.into_iter().filter_map(|l| l.score()).collect_vec();
-        scores.sort_unstable();
-        scores[(scores.len() / 2)]
-    }
+#[macros::problem]
+fn problem(input: &super::Lines) -> isize {
+    let mut scores = input
+        .into_iter()
+        .filter_map(|l| l.score())
+        .collect::<Vec<_>>();
+    scores.sort_unstable();
+    scores[(scores.len() / 2)]
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 288957,
         live => 4001832844,
     });

@@ -5,26 +5,17 @@
 
     What code do you use to activate the infrared thermal imaging camera system?
 */
-use crate::IntoAnswer;
 
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(super::Instructions);
-
-impl IntoAnswer for Answer {
-    type Output = String;
-
-    fn into_answer(self) -> String {
-        let matrix: super::Matrix = self.0.coordinates.iter().collect();
-        let matrix = self.0.folds.iter().fold(matrix, |prev, fold| prev + fold);
-        let s = format!("{}", matrix);
-        println!("{}", s);
-        s
-    }
+#[macros::problem]
+fn problem(input: &super::Instructions) -> String {
+    let matrix: super::Matrix = input.coordinates.iter().collect();
+    let matrix = input.folds.iter().fold(matrix, |prev, fold| prev + fold);
+    matrix.to_string()
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => include_str!("outputs/example"),
         live => include_str!("outputs/live"),
     });

@@ -40,41 +40,25 @@
     your final depth?
 */
 
-use std::ops::AddAssign;
-
 use super::Direction;
 
-#[derive(Default, Debug)]
-struct Answer {
-    horizontal: isize,
-    depth: isize,
-}
-
-crate::derive_FromStr_for_FromIterator!(Answer, Direction);
-crate::derive_Sum_for_AddAssign!(Answer, Direction);
-crate::derive_FromIterator_for_Sum!(Answer, Direction);
-
-impl AddAssign<Direction> for Answer {
-    fn add_assign(&mut self, rhs: Direction) {
-        match rhs {
-            Direction::Forward(v) => self.horizontal += v,
-            Direction::Up(v) => self.depth -= v,
-            Direction::Down(v) => self.depth += v,
+#[macros::problem]
+fn problem(input: &super::DirectionList) -> isize {
+    let mut horizontal = 0;
+    let mut depth = 0;
+    for dir in input {
+        match *dir {
+            Direction::Forward(v) => horizontal += v,
+            Direction::Up(v) => depth -= v,
+            Direction::Down(v) => depth += v,
         }
     }
-}
-
-impl crate::IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.horizontal * self.depth
-    }
+    horizontal * depth
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 150,
         live => 1714950,
     });

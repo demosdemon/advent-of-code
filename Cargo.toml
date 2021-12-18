@@ -9,8 +9,11 @@ version = "0.1.0"
 [dependencies]
 anyhow = "1.0.51"
 derive_more = "0.99.17"
-iterator-ext = "0.2.0"
-itertools = "0.10.1"
-maplit = "1.0.2"
+macros = {path = "macros"}
 nom = "7.1.0"
 paste = "1.0.6"
+
+[workspace]
+members = [
+  "macros",
+]

@@ -28,3 +28,10 @@ impl FromStr for Direction {
         }
     }
 }
+
+#[derive(derive_more::IntoIterator)]
+#[into_iterator(ref)]
+struct DirectionList(Vec<Direction>);
+
+crate::derive_FromIterator!(DirectionList, Direction);
+crate::derive_FromStr_for_FromIterator!(DirectionList, Direction);

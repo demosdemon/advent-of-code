@@ -23,7 +23,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: check
-          args: --workspace
+          args: --workspace --tests
 
   test:
     name: Test Suite
@@ -70,7 +70,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --workspace -- -D warnings
+          args: --workspace --tests -- -D warnings
 
   coverage:
     name: Code Coverage

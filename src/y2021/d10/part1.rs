@@ -77,37 +77,26 @@
     What is the total syntax error score for those errors?
 */
 
-use crate::IntoAnswer;
-
-#[derive(Default, Debug)]
-struct Answer(Vec<super::Line>);
-
-crate::derive_FromIterator!(Answer, super::Line);
-crate::derive_FromStr_for_FromIterator!(Answer, super::Line);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        use super::Line::*;
-        let mut res = [0; 4];
-        for c in self.0 {
-            match c {
-                Invalid(')') => res[0] += 1,
-                Invalid(']') => res[1] += 1,
-                Invalid('}') => res[2] += 1,
-                Invalid('>') => res[3] += 1,
-                Invalid(_) => panic!("invalid character: {:?}", c),
-                Incomplete(_) => {}
-            }
+#[macros::problem]
+fn problem(input: &super::Lines) -> isize {
+    use super::Line::*;
+    let mut res = [0; 4];
+    for c in input {
+        match *c {
+            Invalid(')') => res[0] += 1,
+            Invalid(']') => res[1] += 1,
+            Invalid('}') => res[2] += 1,
+            Invalid('>') => res[3] += 1,
+            Invalid(_) => panic!("invalid character: {:?}", c),
+            Incomplete(_) => {}
         }
-        (res[0] * 3) + (res[1] * 57) + (res[2] * 1197) + (res[3] * 25137)
     }
+    (res[0] * 3) + (res[1] * 57) + (res[2] * 1197) + (res[3] * 25137)
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 26397,
         live => 392139,
     });

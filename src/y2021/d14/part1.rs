@@ -72,22 +72,14 @@
     common element and subtract the quantity of the least common element?
 */
 
-use crate::IntoAnswer;
-
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(super::Instructions);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> Self::Output {
-        (0..10).fold(self.0, |i, _| i.step()).score()
-    }
+#[macros::problem]
+fn problem(input: &super::Instructions) -> isize {
+    (0..10).fold(input.clone(), |i, _| i.step()).score()
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 1588,
         live => 2375,
     });

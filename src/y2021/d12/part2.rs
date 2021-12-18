@@ -52,27 +52,14 @@
     Given these new rules, how many paths through this cave system are there?
 */
 
-use crate::IntoAnswer;
-
-use super::ocean::Ocean;
-
-#[derive(Default, Debug, derive_more::FromStr)]
-struct Answer(Ocean);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.0
-            .paths(true)
-            //.map(|path| println!("{}", path))
-            .count() as isize
-    }
+#[macros::problem]
+fn problem(input: &super::ocean::Ocean) -> isize {
+    input.paths(true).count() as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example_a => 36,
         example_b => 103,
         example_c => 3509,

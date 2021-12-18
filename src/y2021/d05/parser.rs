@@ -6,29 +6,29 @@ use nom::{
     IResult,
 };
 
-pub(super) fn coordinate(s: &str) -> IResult<&str, super::Coordinate> {
+use super::coordinate::Coordinate;
+use super::line::Line;
+
+pub(super) fn coordinate(s: &str) -> IResult<&str, Coordinate> {
     let (s, x) = i64(s)?;
     let (s, _) = tag(",")(s)?;
     let (s, y) = i64(s)?;
-    Ok((s, super::Coordinate::new(x, y)))
+    Ok((s, Coordinate::new(x, y)))
 }
 
-pub(super) fn line(s: &str) -> IResult<&str, super::Line> {
+pub(super) fn line(s: &str) -> IResult<&str, Line> {
     let (s, a) = coordinate(s)?;
     let (s, _) = tag(" -> ")(s)?;
     let (s, b) = coordinate(s)?;
     let (s, _) = alt((eof, line_ending))(s)?;
-    Ok((s, super::Line(a, b)))
+    Ok((s, Line(a, b)))
 }
 
 #[cfg(test)]
 mod test {
     use nom::Finish;
 
-    use super::{
-        super::{Coordinate, Line},
-        coordinate, line,
-    };
+    use super::{coordinate, line, Coordinate, Line};
 
     #[test]
     fn test_valid_coordinate() {

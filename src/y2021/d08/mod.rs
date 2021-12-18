@@ -4,59 +4,9 @@ mod part2;
 mod parser;
 
 use std::collections::{BTreeSet, HashMap};
-use std::str::FromStr;
-
-use maplit::hashmap;
-use nom::Finish;
-
-fn split_iter<I, F>(iter: I, f: F) -> (I, I)
-where
-    I: IntoIterator + Default + Extend<I::Item>,
-    F: FnMut(&I::Item) -> bool,
-{
-    iter.into_iter().partition(f)
-}
-
-fn split_iter_only_remain<I, F>(iter: I, f: F) -> (I::Item, I)
-where
-    I: IntoIterator + Default + Extend<I::Item>,
-    F: FnMut(&I::Item) -> bool,
-{
-    let (left, right) = split_iter(iter, f);
-    (only(left), right)
-}
-
-fn split_iter_only<I, F>(iter: I, mut f: F) -> (I::Item, I::Item)
-where
-    I: IntoIterator,
-    F: FnMut(&I::Item) -> bool,
-{
-    let mut iter = iter.into_iter();
-    let first = iter.next().unwrap();
-    let second = iter.next().unwrap();
-    assert!(iter.next().is_none());
-    let first_match = (f)(&first);
-    let second_match = (f)(&second);
-    assert_ne!(first_match, second_match);
-    if first_match {
-        (first, second)
-    } else {
-        (second, first)
-    }
-}
-
-fn only<I>(iter: I) -> I::Item
-where
-    I: IntoIterator,
-{
-    let mut iter = iter.into_iter();
-    let res = iter.next().unwrap();
-    assert!(iter.next().is_none());
-    res
-}
 
 #[derive(Debug, Hash, PartialEq, Eq, PartialOrd, Ord, Clone)]
-pub enum Segment {
+enum Segment {
     A,
     B,
     C,
@@ -66,13 +16,18 @@ pub enum Segment {
     G,
 }
 
-#[derive(Debug, Hash, PartialEq, Eq, PartialOrd, Ord, derive_more::Deref)]
-pub struct Digit(BTreeSet<Segment>);
+#[derive(Debug, Hash, PartialEq, Eq, PartialOrd, Ord, Clone, derive_more::Deref)]
+struct Digit(BTreeSet<Segment>);
 
 #[derive(
-    Debug, derive_more::Index, derive_more::IndexMut, derive_more::From, derive_more::IntoIterator,
+    Debug,
+    Clone,
+    derive_more::Index,
+    derive_more::IndexMut,
+    derive_more::From,
+    derive_more::IntoIterator,
 )]
-pub struct Signal([Digit; parser::SIGNAL_DIGITS]);
+struct Signal([Digit; parser::SIGNAL_DIGITS]);
 
 impl Signal {
     pub fn consume(self) -> HashMap<Digit, usize> {
@@ -123,33 +78,40 @@ impl Signal {
         // d0 is a superset of d1
         let (d0, d6) = split_iter_only(len6, |d| d.is_superset(&d1));
 
-        let seq_map: HashMap<Digit, usize> = hashmap! {
-            d0 => 0,
-            d1 => 1,
-            d2 => 2,
-            d3 => 3,
-            d4 => 4,
-            d5 => 5,
-            d6 => 6,
-            d7 => 7,
-            d8 => 8,
-            d9 => 9,
-        };
-        assert_eq!(seq_map.len(), 10);
-        seq_map
+        [
+            (d0, 0),
+            (d1, 1),
+            (d2, 2),
+            (d3, 3),
+            (d4, 4),
+            (d5, 5),
+            (d6, 6),
+            (d7, 7),
+            (d8, 8),
+            (d9, 9),
+        ]
+        .into_iter()
+        .collect()
     }
 }
 
 #[derive(
-    Debug, derive_more::Index, derive_more::IndexMut, derive_more::From, derive_more::IntoIterator,
+    Debug,
+    Clone,
+    derive_more::Index,
+    derive_more::IndexMut,
+    derive_more::From,
+    derive_more::IntoIterator,
 )]
-pub struct Output([Digit; parser::OUTPUT_DIGITS]);
+struct Output([Digit; parser::OUTPUT_DIGITS]);
 
-#[derive(Debug, derive_more::Constructor)]
-pub struct Line {
+#[derive(Debug, Clone, derive_more::Constructor)]
+struct Line {
     pub signal: Signal,
     pub output: Output,
 }
+
+crate::derive_FromStr_for_nom!(Line, parser::line);
 
 impl From<Line> for usize {
     fn from(value: Line) -> usize {
@@ -161,16 +123,54 @@ impl From<Line> for usize {
     }
 }
 
-impl FromStr for Line {
-    type Err = nom::error::Error<String>;
+#[derive(Debug, Clone, derive_more::IntoIterator)]
+struct Lines(Vec<Line>);
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match parser::line(s).finish() {
-            Ok((_, v)) => Ok(v),
-            Err(nom::error::Error { input, code }) => Err(nom::error::Error {
-                input: input.to_owned(),
-                code,
-            }),
-        }
+crate::derive_FromIterator!(Lines, Line);
+crate::derive_FromStr_for_FromIterator!(Lines, Line);
+
+fn split_iter<I, F>(iter: I, f: F) -> (I, I)
+where
+    I: IntoIterator + Default + Extend<I::Item>,
+    F: FnMut(&I::Item) -> bool,
+{
+    iter.into_iter().partition(f)
+}
+
+fn split_iter_only_remain<I, F>(iter: I, f: F) -> (I::Item, I)
+where
+    I: IntoIterator + Default + Extend<I::Item>,
+    F: FnMut(&I::Item) -> bool,
+{
+    let (left, right) = split_iter(iter, f);
+    (only(left), right)
+}
+
+fn split_iter_only<I, F>(iter: I, mut f: F) -> (I::Item, I::Item)
+where
+    I: IntoIterator,
+    F: FnMut(&I::Item) -> bool,
+{
+    let mut iter = iter.into_iter();
+    let first = iter.next().unwrap();
+    let second = iter.next().unwrap();
+    assert!(iter.next().is_none());
+    let first_match = (f)(&first);
+    let second_match = (f)(&second);
+    assert_ne!(first_match, second_match);
+    if first_match {
+        (first, second)
+    } else {
+        (second, first)
     }
+}
+
+fn only<I>(iter: I) -> I::Item
+where
+    I: IntoIterator,
+{
+    let mut iter = iter.into_iter();
+    let res = iter.next().unwrap();
+    assert!(iter.next().is_none());
+    res
 }

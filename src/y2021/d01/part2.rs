@@ -45,10 +45,9 @@
     the previous sum?
 */
 
-crate::problem! {
-    struct Answer(input: &super::Ocean) -> isize {
-        input.windows(4).filter(|s| s[0] < s[3]).count() as isize
-    }
+#[macros::problem]
+fn answer(input: &super::Ocean) -> isize {
+    input.windows(4).filter(|s| s[0] < s[3]).count() as isize
 }
 
 #[cfg(test)]

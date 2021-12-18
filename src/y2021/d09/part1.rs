@@ -37,27 +37,17 @@
     all low points on your heightmap?
 */
 
-use crate::IntoAnswer;
-
-use super::Ocean;
-
-#[derive(derive_more::FromStr)]
-struct Answer(Ocean);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.0
-            .iter_low_points()
-            .map(|(_, &v)| (v + 1) as isize)
-            .sum::<isize>()
-    }
+#[macros::problem]
+fn problem(input: &super::Ocean) -> isize {
+    input
+        .iter_low_points()
+        .map(|(_, &v)| (v + 1) as isize)
+        .sum::<isize>()
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 15,
         live => 528,
     });

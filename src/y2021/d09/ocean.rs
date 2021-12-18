@@ -1,4 +1,4 @@
-use std::collections::{BTreeSet, LinkedList};
+use std::collections::{BTreeSet, VecDeque};
 use std::convert::Infallible;
 use std::str::FromStr;
 
@@ -27,7 +27,7 @@ impl Ocean {
         self.iter_low_points()
             .map(|(root, &root_value)| {
                 let mut basin = BTreeSet::new();
-                let mut queue = LinkedList::new();
+                let mut queue = VecDeque::new();
                 queue.push_back((root, root_value));
                 while let Some((point, point_value)) = queue.pop_front() {
                     if basin.insert(point) {

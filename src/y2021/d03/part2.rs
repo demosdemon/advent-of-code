@@ -67,15 +67,24 @@
     binary.)
 */
 
-use crate::IntoAnswer;
-
 use super::line::Line;
 
-#[derive(Default, Debug)]
-struct Answer(Vec<Line>);
+#[macros::problem]
+fn problem(input: &super::Lines) -> isize {
+    let lines = &*input;
+    let bits = lines[0].len();
+    let mut o2 = lines.iter().collect::<Lines>();
+    let mut co2 = lines.iter().collect::<Lines>();
 
-crate::derive_FromStr_for_FromIterator!(Answer, Line);
-crate::derive_FromIterator!(Answer, Line);
+    for bit in 0..=bits {
+        o2 = o2.filter_ceiling(bit);
+        co2 = co2.filter_floor(bit);
+    }
+
+    let o2_rating: usize = o2.only().into();
+    let co2_rating: usize = co2.only().into();
+    (o2_rating * co2_rating) as isize
+}
 
 #[derive(derive_more::Deref, derive_more::IntoIterator)]
 struct Lines<'a>(Vec<&'a Line>);
@@ -119,29 +128,9 @@ impl<'a> FromIterator<&'a Line> for Lines<'a> {
     }
 }
 
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        let lines = self.0;
-        let bits = lines[0].len();
-        let mut o2 = lines.iter().collect::<Lines>();
-        let mut co2 = lines.iter().collect::<Lines>();
-
-        for bit in 0..=bits {
-            o2 = o2.filter_ceiling(bit);
-            co2 = co2.filter_floor(bit);
-        }
-
-        let o2_rating: usize = o2.only().into();
-        let co2_rating: usize = co2.only().into();
-        (o2_rating * co2_rating) as isize
-    }
-}
-
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 230,
         live => 4245351,
     });

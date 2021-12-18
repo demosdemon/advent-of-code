@@ -1,9 +1,9 @@
 mod part1;
 mod part2;
 
-use std::{collections::LinkedList, convert::Infallible, str::FromStr};
-
-use itertools::Itertools;
+use std::collections::VecDeque;
+use std::convert::Infallible;
+use std::str::FromStr;
 
 const AROUND_THE_BLOCK: [(isize, isize); 8] = [
     (-1, -1),
@@ -16,7 +16,7 @@ const AROUND_THE_BLOCK: [(isize, isize); 8] = [
     (0, -1),
 ];
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Octopus {
     value: u8,
     flashed: bool,
@@ -52,12 +52,12 @@ impl From<u8> for Octopus {
 
 const SIZE: usize = 10;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Ocean([Octopus; SIZE * SIZE]);
 
 #[derive(Default)]
 struct FlashQueue {
-    queue: LinkedList<usize>,
+    queue: VecDeque<usize>,
     seen: usize,
 }
 
@@ -108,8 +108,8 @@ impl FromIterator<u8> for Ocean {
     fn from_iter<T: IntoIterator<Item = u8>>(iter: T) -> Self {
         Self(
             iter.into_iter()
-                .map_into()
-                .collect_vec()
+                .map(Octopus::from)
+                .collect::<Vec<_>>()
                 .try_into()
                 .unwrap(),
         )

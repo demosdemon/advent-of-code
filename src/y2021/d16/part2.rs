@@ -44,22 +44,14 @@
     encoded BITS transmission?
 */
 
-use crate::IntoAnswer;
-
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(super::Packet);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> Self::Output {
-        self.0.evaluate() as isize
-    }
+#[macros::problem]
+fn problem(packet: &super::Packet) -> isize {
+    packet.evaluate() as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example_a => 2021,
         example_b => 1,
         example_c => 3,

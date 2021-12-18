@@ -48,24 +48,14 @@
     possible. How much fuel must they spend to align to that position?
 */
 
-use crate::IntoAnswer;
-
-use super::Ocean;
-
-#[derive(derive_more::FromStr)]
-struct Answer(Ocean);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.0.solve(|a, b| (b - a).abs())
-    }
+#[macros::problem]
+fn problem(input: &super::Ocean) -> isize {
+    input.solve(|a, b| (b - a).abs())
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 37,
         live => 345197,
     });

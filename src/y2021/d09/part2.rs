@@ -49,33 +49,20 @@
     What do you get if you multiply together the sizes of the three largest basins?
 */
 
-use itertools::Itertools;
-
-use crate::IntoAnswer;
-
-use super::Ocean;
-
-#[derive(derive_more::FromStr)]
-struct Answer(Ocean);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.0
-            .basins()
-            .into_iter()
-            .map(|(_, v)| v)
-            .sorted_unstable()
-            .rev()
-            .take(3)
-            .fold(1, |a, b| a * b as isize)
-    }
+#[macros::problem]
+fn problem(input: &super::Ocean) -> isize {
+    let mut v = input
+        .basins()
+        .into_iter()
+        .map(|(_, v)| v)
+        .collect::<Vec<_>>();
+    v.sort_unstable();
+    v.into_iter().rev().take(3).fold(1, |a, b| a * b as isize)
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 1134,
         live => 920448,
     });

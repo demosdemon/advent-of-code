@@ -57,22 +57,14 @@
     What is the lowest total risk of any path from the top left to the bottom right?
 */
 
-use crate::IntoAnswer;
-
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(super::Cave);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> Self::Output {
-        self.0.cost().unwrap() as isize
-    }
+#[macros::problem]
+fn problem(input: &super::Cave) -> isize {
+    input.cost().unwrap() as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 40,
         live => 562,
     });

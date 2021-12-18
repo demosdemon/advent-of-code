@@ -54,13 +54,13 @@ mod tests {
     fn test_into_usize() {
         use super::Line;
         let l: Line = "11001".parse().unwrap();
-        assert_eq!(usize::from(&l), 25 as usize)
+        assert_eq!(usize::from(&l), 25)
     }
 
     #[test]
     fn test_not() {
         use super::Line;
         let l: Line = "11001".parse().unwrap();
-        assert_eq!(usize::from(&!l), 6 as usize);
+        assert_eq!(usize::from(&!l), 6);
     }
 }

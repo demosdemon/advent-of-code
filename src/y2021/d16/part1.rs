@@ -148,22 +148,14 @@
     if you add up the version numbers in all packets?
 */
 
-use crate::IntoAnswer;
-
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(super::Packet);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> Self::Output {
-        self.0.version_sum() as isize
-    }
+#[macros::problem]
+fn problem(packet: &super::Packet) -> isize {
+    packet.version_sum() as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example_a => 6,
         example_b => 9,
         example_c => 14,

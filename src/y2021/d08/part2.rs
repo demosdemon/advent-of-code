@@ -57,28 +57,14 @@
     four-digit output values. What do you get if you add up all of the output values?
 */
 
-use itertools::Itertools;
-
-use crate::IntoAnswer;
-
-use super::Line;
-
-struct Answer(Vec<Line>);
-
-crate::derive_FromIterator!(Answer, Line);
-crate::derive_FromStr_for_FromIterator!(Answer, Line);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.0.into_iter().map_into::<usize>().sum::<usize>() as isize
-    }
+#[macros::problem]
+fn problem(input: &super::Lines) -> isize {
+    input.clone().into_iter().map(usize::from).sum::<usize>() as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 61229,
         live => 986163,
     });

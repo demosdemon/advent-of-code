@@ -5,8 +5,6 @@ use std::str::FromStr;
 
 use anyhow::{Context, Error, Result};
 
-use itertools::Itertools;
-
 #[derive(derive_more::IntoIterator)]
 #[into_iterator(ref)]
 struct Ocean(Vec<isize>);
@@ -22,18 +20,18 @@ impl FromStr for Ocean {
             .context("reading input line")?
             .split(',')
             .map(str::parse)
-            .try_collect()
+            .collect::<Result<_, _>>()
             .context("parsing input values")
     }
 }
 
 impl Ocean {
-    pub fn solve<F>(self, mut cost: F) -> isize
+    pub fn solve<F>(&self, mut cost: F) -> isize
     where
         F: FnMut(isize, isize) -> isize,
     {
         self.range()
-            .map(|a| (&self).into_iter().map(|&b| (cost)(a, b)).sum())
+            .map(|a| self.into_iter().map(|&b| (cost)(a, b)).sum())
             .min()
             .unwrap_or_default()
     }

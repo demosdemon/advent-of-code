@@ -115,27 +115,14 @@
     once?
 */
 
-use crate::IntoAnswer;
-
-use super::ocean::Ocean;
-
-#[derive(Default, Debug, derive_more::FromStr)]
-struct Answer(Ocean);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.0
-            .paths(false)
-            // .map(|path| println!("{}", path))
-            .count() as isize
-    }
+#[macros::problem]
+fn problem(input: &super::ocean::Ocean) -> isize {
+    input.paths(false).count() as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example_a => 10,
         example_b => 19,
         example_c => 226,

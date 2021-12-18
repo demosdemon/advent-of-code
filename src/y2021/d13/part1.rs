@@ -134,24 +134,16 @@
     transparent paper?
 */
 
-use crate::IntoAnswer;
-
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(super::Instructions);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        let matrix: super::Matrix = self.0.coordinates.iter().collect();
-        let matrix = matrix + &self.0.folds[0];
-        matrix.len() as isize
-    }
+#[macros::problem]
+fn problem(input: &super::Instructions) -> isize {
+    let matrix: super::Matrix = input.coordinates.iter().collect();
+    let matrix = matrix + &input.folds[0];
+    matrix.len() as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 17,
         live => 785,
     });

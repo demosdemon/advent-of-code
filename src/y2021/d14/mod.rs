@@ -5,7 +5,6 @@ use std::collections::BTreeMap;
 use std::str::FromStr;
 
 use anyhow::{anyhow, Context, Error};
-use itertools::Itertools;
 
 #[derive(Debug)]
 struct InsertionRule {
@@ -48,6 +47,7 @@ impl FromStr for InsertionRule {
     }
 }
 
+#[derive(Clone)]
 struct Instructions {
     tuples: BTreeMap<(u8, u8), usize>,
     rules: BTreeMap<(u8, u8), u8>,
@@ -63,7 +63,7 @@ impl std::fmt::Debug for Instructions {
                 let s = std::str::from_utf8(&b).unwrap();
                 format!("{} -> {}", s, count)
             })
-            .collect_vec();
+            .collect::<Vec<_>>();
         let rules = self
             .rules
             .iter()
@@ -74,7 +74,7 @@ impl std::fmt::Debug for Instructions {
                 let s2 = std::str::from_utf8(&b2).unwrap();
                 format!("{} -> {}", s1, s2)
             })
-            .collect_vec();
+            .collect::<Vec<_>>();
         f.debug_struct("Instructions")
             .field("tuples", &tuples)
             .field("rules", &rules)
@@ -106,8 +106,8 @@ impl FromStr for Instructions {
             tuples,
             rules: lines
                 .map(str::parse::<InsertionRule>)
-                .map_ok(Into::into)
-                .try_collect()?,
+                .map(|r| r.map(Into::into))
+                .collect::<Result<_, _>>()?,
         })
     }
 }

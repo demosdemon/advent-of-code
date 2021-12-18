@@ -7,24 +7,14 @@
     lanternfish!
 */
 
-use crate::IntoAnswer;
-
-use super::Ocean;
-
-#[derive(derive_more::FromStr)]
-struct Answer(Ocean);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.0.count(256) as isize
-    }
+#[macros::problem]
+fn problem(input: &super::Ocean) -> isize {
+    input.count(256) as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 26984457539,
         live => 1710623015163,
     });

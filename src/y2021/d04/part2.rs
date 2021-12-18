@@ -16,27 +16,18 @@
     Figure out which board will win last. Once it wins, what would its final score be?
 */
 
-use itertools::Itertools;
-
-use crate::IntoAnswer;
-
 use super::builder::SolutionBuilder;
 use super::matrix::Board;
 
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(SolutionBuilder);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        let mut bingo = Bingo(self.0.boards);
-        self.0
-            .pulls
-            .into_iter()
-            .find_map(|pull| bingo.mark(pull))
-            .unwrap()
-    }
+#[macros::problem]
+fn problem(input: &SolutionBuilder) -> isize {
+    let input = input.to_owned();
+    let mut bingo = Bingo(input.boards);
+    input
+        .pulls
+        .into_iter()
+        .find_map(|pull| bingo.mark(pull))
+        .unwrap()
 }
 
 #[derive(Debug, Default)]
@@ -55,7 +46,7 @@ impl Bingo {
                     })
                     .flatten()
             })
-            .collect_vec()
+            .collect::<Vec<_>>()
             .into_iter()
             .rev()
             .find_map(|won| {
@@ -67,7 +58,7 @@ impl Bingo {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 1924,
         live => 6594,
     });

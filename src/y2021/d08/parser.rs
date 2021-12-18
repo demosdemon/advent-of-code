@@ -58,7 +58,7 @@ fn output_digits(s: &str) -> IResult<&str, super::Output> {
     Ok((s, v.into()))
 }
 
-pub fn line(s: &str) -> IResult<&str, super::Line> {
+pub(super) fn line(s: &str) -> IResult<&str, super::Line> {
     let (s, signal) = signal_digits(s)?;
     // digits consumes the trailing space
     let (s, _) = tag("| ")(s)?;

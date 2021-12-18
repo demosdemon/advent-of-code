@@ -5,8 +5,6 @@ use std::str::FromStr;
 
 use anyhow::{Context, Error, Result};
 
-use itertools::Itertools;
-
 struct Ocean(Vec<u8>);
 
 crate::derive_FromIterator!(Ocean, u8);
@@ -20,15 +18,15 @@ impl FromStr for Ocean {
             .context("readling input line")?
             .split(',')
             .map(str::parse)
-            .try_collect()
+            .collect::<Result<_, _>>()
             .context("parsing input values")
     }
 }
 
 impl Ocean {
-    pub fn count(self, days: usize) -> i128 {
+    pub fn count(&self, days: usize) -> i128 {
         let mut lanterns = [0i128; 9];
-        for lantern in self.0 {
+        for &lantern in self.0.iter() {
             assert!(lantern < 9);
             lanterns[lantern as usize] += 1;
         }

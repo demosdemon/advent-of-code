@@ -29,28 +29,17 @@
     possible so they can make you an escape route! How much fuel must they spend to
     align to that position?
 */
-
-use crate::IntoAnswer;
-
-use super::Ocean;
-
-#[derive(derive_more::FromStr)]
-struct Answer(Ocean);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.0.solve(|a, b| {
-            let d = (b - a).abs();
-            (d * (d + 1)) / 2
-        })
-    }
+#[macros::problem]
+fn problem(input: &super::Ocean) -> isize {
+    input.solve(|a, b| {
+        let d = (b - a).abs();
+        (d * (d + 1)) / 2
+    })
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 168,
         live => 96361606,
     });

@@ -31,7 +31,7 @@ impl Ord for State {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Cave {
     width: usize,
     nodes: Vec<u8>,

@@ -49,68 +49,37 @@
     submarine? (Be sure to represent your answer in decimal, not binary.)
 */
 
-use itertools::Itertools;
-
-use crate::IntoAnswer;
-
 use super::bit::Bit;
 use super::line::Line;
 
-#[derive(Default, Debug)]
-struct Answer {
-    pub zeros: Vec<usize>,
-    pub ones: Vec<usize>,
-}
-
-crate::derive_FromIterator_for_Extend!(Answer, Line);
-crate::derive_FromStr_for_FromIterator!(Answer, Line);
-
-impl Answer {
-    fn assert_len(&mut self, len: usize) {
-        if self.zeros.is_empty() {
-            self.zeros.resize(len, 0);
-        }
-        assert_eq!(self.zeros.len(), len);
-
-        if self.ones.is_empty() {
-            self.ones.resize(len, 0);
-        }
-        assert_eq!(self.ones.len(), len);
-    }
-}
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        let gamma: Line = itertools::zip(self.zeros, self.ones)
-            .map(|(zeros, ones)| zeros <= ones)
-            .map_into::<Bit>()
-            .collect();
-        let epsilon = !gamma.clone();
-        let gamma: usize = (&gamma).into();
-        let epsilon: usize = (&epsilon).into();
-        (gamma * epsilon) as isize
-    }
-}
-
-impl Extend<Line> for Answer {
-    fn extend<T: IntoIterator<Item = Line>>(&mut self, iter: T) {
-        for line in iter {
-            self.assert_len(line.len());
-            for (idx, b) in line.into_iter().enumerate() {
-                match b {
-                    Bit::Zero => self.zeros[idx] += 1,
-                    Bit::One => self.ones[idx] += 1,
-                }
+#[macros::problem]
+fn problem(input: &super::Lines) -> isize {
+    let len = input[0].len();
+    let mut zeros = vec![0; len];
+    let mut ones = vec![0; len];
+    for line in input {
+        for (idx, b) in line.into_iter().enumerate() {
+            match *b {
+                Bit::Zero => zeros[idx] += 1,
+                Bit::One => ones[idx] += 1,
             }
         }
     }
+    let gamma = zeros
+        .into_iter()
+        .zip(ones)
+        .map(|(zeros, ones)| zeros <= ones)
+        .map(Bit::from)
+        .collect::<Line>();
+    let epsilon = !gamma.clone();
+    let gamma: usize = (&gamma).into();
+    let epsilon: usize = (&epsilon).into();
+    (gamma * epsilon) as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 198,
         live => 4103154,
     });

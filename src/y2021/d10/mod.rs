@@ -4,6 +4,13 @@ mod part2;
 use std::convert::Infallible;
 use std::str::FromStr;
 
+#[derive(derive_more::IntoIterator)]
+#[into_iterator(ref)]
+struct Lines(Vec<Line>);
+
+crate::derive_FromIterator!(Lines, Line);
+crate::derive_FromStr_for_FromIterator!(Lines, Line);
+
 #[derive(Debug)]
 enum Line {
     Incomplete(Vec<char>),
@@ -11,9 +18,9 @@ enum Line {
 }
 
 impl Line {
-    fn score(self) -> Option<isize> {
+    fn score(&self) -> Option<isize> {
         match self {
-            Line::Incomplete(v) => Some(v.into_iter().fold(0, |score, c| {
+            Line::Incomplete(v) => Some(v.iter().fold(0, |score, c| {
                 (score * 5)
                     + match c {
                         ')' => 1,

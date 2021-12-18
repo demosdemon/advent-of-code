@@ -37,47 +37,29 @@
     multiply your final horizontal position by your final depth?
 */
 
-use std::ops::AddAssign;
-
-use crate::IntoAnswer;
-
 use super::Direction;
 
-#[derive(Default, Debug)]
-struct Answer {
-    aim: isize,
-    horizontal: isize,
-    depth: isize,
-}
-
-crate::derive_FromStr_for_FromIterator!(Answer, Direction);
-crate::derive_Sum_for_AddAssign!(Answer, Direction);
-crate::derive_FromIterator_for_Sum!(Answer, Direction);
-
-impl AddAssign<Direction> for Answer {
-    fn add_assign(&mut self, rhs: Direction) {
-        match rhs {
+#[macros::problem]
+fn problem(input: &super::DirectionList) -> isize {
+    let mut aim = 0;
+    let mut horizontal = 0;
+    let mut depth = 0;
+    for dir in input {
+        match *dir {
             Direction::Forward(v) => {
-                self.horizontal += v;
-                self.depth += self.aim * v;
+                horizontal += v;
+                depth += aim * v;
             }
-            Direction::Up(v) => self.aim -= v,
-            Direction::Down(v) => self.aim += v,
+            Direction::Up(v) => aim -= v,
+            Direction::Down(v) => aim += v,
         }
     }
-}
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.horizontal * self.depth
-    }
+    horizontal * depth
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 900,
         live => 1281977850,
     });

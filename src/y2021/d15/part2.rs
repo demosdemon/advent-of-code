@@ -134,22 +134,14 @@
     Using the full map, what is the lowest total risk of any path from the top left to the bottom right?
 */
 
-use crate::IntoAnswer;
-
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(super::Cave);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> Self::Output {
-        (self.0 * 5).cost().unwrap() as isize
-    }
+#[macros::problem]
+fn problem(input: &super::Cave) -> isize {
+    (input.to_owned() * 5).cost().unwrap() as isize
 }
 
 #[cfg(test)]
 mod test {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 315,
         live => 2874,
     });

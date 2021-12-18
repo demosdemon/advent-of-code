@@ -56,138 +56,18 @@
     lines overlap?
 */
 
-use std::fmt::Display;
-use std::ops::{Index, IndexMut};
+use super::builder::SolutionBuilder;
 
-use crate::IntoAnswer;
-
-use super::SolutionBuilder;
-
-#[derive(Debug)]
-struct Board {
-    width: usize,
-    depth: usize,
-    hits: Box<[usize]>,
-}
-
-impl Board {
-    pub fn new(width: usize, depth: usize) -> Self {
-        Self {
-            width,
-            depth,
-            hits: vec![0; width * depth].into_boxed_slice(),
-        }
-    }
-
-    fn pos(&self, coord: &super::Coordinate) -> usize {
-        assert!((coord.x as usize) < self.width);
-        assert!((coord.y as usize) < self.depth);
-        let res = ((coord.y as usize) * self.width) + (coord.x as usize);
-        assert!(res < self.hits.len());
-        res
-    }
-}
-
-impl Display for Board {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for row in self.hits.chunks_exact(self.width as usize) {
-            for &col in row {
-                if col == 0 {
-                    write!(f, ".")?;
-                } else {
-                    assert!(col < 10);
-                    write!(f, "{}", col)?;
-                }
-            }
-            writeln!(f)?;
-        }
-        Ok(())
-    }
-}
-
-impl<'a> Index<&'a super::Coordinate> for Board {
-    type Output = usize;
-
-    fn index(&self, index: &'a super::Coordinate) -> &Self::Output {
-        &self.hits[self.pos(index)]
-    }
-}
-
-impl<'a> IndexMut<&'a super::Coordinate> for Board {
-    fn index_mut(&mut self, index: &'a super::Coordinate) -> &mut Self::Output {
-        &mut self.hits[self.pos(index)]
-    }
-}
-
-impl Extend<super::Coordinate> for Board {
-    fn extend<T: IntoIterator<Item = super::Coordinate>>(&mut self, iter: T) {
-        for coord in iter {
-            self[&coord] += 1;
-        }
-    }
-}
-
-impl Extend<super::Line> for Board {
-    fn extend<T: IntoIterator<Item = super::Line>>(&mut self, iter: T) {
-        self.extend(
-            iter.into_iter()
-                .filter(|l| !l.is_diagonal())
-                .flat_map(|l| l.into_iter().map(|l| l.0)),
-        );
-    }
-}
-
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(SolutionBuilder);
-
-impl Answer {
-    pub fn into_board(self) -> Board {
-        let mut board = Board::new(self.0.max_x() as usize + 1, self.0.max_y() as usize + 1);
-        board.extend(self.0 .0);
-        board
-    }
-}
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        let board = self.into_board();
-        board.hits.iter().filter(|v| **v >= 2).count() as isize
-    }
+#[macros::problem]
+fn problem(input: &SolutionBuilder) -> isize {
+    let b = input.board(|l| !l.is_diagonal());
+    b.overlaps() as isize
 }
 
 #[cfg(test)]
 mod test {
-    use super::Answer;
-
-    crate::tests_for_answer!(Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 5,
         live => 4873,
     });
-
-    #[test]
-    fn test_display() {
-        let example = include_str!("inputs/example");
-        let answer: Answer = example.parse().unwrap();
-        let board = answer.into_board();
-        assert_eq!(board.width, 10);
-        assert_eq!(board.depth, 10);
-        let s = board.to_string();
-        println!("{}", &s);
-        assert_eq!(
-            s,
-            ".......1..
-..1....1..
-..1....1..
-.......1..
-.112111211
-..........
-..........
-..........
-..........
-222111....
-"
-        );
-    }
 }

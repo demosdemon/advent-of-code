@@ -90,34 +90,23 @@
     In the output values, how many times do digits 1, 4, 7, or 8 appear?
 */
 
-use crate::IntoAnswer;
-
-use super::Line;
-
-struct Answer(Vec<Line>);
-
-crate::derive_FromIterator!(Answer, Line);
-crate::derive_FromStr_for_FromIterator!(Answer, Line);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        self.0
-            .into_iter()
-            .map(|v| {
-                v.output
-                    .into_iter()
-                    .filter(|v| matches!(v.len(), 2 | 4 | 3 | 7))
-                    .count()
-            })
-            .sum::<usize>() as isize
-    }
+#[macros::problem]
+fn problem(input: &super::Lines) -> isize {
+    input
+        .clone()
+        .into_iter()
+        .map(|v| {
+            v.output
+                .into_iter()
+                .filter(|v| matches!(v.len(), 2 | 4 | 3 | 7))
+                .count()
+        })
+        .sum::<usize>() as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 26,
         live => 421,
     });

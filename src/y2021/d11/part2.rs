@@ -46,25 +46,17 @@
     step during which all octopuses flash?
 */
 
-use crate::IntoAnswer;
-
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(super::Ocean);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        let mut ocean = self.0;
-        (1..)
-            .find_map(|tick| (ocean.tick() == 100).then(|| tick))
-            .unwrap()
-    }
+#[macros::problem]
+fn problem(input: &super::Ocean) -> isize {
+    let mut ocean = input.to_owned();
+    (1..)
+        .find_map(|tick| (ocean.tick() == 100).then(|| tick))
+        .unwrap()
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 195,
         live => 237,
     });

@@ -316,23 +316,15 @@
     steps. How many total flashes are there after 100 steps?
 */
 
-use crate::IntoAnswer;
-
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(super::Ocean);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(self) -> isize {
-        let mut ocean = self.0;
-        (0..100).map(move |_| ocean.tick()).sum::<usize>() as isize
-    }
+#[macros::problem]
+fn problem(input: &super::Ocean) -> isize {
+    let mut ocean = input.to_owned();
+    (0..100).map(move |_| ocean.tick()).sum::<usize>() as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 1656,
         live => 1729,
     });

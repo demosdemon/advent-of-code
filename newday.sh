@@ -19,17 +19,16 @@ cat >./src/y2021/$1/part1.rs <<"EOF"
 
 */
 
-crate::problem! {
-    struct Answer(input: &super::Ocean) -> isize {
-        todo!()
-    }
+#[macros::problem]
+fn answer(input: &str) -> &str {
+    input
 }
 
 #[cfg(test)]
 mod tests {
     crate::tests_for_problem!(super::Answer, {
-        example => 0,
-        // live => 0,
+        example => "",
+        // live => "",
     });
 }
 EOF

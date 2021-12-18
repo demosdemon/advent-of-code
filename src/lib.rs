@@ -1,21 +1,5 @@
 mod y2021;
 
-use std::str::FromStr;
-
-pub trait IntoAnswer {
-    type Output: PartialEq;
-
-    fn into_answer(self) -> Self::Output;
-}
-
-pub fn solve<S>(s: &str) -> Result<S::Output, S::Err>
-where
-    S: FromStr + IntoAnswer,
-{
-    let s = s.parse::<S>()?;
-    Ok(s.into_answer())
-}
-
 fn chardigit(c: char) -> u8 {
     const ZERO: u8 = b'0';
     assert!(c.is_ascii_digit());
@@ -50,33 +34,6 @@ pub trait Problem {
 }
 
 #[macro_export(crate)]
-macro_rules! problem {
-    (
-        struct $name:ident($input_name:ident: &$input_type:ty) -> $output_type:ty $body:block
-    ) => {
-        struct $name;
-
-        impl $crate::Problem for $name {
-            type Input = $input_type;
-
-            type Output = $output_type;
-
-            fn solve($input_name: &$input_type) -> $output_type $body
-        }
-    };
-    (
-        |$input_name:ident: &$input_type:ty| -> $output_type:ty $body:block
-    ) => {
-        $crate::problem!(struct Problem($input_name: &$input_type) -> $output_type $body);
-    };
-    (
-        $name:ident, |$input_name:ident: &$input_type:ty| -> $output_type:ty $body:block
-    ) => {
-        $crate::problem!(struct $name($input_name: &$input_type) -> $output_type $body);
-    };
-}
-
-#[macro_export(crate)]
 macro_rules! tests_for_problem {
     ($t:ty, {
         $(
@@ -90,25 +47,6 @@ macro_rules! tests_for_problem {
                     let input = include_str!(concat!("inputs/", stringify!($test_case)));
                     let answer = <$t as $crate::Problem>::parse_and_solve(input).unwrap();
                     assert_eq!(answer, $expected);
-                }
-            )*
-        }
-    };
-}
-
-#[macro_export(crate)]
-macro_rules! tests_for_answer {
-    ($t:ty, {
-        $(
-            $test_case:ident => $expected:expr,
-        )*
-    }) => {
-        paste::paste! {
-            $(
-                #[test]
-                fn [<test_ $test_case>]() {
-                    let input = include_str!(concat!("inputs/", stringify!($test_case)));
-                    assert_eq!(crate::solve::<$t>(input).unwrap(), $expected);
                 }
             )*
         }
@@ -149,47 +87,6 @@ macro_rules! derive_Extend {
             #[inline]
             fn extend<T: ::core::iter::IntoIterator<Item = $v>>(&mut self, iter: T) {
                 self.0.extend(iter)
-            }
-        }
-    };
-}
-
-#[macro_export(crate)]
-macro_rules! derive_FromIterator_for_Extend {
-    ($t:ty, $v:ty) => {
-        impl ::core::iter::FromIterator<$v> for $t {
-            fn from_iter<T: ::core::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
-                let mut v = Self::default();
-                v.extend(iter);
-                v
-            }
-        }
-    };
-}
-
-#[macro_export(crate)]
-macro_rules! derive_Sum_for_AddAssign {
-    ($t:ty, $v:ty) => {
-        impl ::core::iter::Sum<$v> for $t {
-            #[inline]
-            fn sum<I: ::core::iter::IntoIterator<Item = $v>>(iter: I) -> Self {
-                let mut new = Self::default();
-                for dir in iter {
-                    new += dir
-                }
-                new
-            }
-        }
-    };
-}
-
-#[macro_export(crate)]
-macro_rules! derive_FromIterator_for_Sum {
-    ($t:ty, $v:ty) => {
-        impl ::core::iter::FromIterator<$v> for $t {
-            #[inline]
-            fn from_iter<T: ::core::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
-                iter.into_iter().sum()
             }
         }
     };

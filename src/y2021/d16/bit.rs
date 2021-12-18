@@ -5,8 +5,6 @@ use std::str::FromStr;
 
 use anyhow::{anyhow, Error};
 
-use crate::IntoAnswer;
-
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub(super) enum Bit {
     Zero = 0,
@@ -122,14 +120,6 @@ impl BitVector {
     }
 }
 
-impl IntoAnswer for BitVector {
-    type Output = String;
-
-    fn into_answer(self) -> Self::Output {
-        self.to_string()
-    }
-}
-
 impl FromIterator<u8> for BitVector {
     fn from_iter<T: IntoIterator<Item = u8>>(iter: T) -> Self {
         iter.into_iter().flat_map(Bit::from_byte).collect()
@@ -164,7 +154,12 @@ impl Display for BitVector {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::BitVector, {
+    #[macros::problem]
+    fn problem(v: &super::BitVector) -> String {
+        v.to_string()
+    }
+
+    crate::tests_for_problem!(Problem, {
         example_a => "110100101111111000101000",
         example_b => "00111000000000000110111101000101001010010001001000000000",
         example_c => "11101110000000001101010000001100100000100011000001100000",

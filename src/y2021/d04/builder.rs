@@ -1,12 +1,10 @@
 use std::str::FromStr;
 
-use itertools::Itertools;
-
 use anyhow::{Context, Error, Result};
 
 use super::matrix::{Board, Tile};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub(super) struct SolutionBuilder {
     pub pulls: Vec<u8>,
 
@@ -52,7 +50,7 @@ impl FromStr for SolutionBuilder {
         let pulls = pulls
             .split(',')
             .map(str::parse)
-            .try_collect()
+            .collect::<Result<_, _>>()
             .context("parsing pulls")?;
         lines
             .next()
@@ -60,7 +58,7 @@ impl FromStr for SolutionBuilder {
             .and_then(crate::expect_empty_line)?;
         Ok(Self {
             pulls,
-            boards: BoardReader(lines).try_collect()?,
+            boards: BoardReader(lines).collect::<Result<_, _>>()?,
         })
     }
 }

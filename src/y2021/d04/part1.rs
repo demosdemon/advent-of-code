@@ -68,38 +68,31 @@
     What will your final score be if you choose that board?
 */
 
-use crate::IntoAnswer;
-
 use super::builder::SolutionBuilder;
 
-#[derive(Debug, derive_more::FromStr)]
-struct Answer(SolutionBuilder);
-
-impl IntoAnswer for Answer {
-    type Output = isize;
-
-    fn into_answer(mut self) -> isize {
-        self.0
-            .pulls
-            .into_iter()
-            .find_map(|pull| {
-                self.0.boards.iter_mut().find_map(|board| {
-                    board
-                        .mark(pull)
-                        .map(|(row, col)| {
-                            (board.bingo_row(row) || board.bingo_column(col))
-                                .then(|| board.sum() * pull as isize)
-                        })
-                        .flatten()
-                })
+#[macros::problem]
+fn problem(input: &SolutionBuilder) -> isize {
+    let mut input = input.to_owned();
+    input
+        .pulls
+        .into_iter()
+        .find_map(|pull| {
+            input.boards.iter_mut().find_map(|board| {
+                board
+                    .mark(pull)
+                    .map(|(row, col)| {
+                        (board.bingo_row(row) || board.bingo_column(col))
+                            .then(|| board.sum() * pull as isize)
+                    })
+                    .flatten()
             })
-            .unwrap()
-    }
+        })
+        .unwrap()
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_answer!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 4512,
         live => 2745,
     });

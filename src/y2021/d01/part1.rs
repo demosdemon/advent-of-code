@@ -62,15 +62,14 @@
     How many measurements are larger than the previous measurement?
 */
 
-crate::problem! {
-    struct Answer(input: &super::Ocean) -> isize {
-        input.windows(2).filter(|s| s[0] < s[1]).count() as isize
-    }
+#[macros::problem]
+fn problem(input: &super::Ocean) -> isize {
+    input.windows(2).filter(|s| s[0] < s[1]).count() as isize
 }
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Answer, {
+    crate::tests_for_problem!(super::Problem, {
         example => 7,
         live => 1722,
     });

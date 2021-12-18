@@ -1,5 +1,5 @@
 use std::borrow::Cow;
-use std::collections::LinkedList;
+use std::collections::VecDeque;
 use std::convert::Infallible;
 use std::fmt::Display;
 use std::str::FromStr;
@@ -168,12 +168,12 @@ impl<'a> Display for Path<'a> {
 
 struct PathIter<'a, 'b> {
     ocean: &'a Ocean,
-    stack: LinkedList<(State<'a, 'b>, usize)>,
+    stack: VecDeque<(State<'a, 'b>, usize)>,
 }
 
 impl<'a, 'b> PathIter<'a, 'b> {
     fn new(ocean: &'a Ocean, bonus: bool) -> Self {
-        let mut stack = LinkedList::new();
+        let mut stack = VecDeque::new();
         stack.push_back(State::new(ocean, bonus));
         Self { ocean, stack }
     }
