@@ -5,7 +5,7 @@ use proc_macro_error::{abort, proc_macro_error};
 use quote::quote;
 use syn::{
     ext::IdentExt, parse::Parse, parse_macro_input, punctuated::Punctuated, FnArg, ItemFn, LitStr,
-    Pat, ReturnType, Token, Type, TypePath,
+    ReturnType, Token, Type, TypePath,
 };
 
 #[proc_macro_attribute]
@@ -19,8 +19,6 @@ pub fn problem(_attr: TokenStream, item: TokenStream) -> TokenStream {
         let i = &signature.ident;
         Ident::new(&i.unraw().to_string().to_upper_camel_case(), i.span())
     };
-    let generics = &signature.generics;
-    let where_clause = generics.where_clause.as_ref();
     let input = {
         let mut iter = signature.inputs.iter();
         let input = iter
@@ -33,10 +31,6 @@ pub fn problem(_attr: TokenStream, item: TokenStream) -> TokenStream {
             FnArg::Typed(arg) => arg,
             arg => abort!(arg, "expected a typed input argument"),
         }
-    };
-    let input_name = match &*input.pat {
-        Pat::Ident(ident) => ident,
-        pat => abort!(pat, "expected an ident"),
     };
     let input_type = match &*input.ty {
         Type::Reference(ty) => {
@@ -66,8 +60,7 @@ pub fn problem(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
             type Output = #output_type;
 
-            fn solve #generics (#input_name: &#input_type) -> #output_type #where_clause
-            #body
+            fn solve(#input) -> #output_type #body
         }
     };
 
