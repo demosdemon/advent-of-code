@@ -58,9 +58,9 @@ pub fn problem(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
     let rv = quote! {
         #(#item_attrs)*
+        #item_vis
         struct #struct_ident;
 
-        #item_vis
         impl crate::Problem for #struct_ident {
             type Input = #input_type;
 
