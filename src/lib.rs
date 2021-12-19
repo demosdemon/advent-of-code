@@ -1,3 +1,5 @@
+pub mod nom;
+
 mod y2021;
 
 fn chardigit(c: char) -> u8 {

@@ -1,8 +1,10 @@
-use nom::{branch::alt, bytes::complete::tag, character::complete::u64, IResult};
+use nom::{branch::alt, bytes::complete::tag, IResult};
+
+use crate::nom::usize;
 
 fn node_value(s: &str) -> IResult<&str, super::Node> {
-    let (s, v) = u64(s)?;
-    Ok((s, (v as usize).into()))
+    let (s, v) = usize(s)?;
+    Ok((s, v.into()))
 }
 
 fn node_pair(s: &str) -> IResult<&str, super::Node> {

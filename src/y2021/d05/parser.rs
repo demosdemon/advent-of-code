@@ -1,19 +1,17 @@
 use nom::{
-    branch::alt,
-    bytes::complete::tag,
-    character::complete::{i64, line_ending},
-    combinator::eof,
-    IResult,
+    branch::alt, bytes::complete::tag, character::complete::line_ending, combinator::eof, IResult,
 };
+
+use crate::nom::isize;
 
 use super::coordinate::Coordinate;
 use super::line::Line;
 
 pub(super) fn coordinate(s: &str) -> IResult<&str, Coordinate> {
-    let (s, x) = i64(s)?;
+    let (s, x) = isize(s)?;
     let (s, _) = tag(",")(s)?;
-    let (s, y) = i64(s)?;
-    Ok((s, Coordinate::new(x as isize, y as isize)))
+    let (s, y) = isize(s)?;
+    Ok((s, Coordinate::new(x, y)))
 }
 
 pub(super) fn line(s: &str) -> IResult<&str, Line> {

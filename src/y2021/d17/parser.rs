@@ -1,15 +1,8 @@
 use nom::{
-    branch::alt,
-    bytes::complete::tag,
-    character::complete::{i64, line_ending},
-    combinator::eof,
-    IResult,
+    branch::alt, bytes::complete::tag, character::complete::line_ending, combinator::eof, IResult,
 };
 
-fn isize(s: &str) -> IResult<&str, isize> {
-    let (s, v) = i64(s)?;
-    Ok((s, v as isize))
-}
+use crate::nom::isize;
 
 pub(super) fn target_area(s: &str) -> IResult<&str, super::TargetArea> {
     let (s, _) = tag("target area: x=")(s)?;
