@@ -4,8 +4,8 @@ use proc_macro2::Ident;
 use proc_macro_error::{abort, proc_macro_error};
 use quote::quote;
 use syn::{
-    ext::IdentExt, parse::Parse, parse_macro_input, punctuated::Punctuated, FnArg, ItemFn, LitStr,
-    ReturnType, Token, Type, TypePath,
+    ext::IdentExt, parse::Parse, parse_macro_input, punctuated::Punctuated, spanned::Spanned, Expr,
+    FnArg, ItemFn, ReturnType, Token, Type, TypePath,
 };
 
 #[proc_macro_attribute]
@@ -71,7 +71,7 @@ struct Roundtrip {
     ty: TypePath,
     #[allow(unused)]
     comma: Token![,],
-    lits: Punctuated<LitStr, Token![,]>,
+    lits: Punctuated<Expr, Token![,]>,
 }
 
 impl Parse for Roundtrip {
@@ -79,7 +79,7 @@ impl Parse for Roundtrip {
         Ok(Self {
             ty: input.parse()?,
             comma: input.parse()?,
-            lits: input.parse_terminated(<LitStr as Parse>::parse)?,
+            lits: input.parse_terminated(<Expr as Parse>::parse)?,
         })
     }
 }
