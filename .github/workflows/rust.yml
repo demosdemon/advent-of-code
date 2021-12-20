@@ -45,6 +45,26 @@ jobs:
           command: test
           args: --workspace
 
+  test-nightly:
+    name: Test Suite (nightly)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install nightly toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+
+      - name: Run cargo test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --workspace -- -Z unstable-options --report-time --shuffle
+
   lints:
     name: Lints
     runs-on: ubuntu-latest
