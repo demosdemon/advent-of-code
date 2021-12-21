@@ -28,7 +28,7 @@ fn answer(input: &String) -> usize {
 mod tests {
     crate::tests_for_problem!(super::Answer, {
         example => 0,
-        // live => "",
+        // live => 0,
     });
 }
 EOF
