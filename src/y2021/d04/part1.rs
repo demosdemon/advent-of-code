@@ -78,13 +78,10 @@ fn problem(input: &SolutionBuilder) -> usize {
         .into_iter()
         .find_map(|pull| {
             input.boards.iter_mut().find_map(|board| {
-                board
-                    .mark(pull)
-                    .map(|(row, col)| {
-                        (board.bingo_row(row) || board.bingo_column(col))
-                            .then(|| board.sum() * pull as usize)
-                    })
-                    .flatten()
+                board.mark(pull).and_then(|(row, col)| {
+                    (board.bingo_row(row) || board.bingo_column(col))
+                        .then(|| board.sum() * pull as usize)
+                })
             })
         })
         .unwrap()

@@ -39,12 +39,9 @@ impl Bingo {
             .iter_mut()
             .enumerate()
             .filter_map(|(idx, board)| {
-                board
-                    .mark(pull)
-                    .map(|(row, col)| {
-                        (board.bingo_row(row) || board.bingo_column(col)).then(|| idx)
-                    })
-                    .flatten()
+                board.mark(pull).and_then(|(row, col)| {
+                    (board.bingo_row(row) || board.bingo_column(col)).then(|| idx)
+                })
             })
             .collect::<Vec<_>>()
             .into_iter()

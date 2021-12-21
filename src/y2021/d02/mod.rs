@@ -17,7 +17,7 @@ impl FromStr for Direction {
 
     fn from_str(s: &str) -> Result<Self> {
         let (dir, amt) = s
-            .split_once(" ")
+            .split_once(' ')
             .context("splitting direction on whitespace")?;
         let amt = amt.parse()?;
         match dir {
