@@ -9,8 +9,8 @@ mod parser;
 #[into_iterator(ref)]
 struct Homework(Vec<Snailfish>);
 
-crate::derive_FromIterator!(Homework, Snailfish);
-crate::derive_FromStr_for_FromIterator!(Homework, Snailfish);
+::aoc::derive_FromIterator!(Homework, Snailfish);
+::aoc::derive_FromStr_for_FromIterator!(Homework, Snailfish);
 
 #[derive(Debug, Clone, PartialEq, Eq, derive_more::Display, derive_more::From)]
 enum Node {
@@ -108,7 +108,7 @@ impl Snailfish {
     }
 }
 
-crate::derive_FromStr_for_nom!(Snailfish, parser::snailfish);
+::aoc::derive_FromStr_for_nom!(Snailfish, parser::snailfish);
 
 impl Add for Snailfish {
     type Output = Snailfish;
@@ -145,7 +145,7 @@ fn sum(input: &Homework) -> Snailfish {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Sum, {
+    ::aoc::tests_for_problem!(super::Sum, {
         example_a => "[[[[1,1],[2,2]],[3,3]],[4,4]]".parse().unwrap(),
         example_b => "[[[[3,0],[5,3]],[4,4]],[5,5]]".parse().unwrap(),
         example_c => "[[[[5,0],[7,4]],[5,5]],[6,6]]".parse().unwrap(),

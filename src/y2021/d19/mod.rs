@@ -88,7 +88,7 @@ impl Display for Scanner {
     }
 }
 
-crate::derive_FromStr_for_nom!(Scanner, parser::scanner);
+::aoc::derive_FromStr_for_nom!(Scanner, parser::scanner);
 
 struct Report(Vec<Scanner>);
 
@@ -98,7 +98,7 @@ impl Display for Report {
     }
 }
 
-crate::derive_FromStr_for_nom!(Report, parser::report);
+::aoc::derive_FromStr_for_nom!(Report, parser::report);
 
 #[cfg(test)]
 mod tests {

@@ -15,7 +15,7 @@ impl From<Coordinate> for (isize, isize) {
     }
 }
 
-crate::derive_FromStr_for_nom!(Coordinate, super::parser::coordinate);
+::aoc::derive_FromStr_for_nom!(Coordinate, super::parser::coordinate);
 
 impl<'a> Add<&'a Coordinate> for &'a Coordinate {
     type Output = Coordinate;

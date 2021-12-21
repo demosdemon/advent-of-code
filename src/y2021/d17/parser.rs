@@ -2,7 +2,7 @@ use nom::{
     branch::alt, bytes::complete::tag, character::complete::line_ending, combinator::eof, IResult,
 };
 
-use crate::nom::isize;
+use aoc::nom::isize;
 
 pub(super) fn target_area(s: &str) -> IResult<&str, super::TargetArea> {
     let (s, _) = tag("target area: x=")(s)?;

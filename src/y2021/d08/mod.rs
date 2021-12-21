@@ -111,7 +111,7 @@ struct Line {
     pub output: Output,
 }
 
-crate::derive_FromStr_for_nom!(Line, parser::line);
+::aoc::derive_FromStr_for_nom!(Line, parser::line);
 
 impl From<Line> for usize {
     fn from(value: Line) -> usize {
@@ -126,8 +126,8 @@ impl From<Line> for usize {
 #[derive(Debug, Clone, derive_more::IntoIterator)]
 struct Lines(Vec<Line>);
 
-crate::derive_FromIterator!(Lines, Line);
-crate::derive_FromStr_for_FromIterator!(Lines, Line);
+::aoc::derive_FromIterator!(Lines, Line);
+::aoc::derive_FromStr_for_FromIterator!(Lines, Line);
 
 fn split_iter<I, F>(iter: I, f: F) -> (I, I)
 where

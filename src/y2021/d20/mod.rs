@@ -33,4 +33,4 @@ impl Input {
     }
 }
 
-crate::derive_FromStr_for_nom!(Input, parser::input);
+::aoc::derive_FromStr_for_nom!(Input, parser::input);

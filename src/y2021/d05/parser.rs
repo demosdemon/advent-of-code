@@ -2,7 +2,7 @@ use nom::{
     branch::alt, bytes::complete::tag, character::complete::line_ending, combinator::eof, IResult,
 };
 
-use crate::nom::isize;
+use aoc::nom::isize;
 
 use super::coordinate::Coordinate;
 use super::line::Line;

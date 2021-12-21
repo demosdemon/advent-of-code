@@ -33,5 +33,5 @@ impl FromStr for Direction {
 #[into_iterator(ref)]
 struct DirectionList(Vec<Direction>);
 
-crate::derive_FromIterator!(DirectionList, Direction);
-crate::derive_FromStr_for_FromIterator!(DirectionList, Direction);
+::aoc::derive_FromIterator!(DirectionList, Direction);
+::aoc::derive_FromStr_for_FromIterator!(DirectionList, Direction);

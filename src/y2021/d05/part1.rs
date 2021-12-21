@@ -65,7 +65,7 @@ fn problem(input: &SolutionBuilder) -> usize {
 
 #[cfg(test)]
 mod test {
-    crate::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::Problem, {
         example => 5,
         live => 4873,
     });

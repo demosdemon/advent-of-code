@@ -55,7 +55,7 @@ pub fn problem(_attr: TokenStream, item: TokenStream) -> TokenStream {
         #item_vis
         struct #struct_ident;
 
-        impl crate::Problem for #struct_ident {
+        impl ::aoc::Problem for #struct_ident {
             type Input = #input_type;
 
             type Output = #output_type;

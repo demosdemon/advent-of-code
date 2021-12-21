@@ -8,7 +8,7 @@ use nom::{
     IResult,
 };
 
-use crate::nom::{isize, usize};
+use aoc::nom::{isize, usize};
 
 fn eol(s: &str) -> IResult<&str, &str> {
     alt((line_ending, eof))(s)

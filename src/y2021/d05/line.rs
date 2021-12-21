@@ -37,7 +37,7 @@ impl IntoIterator for Line {
 
 pub(super) struct LineIterator(Option<Line>);
 
-crate::derive_FromStr_for_nom!(Line, super::parser::line);
+::aoc::derive_FromStr_for_nom!(Line, super::parser::line);
 
 impl Iterator for LineIterator {
     type Item = Line;

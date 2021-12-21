@@ -8,5 +8,5 @@ mod line;
 #[into_iterator(ref)]
 struct Lines(Vec<line::Line>);
 
-crate::derive_FromIterator!(Lines, line::Line);
-crate::derive_FromStr_for_FromIterator!(Lines, line::Line);
+::aoc::derive_FromIterator!(Lines, line::Line);
+::aoc::derive_FromStr_for_FromIterator!(Lines, line::Line);

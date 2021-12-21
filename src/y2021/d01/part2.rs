@@ -52,7 +52,7 @@ fn answer(input: &super::Ocean) -> usize {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::Answer, {
         example => 5,
         live => 1748,
     });

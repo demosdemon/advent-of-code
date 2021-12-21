@@ -9,7 +9,7 @@ use super::bit::Bit;
 #[into_iterator(owned, ref)]
 pub(super) struct Line(Vec<Bit>);
 
-crate::derive_FromIterator!(Line, Bit);
+::aoc::derive_FromIterator!(Line, Bit);
 
 impl<'slice> From<&'slice [Bit]> for Line {
     fn from(v: &'slice [Bit]) -> Self {

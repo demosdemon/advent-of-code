@@ -142,7 +142,7 @@ fn problem(input: &super::TargetArea) -> usize {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::Problem, {
         example => 45,
         live => 5995,
     });

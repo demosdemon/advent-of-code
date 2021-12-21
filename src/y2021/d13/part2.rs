@@ -15,7 +15,7 @@ fn problem(input: &super::Instructions) -> String {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::Problem, {
         example => include_str!("outputs/example"),
         live => include_str!("outputs/live"),
     });

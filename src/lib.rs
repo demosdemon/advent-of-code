@@ -1,14 +1,12 @@
 pub mod nom;
 
-mod y2021;
-
-fn chardigit(c: char) -> u8 {
+pub fn chardigit(c: char) -> u8 {
     const ZERO: u8 = b'0';
     assert!(c.is_ascii_digit());
     (c as u8) - ZERO
 }
 
-fn expect_empty_line<S: AsRef<str>>(s: S) -> anyhow::Result<()> {
+pub fn expect_empty_line<S: AsRef<str>>(s: S) -> anyhow::Result<()> {
     let s = s.as_ref();
     if s.is_empty() {
         Ok(())
@@ -35,7 +33,7 @@ pub trait Problem {
     }
 }
 
-#[cfg(test)]
+#[macro_export]
 macro_rules! tests_for_problem {
     ($t:ty, {
         $(
@@ -55,6 +53,7 @@ macro_rules! tests_for_problem {
     };
 }
 
+#[macro_export]
 macro_rules! derive_FromStr_for_FromIterator {
     ($t:ty, $v:ty) => {
         impl ::core::str::FromStr for $t {
@@ -69,6 +68,7 @@ macro_rules! derive_FromStr_for_FromIterator {
     };
 }
 
+#[macro_export]
 macro_rules! derive_FromIterator {
     ($t:ty, $v:ty) => {
         impl ::core::iter::FromIterator<$v> for $t {
@@ -80,6 +80,7 @@ macro_rules! derive_FromIterator {
     };
 }
 
+#[macro_export]
 macro_rules! derive_FromStr_for_nom {
     ($t:ty, $f:path) => {
         impl ::core::str::FromStr for $t {
@@ -97,9 +98,3 @@ macro_rules! derive_FromStr_for_nom {
         }
     };
 }
-
-pub(crate) use derive_FromIterator;
-pub(crate) use derive_FromStr_for_FromIterator;
-pub(crate) use derive_FromStr_for_nom;
-#[cfg(test)]
-pub(crate) use tests_for_problem;

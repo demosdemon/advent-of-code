@@ -130,7 +130,7 @@ impl<'a> FromIterator<&'a Line> for Lines<'a> {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::Problem, {
         example => 230,
         live => 4245351,
     });

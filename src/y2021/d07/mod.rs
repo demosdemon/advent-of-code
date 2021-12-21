@@ -9,7 +9,7 @@ use anyhow::{Context, Error, Result};
 #[into_iterator(ref)]
 struct Ocean(Vec<isize>);
 
-crate::derive_FromIterator!(Ocean, isize);
+::aoc::derive_FromIterator!(Ocean, isize);
 
 impl FromStr for Ocean {
     type Err = Error;

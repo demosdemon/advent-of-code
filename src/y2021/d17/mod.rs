@@ -14,7 +14,7 @@ struct TargetArea {
     max_y: isize,
 }
 
-crate::derive_FromStr_for_nom!(TargetArea, parser::target_area);
+::aoc::derive_FromStr_for_nom!(TargetArea, parser::target_area);
 
 fn pos(dx: isize, dy: isize, t: isize) -> (isize, isize) {
     let y = dy * t - (t - 1) * t / 2;
@@ -66,7 +66,7 @@ mod tests {
         s.to_string()
     }
 
-    crate::tests_for_problem!(Problem, {
+    ::aoc::tests_for_problem!(Problem, {
         example => include_str!("inputs/example"),
         live => include_str!("inputs/live"),
     });

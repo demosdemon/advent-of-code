@@ -92,7 +92,7 @@ impl From<bool> for Bit {
 
 pub(super) struct BitVector(Vec<Bit>);
 
-crate::derive_FromIterator!(BitVector, Bit);
+::aoc::derive_FromIterator!(BitVector, Bit);
 
 impl BitVector {
     fn reverse(&mut self) {
@@ -159,7 +159,7 @@ mod tests {
         v.to_string()
     }
 
-    crate::tests_for_problem!(Problem, {
+    ::aoc::tests_for_problem!(Problem, {
         example_a => "110100101111111000101000",
         example_b => "00111000000000000110111101000101001010010001001000000000",
         example_c => "11101110000000001101010000001100100000100011000001100000",

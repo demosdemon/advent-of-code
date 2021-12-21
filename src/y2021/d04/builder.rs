@@ -55,7 +55,7 @@ impl FromStr for SolutionBuilder {
         lines
             .next()
             .context("reading empty line separator")
-            .and_then(crate::expect_empty_line)?;
+            .and_then(aoc::expect_empty_line)?;
         Ok(Self {
             pulls,
             boards: BoardReader(lines).collect::<Result<_, _>>()?,

@@ -204,7 +204,7 @@ fn answer(input: &super::Homework) -> usize {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::Answer, {
         example_a => 445,
         example_b => 791,
         example_c => 1137,

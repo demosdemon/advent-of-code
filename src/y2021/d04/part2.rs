@@ -55,7 +55,7 @@ impl Bingo {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::Problem, {
         example => 1924,
         live => 6594,
     });

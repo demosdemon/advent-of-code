@@ -90,7 +90,7 @@ fn answer(input: &super::Input) -> usize {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::Answer, {
         example => 739785,
         live => 684495,
     });

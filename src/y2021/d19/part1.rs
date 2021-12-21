@@ -399,7 +399,7 @@ fn answer(input: &super::Report) -> usize {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::Answer, {
         example => 79,
         live => 408,
     });

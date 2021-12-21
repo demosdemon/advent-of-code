@@ -141,7 +141,7 @@ fn problem(input: &super::Cave) -> usize {
 
 #[cfg(test)]
 mod test {
-    crate::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::Problem, {
         example => 315,
         live => 2874,
     });

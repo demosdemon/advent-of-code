@@ -59,7 +59,7 @@ fn problem(input: &super::ocean::Ocean) -> usize {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::Problem, {
         example_a => 36,
         example_b => 103,
         example_c => 3509,

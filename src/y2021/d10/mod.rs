@@ -8,8 +8,8 @@ use std::str::FromStr;
 #[into_iterator(ref)]
 struct Lines(Vec<Line>);
 
-crate::derive_FromIterator!(Lines, Line);
-crate::derive_FromStr_for_FromIterator!(Lines, Line);
+::aoc::derive_FromIterator!(Lines, Line);
+::aoc::derive_FromStr_for_FromIterator!(Lines, Line);
 
 #[derive(Debug)]
 enum Line {

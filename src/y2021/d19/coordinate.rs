@@ -68,4 +68,4 @@ impl<'lhs, 'rhs> Add<&'rhs Coordinate> for &'lhs Coordinate {
     }
 }
 
-crate::derive_FromStr_for_nom!(Coordinate, super::parser::beacon);
+::aoc::derive_FromStr_for_nom!(Coordinate, super::parser::beacon);

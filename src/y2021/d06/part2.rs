@@ -14,7 +14,7 @@ fn problem(input: &super::Ocean) -> isize {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::Problem, {
         example => 26984457539,
         live => 1710623015163,
     });

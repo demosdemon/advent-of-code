@@ -5,8 +5,8 @@ use super::line::Line;
 #[into_iterator(owned, ref)]
 pub(super) struct SolutionBuilder(Vec<Line>);
 
-crate::derive_FromIterator!(SolutionBuilder, Line);
-crate::derive_FromStr_for_FromIterator!(SolutionBuilder, Line);
+::aoc::derive_FromIterator!(SolutionBuilder, Line);
+::aoc::derive_FromStr_for_FromIterator!(SolutionBuilder, Line);
 
 impl SolutionBuilder {
     pub fn board<F>(&self, predicate: F) -> Board

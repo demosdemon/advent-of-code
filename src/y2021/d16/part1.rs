@@ -155,7 +155,7 @@ fn problem(packet: &super::Packet) -> usize {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::Problem, {
         example_a => 6,
         example_b => 9,
         example_c => 14,

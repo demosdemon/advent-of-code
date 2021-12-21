@@ -79,7 +79,7 @@ fn problem(input: &super::Lines) -> usize {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::Problem, {
         example => 198,
         live => 4103154,
     });

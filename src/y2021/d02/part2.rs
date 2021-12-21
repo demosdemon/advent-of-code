@@ -59,7 +59,7 @@ fn problem(input: &super::DirectionList) -> isize {
 
 #[cfg(test)]
 mod tests {
-    crate::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::Problem, {
         example => 900,
         live => 1281977850,
     });

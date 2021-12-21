@@ -7,7 +7,7 @@ use anyhow::{Context, Error, Result};
 
 struct Ocean(Vec<u8>);
 
-crate::derive_FromIterator!(Ocean, u8);
+::aoc::derive_FromIterator!(Ocean, u8);
 
 impl FromStr for Ocean {
     type Err = Error;

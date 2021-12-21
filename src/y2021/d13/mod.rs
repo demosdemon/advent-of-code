@@ -135,7 +135,7 @@ impl FromStr for Instructions {
 
 struct Matrix(BTreeSet<Coordinate>);
 
-crate::derive_FromIterator!(Matrix, Coordinate);
+::aoc::derive_FromIterator!(Matrix, Coordinate);
 
 impl Matrix {
     pub fn len(&self) -> usize {

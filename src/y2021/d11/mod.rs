@@ -121,7 +121,7 @@ impl FromStr for Ocean {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(s.lines()
-            .flat_map(|s| s.chars().map(crate::chardigit))
+            .flat_map(|s| s.chars().map(aoc::chardigit))
             .collect())
     }
 }
