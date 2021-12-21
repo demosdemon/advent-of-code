@@ -35,7 +35,7 @@ pub trait Problem {
     }
 }
 
-#[macro_export(crate)]
+#[cfg(test)]
 macro_rules! tests_for_problem {
     ($t:ty, {
         $(
@@ -55,7 +55,6 @@ macro_rules! tests_for_problem {
     };
 }
 
-#[macro_export(crate)]
 macro_rules! derive_FromStr_for_FromIterator {
     ($t:ty, $v:ty) => {
         impl ::core::str::FromStr for $t {
@@ -70,7 +69,6 @@ macro_rules! derive_FromStr_for_FromIterator {
     };
 }
 
-#[macro_export(crate)]
 macro_rules! derive_FromIterator {
     ($t:ty, $v:ty) => {
         impl ::core::iter::FromIterator<$v> for $t {
@@ -82,7 +80,6 @@ macro_rules! derive_FromIterator {
     };
 }
 
-#[macro_export(crate)]
 macro_rules! derive_FromStr_for_nom {
     ($t:ty, $f:path) => {
         impl ::core::str::FromStr for $t {
@@ -100,3 +97,9 @@ macro_rules! derive_FromStr_for_nom {
         }
     };
 }
+
+pub(crate) use derive_FromIterator;
+pub(crate) use derive_FromStr_for_FromIterator;
+pub(crate) use derive_FromStr_for_nom;
+#[cfg(test)]
+pub(crate) use tests_for_problem;
