@@ -84,4 +84,10 @@ enum Part1 {
     Example,
     Live,
 }
+
+macros::day! {
+    
+    let part1 = (part1::solve, )
+}
 */
+

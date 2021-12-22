@@ -19,3 +19,4 @@ pub(crate) mod d18;
 pub(crate) mod d19;
 pub(crate) mod d20;
 pub(crate) mod d21;
+pub(crate) mod d22;
