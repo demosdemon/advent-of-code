@@ -52,14 +52,13 @@
     Given these new rules, how many paths through this cave system are there?
 */
 
-#[macros::problem]
-fn problem(input: &super::ocean::Ocean) -> usize {
+pub fn solve(input: &super::ocean::Ocean) -> usize {
     input.paths(true).count()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example_a => 36,
         example_b => 103,
         example_c => 3509,

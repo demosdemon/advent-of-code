@@ -62,14 +62,13 @@
     How many measurements are larger than the previous measurement?
 */
 
-#[macros::problem]
-fn problem(input: &super::Ocean) -> usize {
+pub fn solve(input: &super::Ocean) -> usize {
     input.windows(2).filter(|s| s[0] < s[1]).count()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 7,
         live => 1722,
     });

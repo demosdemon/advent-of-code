@@ -29,8 +29,8 @@
     possible so they can make you an escape route! How much fuel must they spend to
     align to that position?
 */
-#[macros::problem]
-fn problem(input: &super::Ocean) -> isize {
+
+pub fn solve(input: &super::Ocean) -> isize {
     input.solve(|a, b| {
         let d = (b - a).abs();
         (d * (d + 1)) / 2
@@ -39,7 +39,7 @@ fn problem(input: &super::Ocean) -> isize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 168,
         live => 96361606,
     });

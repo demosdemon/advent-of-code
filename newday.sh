@@ -9,24 +9,23 @@ echo "stubbing $1"
 mkdir -p ./src/y2021/$1/inputs
 touch ./src/y2021/$1/inputs/{live,example}
 
-echo "mod $1;" >> ./src/y2021/mod.rs
+echo "pub(crate) mod $1;" >> ./src/y2021/mod.rs
 
-echo "mod part1;" >> ./src/y2021/$1/mod.rs
-echo "// mod part2;" >> ./src/y2021/$1/mod.rs
+echo "pub(crate) mod part1;" >> ./src/y2021/$1/mod.rs
+echo "// pub(crate) mod part2;" >> ./src/y2021/$1/mod.rs
 
 cat >./src/y2021/$1/part1.rs <<"EOF"
 /*
 
 */
 
-#[macros::problem]
-fn answer(input: &String) -> usize {
+pub fn solve(input: &String) -> usize {
     0
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 0,
         // live => 0,
     });

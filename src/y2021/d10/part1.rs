@@ -77,8 +77,7 @@
     What is the total syntax error score for those errors?
 */
 
-#[macros::problem]
-fn problem(input: &super::Lines) -> usize {
+pub fn solve(input: &super::Lines) -> usize {
     use super::Line::*;
     let mut res = [0; 4];
     for c in input {
@@ -96,7 +95,7 @@ fn problem(input: &super::Lines) -> usize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 26397,
         live => 392139,
     });

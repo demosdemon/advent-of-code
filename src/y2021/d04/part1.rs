@@ -70,8 +70,7 @@
 
 use super::builder::SolutionBuilder;
 
-#[macros::problem]
-fn problem(input: &SolutionBuilder) -> usize {
+pub fn solve(input: &SolutionBuilder) -> usize {
     let mut input = input.to_owned();
     input
         .pulls
@@ -89,7 +88,7 @@ fn problem(input: &SolutionBuilder) -> usize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 4512,
         live => 2745,
     });

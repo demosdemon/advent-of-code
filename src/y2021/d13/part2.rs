@@ -6,8 +6,7 @@
     What code do you use to activate the infrared thermal imaging camera system?
 */
 
-#[macros::problem]
-fn problem(input: &super::Instructions) -> String {
+pub fn solve(input: &super::Instructions) -> String {
     let matrix: super::Matrix = input.coordinates.iter().collect();
     let matrix = input.folds.iter().fold(matrix, |prev, fold| prev + fold);
     matrix.to_string()
@@ -15,7 +14,7 @@ fn problem(input: &super::Instructions) -> String {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => include_str!("outputs/example"),
         live => include_str!("outputs/live"),
     });

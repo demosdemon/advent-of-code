@@ -52,8 +52,7 @@
 use super::bit::Bit;
 use super::line::Line;
 
-#[macros::problem]
-fn problem(input: &super::Lines) -> usize {
+pub fn solve(input: &super::Lines) -> usize {
     let len = input[0].len();
     let mut zeros = vec![0; len];
     let mut ones = vec![0; len];
@@ -79,7 +78,7 @@ fn problem(input: &super::Lines) -> usize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 198,
         live => 4103154,
     });

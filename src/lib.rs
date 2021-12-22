@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 pub mod nom;
 
 pub fn chardigit(c: char) -> u8 {
@@ -15,27 +17,19 @@ pub fn expect_empty_line<S: AsRef<str>>(s: S) -> anyhow::Result<()> {
     }
 }
 
-pub trait Problem {
-    type Input: ::core::str::FromStr;
-
-    type Output: ::core::cmp::PartialEq;
-
-    fn solve(input: &<Self as Problem>::Input) -> <Self as Problem>::Output;
-
-    fn parse_and_solve(
-        input: &str,
-    ) -> ::core::result::Result<
-        <Self as Problem>::Output,
-        <<Self as Problem>::Input as ::core::str::FromStr>::Err,
-    > {
-        let input = input.parse()?;
-        Ok(Self::solve(&input))
-    }
+pub fn parse_and_solve<I, O, S>(s: &str, f: S) -> Result<O, I::Err>
+where
+    I: FromStr,
+    O: PartialEq,
+    S: FnOnce(&I) -> O,
+{
+    let input = s.parse()?;
+    Ok((f)(&input))
 }
 
 #[macro_export]
 macro_rules! tests_for_problem {
-    ($t:ty, {
+    ($solve:expr, {
         $(
             $test_case:ident => $expected:expr,
         )*
@@ -45,7 +39,7 @@ macro_rules! tests_for_problem {
                 #[test]
                 fn [<test_ $test_case>]() {
                     let input = include_str!(concat!("inputs/", stringify!($test_case)));
-                    let answer = <$t as $crate::Problem>::parse_and_solve(input).unwrap();
+                    let answer = ::aoc::parse_and_solve(input, $solve).unwrap();
                     assert_eq!(answer, $expected);
                 }
             )*

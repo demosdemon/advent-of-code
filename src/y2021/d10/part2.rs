@@ -58,8 +58,7 @@
     and sort the scores. What is the middle score?
 */
 
-#[macros::problem]
-fn problem(input: &super::Lines) -> usize {
+pub fn solve(input: &super::Lines) -> usize {
     let mut scores = input
         .into_iter()
         .filter_map(|l| l.score())
@@ -71,7 +70,7 @@ fn problem(input: &super::Lines) -> usize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 288957,
         live => 4001832844,
     });

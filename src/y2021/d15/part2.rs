@@ -134,14 +134,13 @@
     Using the full map, what is the lowest total risk of any path from the top left to the bottom right?
 */
 
-#[macros::problem]
-fn problem(input: &super::Cave) -> usize {
+pub fn solve(input: &super::Cave) -> usize {
     (input * 5).cost().unwrap()
 }
 
 #[cfg(test)]
 mod test {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 315,
         live => 2874,
     });

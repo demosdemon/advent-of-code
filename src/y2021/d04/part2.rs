@@ -19,8 +19,7 @@
 use super::builder::SolutionBuilder;
 use super::matrix::Board;
 
-#[macros::problem]
-fn problem(input: &SolutionBuilder) -> usize {
+pub fn solve(input: &SolutionBuilder) -> usize {
     let input = input.to_owned();
     let mut bingo = Bingo(input.boards);
     input
@@ -55,7 +54,7 @@ impl Bingo {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 1924,
         live => 6594,
     });

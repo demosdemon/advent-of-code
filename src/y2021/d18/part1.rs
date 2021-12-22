@@ -197,14 +197,13 @@
     appear. What is the magnitude of the final sum?
 */
 
-#[macros::problem]
-fn answer(input: &super::Homework) -> usize {
-    super::Sum::solve(input).magnitude()
+pub fn solve(input: &super::Homework) -> usize {
+    super::sum(input).magnitude()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::solve, {
         example_a => 445,
         example_b => 791,
         example_c => 1137,

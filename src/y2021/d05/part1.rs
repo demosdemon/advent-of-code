@@ -58,14 +58,13 @@
 
 use super::builder::SolutionBuilder;
 
-#[macros::problem]
-fn problem(input: &SolutionBuilder) -> usize {
+pub fn solve(input: &SolutionBuilder) -> usize {
     input.board(|l| !l.is_diagonal()).overlaps()
 }
 
 #[cfg(test)]
 mod test {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 5,
         live => 4873,
     });

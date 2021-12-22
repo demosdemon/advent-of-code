@@ -39,8 +39,7 @@
 
 use super::Direction;
 
-#[macros::problem]
-fn problem(input: &super::DirectionList) -> isize {
+pub fn solve(input: &super::DirectionList) -> isize {
     let mut aim = 0;
     let mut horizontal = 0;
     let mut depth = 0;
@@ -59,7 +58,7 @@ fn problem(input: &super::DirectionList) -> isize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 900,
         live => 1281977850,
     });

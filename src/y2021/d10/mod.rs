@@ -1,18 +1,18 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
 use std::convert::Infallible;
 use std::str::FromStr;
 
 #[derive(derive_more::IntoIterator)]
 #[into_iterator(ref)]
-struct Lines(Vec<Line>);
+pub struct Lines(Vec<Line>);
 
 ::aoc::derive_FromIterator!(Lines, Line);
 ::aoc::derive_FromStr_for_FromIterator!(Lines, Line);
 
 #[derive(Debug)]
-enum Line {
+pub enum Line {
     Incomplete(Vec<char>),
     Invalid(char),
 }

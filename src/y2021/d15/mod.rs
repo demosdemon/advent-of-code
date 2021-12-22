@@ -1,5 +1,5 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
@@ -32,7 +32,7 @@ impl Ord for State {
 }
 
 #[derive(Debug, Clone)]
-struct Cave {
+pub struct Cave {
     width: usize,
     nodes: Vec<u8>,
 }

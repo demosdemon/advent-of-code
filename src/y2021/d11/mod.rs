@@ -1,5 +1,5 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
 use std::collections::VecDeque;
 use std::convert::Infallible;
@@ -53,7 +53,7 @@ impl From<u8> for Octopus {
 const SIZE: usize = 10;
 
 #[derive(Debug, Clone)]
-struct Ocean([Octopus; SIZE * SIZE]);
+pub struct Ocean([Octopus; SIZE * SIZE]);
 
 #[derive(Default)]
 struct FlashQueue {

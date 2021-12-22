@@ -137,14 +137,13 @@
     lit in the resulting image?
 */
 
-#[macros::problem]
-fn answer(input: &super::Input) -> usize {
+pub fn solve(input: &super::Input) -> usize {
     input.fold(2)
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 35,
         live => 5597,
     });

@@ -72,14 +72,13 @@
     days?
 */
 
-#[macros::problem]
-fn problem(input: &super::Ocean) -> isize {
+pub fn solve(input: &super::Ocean) -> isize {
     input.count(80)
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 5934,
         live => 380758,
     });

@@ -1,5 +1,5 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
-mod builder;
-mod matrix;
+pub(crate) mod builder;
+pub(crate) mod matrix;

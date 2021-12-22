@@ -72,14 +72,13 @@
     common element and subtract the quantity of the least common element?
 */
 
-#[macros::problem]
-fn problem(input: &super::Instructions) -> usize {
+pub fn solve(input: &super::Instructions) -> usize {
     (0..10).fold(input.clone(), |i, _| i.step()).score()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 1588,
         live => 2375,
     });

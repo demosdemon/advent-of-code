@@ -1,11 +1,11 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
 use std::str::FromStr;
 
 use anyhow::{Context, Error, Result};
 
-struct Ocean(Vec<u8>);
+pub struct Ocean(Vec<u8>);
 
 ::aoc::derive_FromIterator!(Ocean, u8);
 

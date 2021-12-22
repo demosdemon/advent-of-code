@@ -48,14 +48,13 @@
     possible. How much fuel must they spend to align to that position?
 */
 
-#[macros::problem]
-fn problem(input: &super::Ocean) -> isize {
+pub fn solve(input: &super::Ocean) -> isize {
     input.solve(|a, b| (b - a).abs())
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 37,
         live => 345197,
     });

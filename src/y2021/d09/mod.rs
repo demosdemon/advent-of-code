@@ -1,6 +1,6 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
-mod ocean;
+pub(crate) mod ocean;
 
 use ocean::Ocean;

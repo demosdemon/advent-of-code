@@ -1,12 +1,12 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
 use std::str::FromStr;
 
 use anyhow::{anyhow, Context, Error, Result};
 
 #[derive(Debug)]
-enum Direction {
+pub enum Direction {
     Forward(isize),
     Up(isize),
     Down(isize),
@@ -31,7 +31,7 @@ impl FromStr for Direction {
 
 #[derive(derive_more::IntoIterator)]
 #[into_iterator(ref)]
-struct DirectionList(Vec<Direction>);
+pub struct DirectionList(Vec<Direction>);
 
 ::aoc::derive_FromIterator!(DirectionList, Direction);
 ::aoc::derive_FromStr_for_FromIterator!(DirectionList, Direction);

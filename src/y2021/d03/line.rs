@@ -7,7 +7,7 @@ use super::bit::Bit;
 
 #[derive(Default, Debug, Clone, derive_more::IntoIterator, derive_more::Index)]
 #[into_iterator(owned, ref)]
-pub(super) struct Line(Vec<Bit>);
+pub struct Line(Vec<Bit>);
 
 ::aoc::derive_FromIterator!(Line, Bit);
 

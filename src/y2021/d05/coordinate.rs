@@ -4,7 +4,7 @@ use std::ops::Add;
     Debug, PartialEq, Eq, PartialOrd, Ord, Clone, derive_more::Display, derive_more::Constructor,
 )]
 #[display(fmt = "{},{}", x, y)]
-pub(super) struct Coordinate {
+pub struct Coordinate {
     pub x: isize,
     pub y: isize,
 }

@@ -69,8 +69,7 @@
 
 use super::line::Line;
 
-#[macros::problem]
-fn problem(input: &super::Lines) -> usize {
+pub fn solve(input: &super::Lines) -> usize {
     let lines = &*input;
     let bits = lines[0].len();
     let mut o2 = lines.iter().collect::<Lines>();
@@ -130,7 +129,7 @@ impl<'a> FromIterator<&'a Line> for Lines<'a> {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 230,
         live => 4245351,
     });

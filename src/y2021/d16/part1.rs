@@ -148,14 +148,13 @@
     if you add up the version numbers in all packets?
 */
 
-#[macros::problem]
-fn problem(packet: &super::Packet) -> usize {
+pub fn solve(packet: &super::Packet) -> usize {
     packet.version_sum()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example_a => 6,
         example_b => 9,
         example_c => 14,

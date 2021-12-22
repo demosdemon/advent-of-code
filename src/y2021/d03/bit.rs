@@ -3,7 +3,7 @@ use std::ops::{Add, Not};
 use anyhow::{anyhow, Error, Result};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub(super) enum Bit {
+pub enum Bit {
     Zero = 0,
     One = 1,
 }

@@ -28,14 +28,13 @@
     area after any step?
 */
 
-#[macros::problem]
-fn problem(input: &super::TargetArea) -> usize {
+pub fn solve(input: &super::TargetArea) -> usize {
     input.range().count()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 112,
         live => 3202,
     });

@@ -1,8 +1,8 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
-mod coordinate;
-mod parser;
+pub(crate) mod coordinate;
+pub(crate) mod parser;
 
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::Display;
@@ -90,7 +90,7 @@ impl Display for Scanner {
 
 ::aoc::derive_FromStr_for_nom!(Scanner, parser::scanner);
 
-struct Report(Vec<Scanner>);
+pub struct Report(Vec<Scanner>);
 
 impl Display for Report {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

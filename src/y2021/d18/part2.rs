@@ -33,8 +33,7 @@
 
 use itertools::Itertools;
 
-#[macros::problem]
-fn answer(input: &super::Homework) -> usize {
+pub fn solve(input: &super::Homework) -> usize {
     input
         .into_iter()
         .permutations(2)
@@ -45,7 +44,7 @@ fn answer(input: &super::Homework) -> usize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::solve, {
         example_a => 90,
         example_b => 115,
         example_c => 140,

@@ -391,15 +391,14 @@
     Assemble the full map of beacons. How many beacons are there?
 */
 
-#[macros::problem]
-fn answer(input: &super::Report) -> usize {
+pub fn solve(input: &super::Report) -> usize {
     let set: super::BeaconSet = input.0.as_slice().into();
     set.beacons.len()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 79,
         live => 408,
     });

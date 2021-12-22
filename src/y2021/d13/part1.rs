@@ -134,8 +134,7 @@
     transparent paper?
 */
 
-#[macros::problem]
-fn problem(input: &super::Instructions) -> usize {
+pub fn solve(input: &super::Instructions) -> usize {
     let matrix: super::Matrix = input.coordinates.iter().collect();
     let matrix = matrix + &input.folds[0];
     matrix.len()
@@ -143,7 +142,7 @@ fn problem(input: &super::Instructions) -> usize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 17,
         live => 785,
     });

@@ -57,14 +57,13 @@
     What is the lowest total risk of any path from the top left to the bottom right?
 */
 
-#[macros::problem]
-fn problem(input: &super::Cave) -> usize {
+pub fn solve(input: &super::Cave) -> usize {
     input.cost().unwrap()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 40,
         live => 562,
     });

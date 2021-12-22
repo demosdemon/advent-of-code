@@ -134,15 +134,14 @@
     position it reaches on this trajectory?
 */
 
-#[macros::problem]
-fn problem(input: &super::TargetArea) -> usize {
+pub fn solve(input: &super::TargetArea) -> usize {
     let min_y = input.min_y.abs() as usize;
     (min_y * (min_y - 1)) / 2
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 45,
         live => 5995,
     });

@@ -1,5 +1,5 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
 use std::str::FromStr;
 
@@ -7,7 +7,7 @@ use anyhow::{Context, Error, Result};
 
 #[derive(derive_more::IntoIterator)]
 #[into_iterator(ref)]
-struct Ocean(Vec<isize>);
+pub struct Ocean(Vec<isize>);
 
 ::aoc::derive_FromIterator!(Ocean, isize);
 

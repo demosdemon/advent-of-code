@@ -5,7 +5,7 @@ use anyhow::{Context, Error, Result};
 use super::matrix::{Board, Tile};
 
 #[derive(Debug, Clone)]
-pub(super) struct SolutionBuilder {
+pub struct SolutionBuilder {
     pub pulls: Vec<u8>,
 
     pub boards: Vec<Board>,

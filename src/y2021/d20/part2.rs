@@ -10,14 +10,13 @@
     50 times. How many pixels are lit in the resulting image?
 */
 
-#[macros::problem]
-fn answer(input: &super::Input) -> usize {
+pub fn solve(input: &super::Input) -> usize {
     input.fold(50)
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 3351,
         live => 18723,
     });

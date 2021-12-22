@@ -81,8 +81,7 @@ impl Deterministic {
     }
 }
 
-#[macros::problem]
-fn answer(input: &super::Input) -> usize {
+pub fn solve(input: &super::Input) -> usize {
     let mut game = Deterministic::default();
     let state = game.game(input);
     std::cmp::min(state.p1.score, state.p2.score) * game.rolls
@@ -90,7 +89,7 @@ fn answer(input: &super::Input) -> usize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 739785,
         live => 684495,
     });

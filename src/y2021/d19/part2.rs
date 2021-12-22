@@ -12,8 +12,7 @@
 
 use itertools::Itertools;
 
-#[macros::problem]
-fn answer(input: &super::Report) -> usize {
+pub fn solve(input: &super::Report) -> usize {
     let set: super::BeaconSet = input.0.as_slice().into();
     set.scanners
         .iter()
@@ -25,7 +24,7 @@ fn answer(input: &super::Report) -> usize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 3621,
         live => 13348,
     });

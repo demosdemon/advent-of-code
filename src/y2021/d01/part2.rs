@@ -45,14 +45,13 @@
     the previous sum?
 */
 
-#[macros::problem]
-fn answer(input: &super::Ocean) -> usize {
+pub fn solve(input: &super::Ocean) -> usize {
     input.windows(4).filter(|s| s[0] < s[3]).count()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 5,
         live => 1748,
     });

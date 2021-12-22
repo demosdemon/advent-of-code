@@ -46,8 +46,7 @@
     step during which all octopuses flash?
 */
 
-#[macros::problem]
-fn problem(input: &super::Ocean) -> usize {
+pub fn solve(input: &super::Ocean) -> usize {
     let mut ocean = input.to_owned();
     (1..)
         .find_map(|tick| (ocean.tick() == 100).then(|| tick))
@@ -56,7 +55,7 @@ fn problem(input: &super::Ocean) -> usize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 195,
         live => 237,
     });

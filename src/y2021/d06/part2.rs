@@ -7,14 +7,13 @@
     lanternfish!
 */
 
-#[macros::problem]
-fn problem(input: &super::Ocean) -> isize {
+pub fn solve(input: &super::Ocean) -> isize {
     input.count(256)
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 26984457539,
         live => 1710623015163,
     });

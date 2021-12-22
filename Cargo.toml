@@ -13,9 +13,8 @@ derive_more = "0.99.17"
 itertools = "0.10.3"
 macros = {path = "macros"}
 nom = "7.1.0"
-
-[dev-dependencies]
 paste = "1.0.6"
+structopt = "0.3.25"
 
 [workspace]
 members = [

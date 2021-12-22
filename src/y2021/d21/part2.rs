@@ -95,14 +95,13 @@ impl Dirac {
     }
 }
 
-#[macros::problem]
-fn answer(input: &Input) -> usize {
+pub fn solve(input: &Input) -> usize {
     Dirac::from_input(input).max()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Answer, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 444356092776315,
         live => 152587196649184,
     });

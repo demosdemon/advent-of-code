@@ -49,8 +49,7 @@
     What do you get if you multiply together the sizes of the three largest basins?
 */
 
-#[macros::problem]
-fn problem(input: &super::Ocean) -> usize {
+pub fn solve(input: &super::Ocean) -> usize {
     let mut v = input
         .basins()
         .into_iter()
@@ -62,7 +61,7 @@ fn problem(input: &super::Ocean) -> usize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 1134,
         live => 920448,
     });

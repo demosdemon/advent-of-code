@@ -44,14 +44,13 @@
     encoded BITS transmission?
 */
 
-#[macros::problem]
-fn problem(packet: &super::Packet) -> usize {
+pub fn solve(packet: &super::Packet) -> usize {
     packet.evaluate()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example_a => 2021,
         example_b => 1,
         example_c => 3,

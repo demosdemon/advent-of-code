@@ -1,5 +1,5 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
 use std::collections::BTreeSet;
 use std::fmt::{Display, Write};
@@ -95,7 +95,7 @@ impl FromStr for Fold {
 }
 
 #[derive(Debug)]
-struct Instructions {
+pub struct Instructions {
     coordinates: Vec<Coordinate>,
     folds: Vec<Fold>,
 }

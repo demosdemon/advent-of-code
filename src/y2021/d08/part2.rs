@@ -57,14 +57,13 @@
     four-digit output values. What do you get if you add up all of the output values?
 */
 
-#[macros::problem]
-fn problem(input: &super::Lines) -> usize {
+pub fn solve(input: &super::Lines) -> usize {
     input.clone().into_iter().map(usize::from).sum()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 61229,
         live => 986163,
     });

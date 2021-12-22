@@ -1,13 +1,13 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
-mod parser;
+pub(crate) mod parser;
 
 use std::ops::RangeInclusive;
 
 #[derive(derive_more::Display)]
 #[display(fmt = "target area: x={}..{}, y={}..{}\n", min_x, max_x, min_y, max_y)]
-struct TargetArea {
+pub struct TargetArea {
     min_x: isize,
     max_x: isize,
     min_y: isize,
@@ -61,12 +61,11 @@ impl TargetArea {
 
 #[cfg(test)]
 mod tests {
-    #[macros::problem]
-    fn problem(s: &super::TargetArea) -> String {
+    fn solve(s: &super::TargetArea) -> String {
         s.to_string()
     }
 
-    ::aoc::tests_for_problem!(Problem, {
+    ::aoc::tests_for_problem!(solve, {
         example => include_str!("inputs/example"),
         live => include_str!("inputs/live"),
     });

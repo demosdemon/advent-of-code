@@ -157,7 +157,7 @@ impl<'a, 'b> State<'a, 'b> {
     }
 }
 
-pub(super) struct Path<'a>(Box<[&'a str]>);
+pub struct Path<'a>(Box<[&'a str]>);
 
 impl<'a> Display for Path<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -209,7 +209,7 @@ impl Ocean {
 }
 
 #[derive(Debug, Default)]
-pub(super) struct Ocean {
+pub struct Ocean {
     names: Box<[String]>,
     edges: Vec<Vec<(usize, EdgeType)>>,
     head: usize,

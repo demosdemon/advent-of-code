@@ -1,12 +1,12 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
-mod parser;
+pub(crate) mod parser;
 
 use std::collections::{BTreeSet, HashMap};
 
 #[derive(Debug, Hash, PartialEq, Eq, PartialOrd, Ord, Clone)]
-enum Segment {
+pub enum Segment {
     A,
     B,
     C,
@@ -17,7 +17,7 @@ enum Segment {
 }
 
 #[derive(Debug, Hash, PartialEq, Eq, PartialOrd, Ord, Clone, derive_more::Deref)]
-struct Digit(BTreeSet<Segment>);
+pub struct Digit(BTreeSet<Segment>);
 
 #[derive(
     Debug,
@@ -27,7 +27,7 @@ struct Digit(BTreeSet<Segment>);
     derive_more::From,
     derive_more::IntoIterator,
 )]
-struct Signal([Digit; parser::SIGNAL_DIGITS]);
+pub struct Signal([Digit; parser::SIGNAL_DIGITS]);
 
 impl Signal {
     pub fn consume(self) -> HashMap<Digit, usize> {
@@ -103,10 +103,10 @@ impl Signal {
     derive_more::From,
     derive_more::IntoIterator,
 )]
-struct Output([Digit; parser::OUTPUT_DIGITS]);
+pub struct Output([Digit; parser::OUTPUT_DIGITS]);
 
 #[derive(Debug, Clone, derive_more::Constructor)]
-struct Line {
+pub struct Line {
     pub signal: Signal,
     pub output: Output,
 }
@@ -124,7 +124,7 @@ impl From<Line> for usize {
 }
 
 #[derive(Debug, Clone, derive_more::IntoIterator)]
-struct Lines(Vec<Line>);
+pub struct Lines(Vec<Line>);
 
 ::aoc::derive_FromIterator!(Lines, Line);
 ::aoc::derive_FromStr_for_FromIterator!(Lines, Line);

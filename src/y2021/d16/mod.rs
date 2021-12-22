@@ -1,7 +1,7 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
-mod bit;
+pub(crate) mod bit;
 
 use std::str::FromStr;
 
@@ -10,7 +10,7 @@ use anyhow::{Context, Error};
 use bit::{Bit, BitVector};
 
 #[derive(Debug)]
-struct Version([Bit; 3]);
+pub struct Version([Bit; 3]);
 
 impl Version {
     pub fn read(bv: &mut BitVector) -> Option<Self> {
@@ -19,7 +19,7 @@ impl Version {
 }
 
 #[derive(Debug)]
-struct PacketType([Bit; 3]);
+pub struct PacketType([Bit; 3]);
 
 impl PacketType {
     pub fn read(bv: &mut BitVector) -> Option<Self> {
@@ -46,7 +46,7 @@ impl LengthType {
 }
 
 #[derive(Debug)]
-enum Packet {
+pub enum Packet {
     Literal {
         version: Version,
         // always [One, Zero, Zero]

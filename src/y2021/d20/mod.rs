@@ -1,8 +1,8 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
-mod image;
-mod parser;
+pub(crate) mod image;
+pub(crate) mod parser;
 
 use image::{Algorithm, Image, Pixel};
 
@@ -20,7 +20,7 @@ const ALGORITHM_DX_DY: [(isize, isize); ALGORITHM_BITS] = [
     (1, 1),
 ];
 
-struct Input {
+pub struct Input {
     algo: Algorithm,
     image: Image,
 }

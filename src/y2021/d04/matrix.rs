@@ -6,7 +6,7 @@ use std::str::FromStr;
 use anyhow::{anyhow, Result};
 
 #[derive(Debug, Default, Clone)]
-pub(super) struct Tile {
+pub struct Tile {
     /// Value on the bingo board.
     pub(crate) value: u8,
 
@@ -50,7 +50,7 @@ impl Display for Tile {
 }
 
 #[derive(Debug, Clone)]
-pub(super) struct Board {
+pub struct Board {
     /// Width & Depth of the board (e.g., 5 for a 5x5 board)
     size: u8,
 

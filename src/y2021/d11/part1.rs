@@ -316,15 +316,14 @@
     steps. How many total flashes are there after 100 steps?
 */
 
-#[macros::problem]
-fn problem(input: &super::Ocean) -> usize {
+pub fn solve(input: &super::Ocean) -> usize {
     let mut ocean = input.to_owned();
     (0..100).map(move |_| ocean.tick()).sum()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 1656,
         live => 1729,
     });

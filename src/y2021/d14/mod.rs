@@ -1,5 +1,5 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
 use std::collections::BTreeMap;
 use std::str::FromStr;
@@ -48,7 +48,7 @@ impl FromStr for InsertionRule {
 }
 
 #[derive(Clone)]
-struct Instructions {
+pub struct Instructions {
     tuples: BTreeMap<(u8, u8), usize>,
     rules: BTreeMap<(u8, u8), u8>,
 }

@@ -90,8 +90,7 @@
     In the output values, how many times do digits 1, 4, 7, or 8 appear?
 */
 
-#[macros::problem]
-fn problem(input: &super::Lines) -> usize {
+pub fn solve(input: &super::Lines) -> usize {
     input
         .clone()
         .into_iter()
@@ -106,7 +105,7 @@ fn problem(input: &super::Lines) -> usize {
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Problem, {
+    ::aoc::tests_for_problem!(super::solve, {
         example => 26,
         live => 421,
     });

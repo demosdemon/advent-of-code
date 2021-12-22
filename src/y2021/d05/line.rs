@@ -2,7 +2,7 @@ use super::coordinate::Coordinate;
 
 #[derive(Debug, PartialEq, Clone, derive_more::Display)]
 #[display(fmt = "{} -> {}", _0, _1)]
-pub(super) struct Line(pub Coordinate, pub Coordinate);
+pub struct Line(pub Coordinate, pub Coordinate);
 
 impl Line {
     pub fn angle(&self) -> usize {
@@ -35,7 +35,7 @@ impl IntoIterator for Line {
     }
 }
 
-pub(super) struct LineIterator(Option<Line>);
+pub struct LineIterator(Option<Line>);
 
 ::aoc::derive_FromStr_for_nom!(Line, super::parser::line);
 

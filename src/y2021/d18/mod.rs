@@ -1,19 +1,19 @@
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
 use std::ops::Add;
 
-mod parser;
+pub(crate) mod parser;
 
 #[derive(derive_more::IntoIterator)]
 #[into_iterator(ref)]
-struct Homework(Vec<Snailfish>);
+pub struct Homework(Vec<Snailfish>);
 
 ::aoc::derive_FromIterator!(Homework, Snailfish);
 ::aoc::derive_FromStr_for_FromIterator!(Homework, Snailfish);
 
 #[derive(Debug, Clone, PartialEq, Eq, derive_more::Display, derive_more::From)]
-enum Node {
+pub enum Node {
     Value(usize),
 
     Pair(#[from(forward)] Box<Snailfish>),
@@ -73,7 +73,7 @@ impl Node {
 
 #[derive(Debug, Clone, PartialEq, Eq, derive_more::Display, derive_more::From)]
 #[display(fmt = "[{},{}]", _0, _1)]
-struct Snailfish(#[from(forward)] Node, #[from(forward)] Node);
+pub struct Snailfish(#[from(forward)] Node, #[from(forward)] Node);
 
 impl Snailfish {
     fn as_unit(&self) -> Option<(usize, usize)> {
@@ -138,14 +138,13 @@ impl<'lhs, 'rhs> Add<&'rhs Snailfish> for &'lhs Snailfish {
     }
 }
 
-#[macros::problem]
 fn sum(input: &Homework) -> Snailfish {
     input.into_iter().cloned().reduce(Add::add).unwrap()
 }
 
 #[cfg(test)]
 mod tests {
-    ::aoc::tests_for_problem!(super::Sum, {
+    ::aoc::tests_for_problem!(super::sum, {
         example_a => "[[[[1,1],[2,2]],[3,3]],[4,4]]".parse().unwrap(),
         example_b => "[[[[3,0],[5,3]],[4,4]],[5,5]]".parse().unwrap(),
         example_c => "[[[[5,0],[7,4]],[5,5]],[6,6]]".parse().unwrap(),

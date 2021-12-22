@@ -5,11 +5,11 @@ use std::{
 
 use anyhow::{anyhow, Context};
 
-mod part1;
-mod part2;
+pub(crate) mod part1;
+pub(crate) mod part2;
 
 #[derive(Debug, Clone, Copy)]
-struct Input {
+pub struct Input {
     p1: u8,
     p2: u8,
 }

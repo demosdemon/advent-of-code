@@ -1,76 +1,18 @@
-use heck::{ToSnakeCase, ToUpperCamelCase};
+use heck::ToSnakeCase;
 use proc_macro::TokenStream;
-use proc_macro2::Ident;
-use proc_macro_error::{abort, proc_macro_error};
+use proc_macro_error::proc_macro_error;
 use quote::quote;
 use syn::{
     ext::IdentExt, parse::Parse, parse_macro_input, punctuated::Punctuated, spanned::Spanned, Expr,
-    FnArg, ItemFn, ReturnType, Token, Type, TypePath,
+    Ident, Token, TypePath,
 };
-
-#[proc_macro_attribute]
-#[proc_macro_error]
-pub fn problem(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    let item = parse_macro_input!(item as ItemFn);
-    let item_attrs = &item.attrs;
-    let item_vis = &item.vis;
-    let signature = &item.sig;
-    let struct_ident = {
-        let i = &signature.ident;
-        Ident::new(&i.unraw().to_string().to_upper_camel_case(), i.span())
-    };
-    let input = {
-        let mut iter = signature.inputs.iter();
-        let input = iter
-            .next()
-            .unwrap_or_else(|| abort!(signature, "expected one input paramter"));
-        if let Some(next) = iter.next() {
-            abort!(next, "expected only one input parameter");
-        }
-        match input {
-            FnArg::Typed(arg) => arg,
-            arg => abort!(arg, "expected a typed input argument"),
-        }
-    };
-    let input_type = match &*input.ty {
-        Type::Reference(ty) => {
-            if let Some(ref lt) = ty.lifetime {
-                abort!(lt, "expected an anonymous lifetime");
-            }
-            if let Some(ref t) = ty.mutability {
-                abort!(t, "input type is not mutable");
-            }
-            &*ty.elem
-        }
-        ty => abort!(ty, "expected a type reference"),
-    };
-    let output_type = match &signature.output {
-        ReturnType::Type(_, t) => &**t,
-        t => abort!(t, "must use an explicitly defined return type"),
-    };
-    let body = &*item.block;
-
-    let rv = quote! {
-        #(#item_attrs)*
-        #item_vis
-        struct #struct_ident;
-
-        impl ::aoc::Problem for #struct_ident {
-            type Input = #input_type;
-
-            type Output = #output_type;
-
-            fn solve(#input) -> #output_type #body
-        }
-    };
-
-    rv.into()
-}
 
 struct Roundtrip {
     ty: TypePath,
+
     #[allow(unused)]
     comma: Token![,],
+
     lits: Punctuated<Expr, Token![,]>,
 }
 
@@ -126,3 +68,20 @@ pub fn test_roundtrip(input: TokenStream) -> TokenStream {
     let rv = quote!(#( #tests )*);
     rv.into()
 }
+
+/*
+#[derive(structopt::StructOpt)]
+enum Day04 {
+    All,
+    Part1(Part1),
+    Part2(Part2),
+}
+
+#[derive(structopt::StructOpt)]
+enum Part1 {
+    All,
+    File(String, String),
+    Example,
+    Live,
+}
+*/
