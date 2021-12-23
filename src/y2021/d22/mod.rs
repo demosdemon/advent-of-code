@@ -148,8 +148,6 @@ pub struct Instruction {
 #[derive(Default, derive_more::IntoIterator)]
 pub struct Instructions(Vec<Instruction>);
 
-::aoc::derive_Display_for_Iter!(Instructions);
-
 impl Instructions {
     pub fn reduce(&self, zone: Option<&Cube>) -> isize {
         let mut grid = BTreeMap::<Cube, isize>::new();
