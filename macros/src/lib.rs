@@ -86,8 +86,7 @@ enum Part1 {
 }
 
 macros::day! {
-    
+
     let part1 = (part1::solve, )
 }
 */
-

@@ -92,3 +92,17 @@ macro_rules! derive_FromStr_for_nom {
         }
     };
 }
+
+#[macro_export]
+macro_rules! derive_Display_for_Iter {
+    ($t:ty) => {
+        impl ::core::fmt::Display for $t {
+            fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                for v in self.0.iter() {
+                    writeln!(f, "{}", v)?;
+                }
+                Ok(())
+            }
+        }
+    };
+}
