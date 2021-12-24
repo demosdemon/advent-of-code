@@ -1,10 +1,30 @@
-use std::ops::RangeFrom;
+use std::{
+    clone::Clone,
+    ops::{Range, RangeFrom, RangeTo},
+};
 
 use nom::{
-    character::complete::{i32, i64, u32, u64},
+    branch::alt,
+    character::complete::{i32, i64, line_ending, u32, u64},
+    combinator::eof,
     error::ParseError,
     AsChar, Compare, IResult, InputIter, InputLength, InputTake, Slice,
 };
+
+pub fn eol<I, E>(input: I) -> IResult<I, I, E>
+where
+    I: Clone
+        + Compare<&'static str>
+        + InputIter
+        + InputLength
+        + InputTake
+        + Slice<Range<usize>>
+        + Slice<RangeFrom<usize>>
+        + Slice<RangeTo<usize>>,
+    E: ParseError<I>,
+{
+    alt((line_ending, eof))(input)
+}
 
 pub fn isize<I, E>(input: I) -> IResult<I, isize, E>
 where

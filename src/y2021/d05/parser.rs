@@ -1,8 +1,6 @@
-use nom::{
-    branch::alt, bytes::complete::tag, character::complete::line_ending, combinator::eof, IResult,
-};
+use nom::{bytes::complete::tag, IResult};
 
-use aoc::nom::isize;
+use aoc::nom::{eol, isize};
 
 use super::coordinate::Coordinate;
 use super::line::Line;
@@ -18,7 +16,7 @@ pub(super) fn line(s: &str) -> IResult<&str, Line> {
     let (s, a) = coordinate(s)?;
     let (s, _) = tag(" -> ")(s)?;
     let (s, b) = coordinate(s)?;
-    let (s, _) = alt((eof, line_ending))(s)?;
+    let (s, _) = eol(s)?;
     Ok((s, Line(a, b)))
 }
 

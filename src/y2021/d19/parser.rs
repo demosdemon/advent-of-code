@@ -1,5 +1,4 @@
 use nom::{
-    branch::alt,
     bytes::complete::tag,
     character::complete::line_ending,
     combinator::eof,
@@ -8,11 +7,7 @@ use nom::{
     IResult,
 };
 
-use aoc::nom::{isize, usize};
-
-fn eol(s: &str) -> IResult<&str, &str> {
-    alt((line_ending, eof))(s)
-}
+use aoc::nom::{eol, isize, usize};
 
 pub(super) fn beacon(s: &str) -> IResult<&str, super::Coordinate> {
     let comma = tag(",");
