@@ -92,3 +92,16 @@ macro_rules! derive_FromStr_for_nom {
         }
     };
 }
+
+#[macro_export]
+macro_rules! ordered {
+    ($lhs:expr, $rhs:expr) => {{
+        let __lhs = ($lhs);
+        let __rhs = ($rhs);
+        if __rhs < __lhs {
+            (__rhs, __lhs)
+        } else {
+            (__lhs, __rhs)
+        }
+    }};
+}
