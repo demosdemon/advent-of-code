@@ -20,14 +20,14 @@ impl Tile {
     }
 }
 
-impl TryFrom<char> for Tile {
+impl TryFrom<u8> for Tile {
     type Error = anyhow::Error;
 
-    fn try_from(value: char) -> Result<Self, Self::Error> {
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
         match value {
-            '.' => Ok(Self::Vacant),
-            '>' => Ok(Self::Eastward),
-            'v' => Ok(Self::Southward),
+            b'.' => Ok(Self::Vacant),
+            b'>' => Ok(Self::Eastward),
+            b'v' => Ok(Self::Southward),
             _ => Err(anyhow::anyhow!("invalid character: {}", value)),
         }
     }
@@ -125,7 +125,7 @@ impl FromStr for OceanFloor {
             if line.len() != width {
                 return Err(anyhow::anyhow!("invalid input line: {}", s));
             }
-            for c in line.chars() {
+            for c in line.bytes() {
                 let t: Tile = c.try_into()?;
                 tiles.push(t)
             }

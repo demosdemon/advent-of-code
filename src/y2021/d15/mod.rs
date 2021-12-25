@@ -48,7 +48,7 @@ impl FromStr for Cave {
                 width = line.len();
             }
             assert_eq!(width, line.len());
-            nodes.extend(line.chars().map(aoc::chardigit));
+            nodes.extend(line.bytes().map(aoc::chardigit));
         }
         let s = Self { width, nodes };
         Ok(s)

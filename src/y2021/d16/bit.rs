@@ -25,25 +25,25 @@ impl Bit {
         ]
     }
 
-    pub fn from_char(c: char) -> Result<[Bit; 4], Error> {
+    pub fn from_char(c: u8) -> Result<[Bit; 4], Error> {
         use Bit::*;
         match c {
-            '0' => Ok([Zero, Zero, Zero, Zero]),
-            '1' => Ok([Zero, Zero, Zero, One]),
-            '2' => Ok([Zero, Zero, One, Zero]),
-            '3' => Ok([Zero, Zero, One, One]),
-            '4' => Ok([Zero, One, Zero, Zero]),
-            '5' => Ok([Zero, One, Zero, One]),
-            '6' => Ok([Zero, One, One, Zero]),
-            '7' => Ok([Zero, One, One, One]),
-            '8' => Ok([One, Zero, Zero, Zero]),
-            '9' => Ok([One, Zero, Zero, One]),
-            'A' | 'a' => Ok([One, Zero, One, Zero]),
-            'B' | 'b' => Ok([One, Zero, One, One]),
-            'C' | 'c' => Ok([One, One, Zero, Zero]),
-            'D' | 'd' => Ok([One, One, Zero, One]),
-            'E' | 'e' => Ok([One, One, One, Zero]),
-            'F' | 'f' => Ok([One, One, One, One]),
+            b'0' => Ok([Zero, Zero, Zero, Zero]),
+            b'1' => Ok([Zero, Zero, Zero, One]),
+            b'2' => Ok([Zero, Zero, One, Zero]),
+            b'3' => Ok([Zero, Zero, One, One]),
+            b'4' => Ok([Zero, One, Zero, Zero]),
+            b'5' => Ok([Zero, One, Zero, One]),
+            b'6' => Ok([Zero, One, One, Zero]),
+            b'7' => Ok([Zero, One, One, One]),
+            b'8' => Ok([One, Zero, Zero, Zero]),
+            b'9' => Ok([One, Zero, Zero, One]),
+            b'A' | b'a' => Ok([One, Zero, One, Zero]),
+            b'B' | b'b' => Ok([One, Zero, One, One]),
+            b'C' | b'c' => Ok([One, One, Zero, Zero]),
+            b'D' | b'd' => Ok([One, One, Zero, One]),
+            b'E' | b'e' => Ok([One, One, One, Zero]),
+            b'F' | b'f' => Ok([One, One, One, One]),
             _ => Err(anyhow!("expected a hexadecimal character; got {}", c)),
         }
     }
@@ -132,7 +132,7 @@ impl FromStr for BitVector {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut this: Self = s
             .trim()
-            .chars()
+            .bytes()
             .map(Bit::from_char)
             .collect::<Result<Vec<_>, _>>()?
             .into_iter()

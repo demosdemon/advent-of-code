@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 pub mod nom;
 
-pub fn chardigit(c: char) -> u8 {
+pub fn chardigit(c: u8) -> u8 {
     const ZERO: u8 = b'0';
     assert!(c.is_ascii_digit());
     (c as u8) - ZERO

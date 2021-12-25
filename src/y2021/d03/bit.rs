@@ -54,13 +54,13 @@ impl From<bool> for Bit {
     }
 }
 
-impl TryFrom<char> for Bit {
+impl TryFrom<u8> for Bit {
     type Error = Error;
 
-    fn try_from(value: char) -> Result<Self> {
+    fn try_from(value: u8) -> Result<Self> {
         match value {
-            '0' => Ok(Self::Zero),
-            '1' => Ok(Self::One),
+            b'0' => Ok(Self::Zero),
+            b'1' => Ok(Self::One),
             _ => Err(anyhow!("invalid bit char; got {}", value)),
         }
     }

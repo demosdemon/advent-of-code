@@ -54,7 +54,7 @@ impl FromStr for Line {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self> {
-        s.chars().map(TryFrom::try_from).collect()
+        s.bytes().map(TryFrom::try_from).collect()
     }
 }
 

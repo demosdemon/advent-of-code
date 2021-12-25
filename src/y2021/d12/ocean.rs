@@ -22,7 +22,7 @@ impl FromStr for EdgeType {
     type Err = Infallible;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if s.chars().all(|c| c.is_ascii_uppercase()) {
+        if s.bytes().all(|c| c.is_ascii_uppercase()) {
             Ok(Self::Big)
         } else {
             Ok(Self::Little)

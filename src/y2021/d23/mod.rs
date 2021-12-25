@@ -54,17 +54,17 @@ impl Tile {
     }
 }
 
-impl TryFrom<char> for Tile {
+impl TryFrom<u8> for Tile {
     type Error = anyhow::Error;
-    fn try_from(value: char) -> Result<Self, Self::Error> {
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
         match value {
-            '#' => Ok(Self::Wall),
-            '.' => Ok(Self::Vacant),
-            'A' => Ok(Self::Amphipod(Amphipod::Amber)),
-            'B' => Ok(Self::Amphipod(Amphipod::Bronze)),
-            'C' => Ok(Self::Amphipod(Amphipod::Copper)),
-            'D' => Ok(Self::Amphipod(Amphipod::Desert)),
-            ' ' => Ok(Self::Void),
+            b'#' => Ok(Self::Wall),
+            b'.' => Ok(Self::Vacant),
+            b'A' => Ok(Self::Amphipod(Amphipod::Amber)),
+            b'B' => Ok(Self::Amphipod(Amphipod::Bronze)),
+            b'C' => Ok(Self::Amphipod(Amphipod::Copper)),
+            b'D' => Ok(Self::Amphipod(Amphipod::Desert)),
+            b' ' => Ok(Self::Void),
             _ => Err(anyhow::anyhow!("invalid character: {}", value)),
         }
     }
@@ -294,8 +294,8 @@ impl<const ROWS: usize> FromStr for Maze<ROWS> {
                 .map(|line| {
                     if line.len() <= ROW_WIDTH {
                         Ok(line
-                            .chars()
-                            .chain((0..ROW_WIDTH - line.len()).map(|_| ' '))
+                            .bytes()
+                            .chain((0..ROW_WIDTH - line.len()).map(|_| b' '))
                             .map(Tile::try_from)
                             .collect::<Result<ArrayVec<_, ROW_WIDTH>, _>>()?
                             .into_inner()

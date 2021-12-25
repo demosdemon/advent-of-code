@@ -79,7 +79,7 @@ impl<S: AsRef<str>> Extend<S> for Ocean {
                 self.width = line.len();
             }
             assert_eq!(self.width, line.len());
-            self.matrix.extend(line.chars().map(aoc::chardigit))
+            self.matrix.extend(line.bytes().map(aoc::chardigit))
         }
     }
 }

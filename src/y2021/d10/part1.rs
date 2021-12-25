@@ -82,10 +82,10 @@ pub fn solve(input: &super::Lines) -> usize {
     let mut res = [0; 4];
     for c in input {
         match *c {
-            Invalid(')') => res[0] += 1,
-            Invalid(']') => res[1] += 1,
-            Invalid('}') => res[2] += 1,
-            Invalid('>') => res[3] += 1,
+            Invalid(b')') => res[0] += 1,
+            Invalid(b']') => res[1] += 1,
+            Invalid(b'}') => res[2] += 1,
+            Invalid(b'>') => res[3] += 1,
             Invalid(_) => panic!("invalid character: {:?}", c),
             Incomplete(_) => {}
         }
