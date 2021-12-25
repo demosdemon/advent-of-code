@@ -1,9 +1,6 @@
 pub(crate) mod part1;
 pub(crate) mod part2;
 
-use std::convert::Infallible;
-use std::str::FromStr;
-
 #[derive(derive_more::IntoIterator)]
 #[into_iterator(ref)]
 pub struct Lines(Vec<Line>);
@@ -16,6 +13,8 @@ pub enum Line {
     Incomplete(Vec<u8>),
     Invalid(u8),
 }
+
+::aoc::derive_FromStr_for_bytes_TryFrom_collect!(Line, u8);
 
 impl Line {
     fn score(&self) -> Option<usize> {
@@ -54,13 +53,5 @@ impl FromIterator<u8> for Line {
         }
         stack.reverse();
         Incomplete(stack)
-    }
-}
-
-impl FromStr for Line {
-    type Err = Infallible;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(s.bytes().collect())
     }
 }

@@ -1,7 +1,4 @@
 use std::ops::{Add, Not};
-use std::str::FromStr;
-
-use anyhow::{Error, Result};
 
 use super::bit::Bit;
 
@@ -9,6 +6,7 @@ use super::bit::Bit;
 #[into_iterator(owned, ref)]
 pub struct Line(Vec<Bit>);
 
+::aoc::derive_FromStr_for_bytes_TryFrom_collect!(Line, Bit);
 ::aoc::derive_FromIterator!(Line, Bit);
 
 impl<'slice> From<&'slice [Bit]> for Line {
@@ -47,14 +45,6 @@ impl Not for Line {
 impl<'a> From<&'a Line> for usize {
     fn from(v: &'a Line) -> Self {
         v.into_iter().fold(Self::default(), Add::add)
-    }
-}
-
-impl FromStr for Line {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self> {
-        s.bytes().map(TryFrom::try_from).collect()
     }
 }
 

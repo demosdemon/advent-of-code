@@ -63,6 +63,21 @@ macro_rules! derive_FromStr_for_FromIterator {
 }
 
 #[macro_export]
+macro_rules! derive_FromStr_for_bytes_TryFrom_collect {
+    ($t:ty, $v:ty) => {
+        impl ::core::str::FromStr for $t {
+            type Err = <$v as ::core::convert::TryFrom<u8>>::Error;
+            #[inline]
+            fn from_str(
+                s: &str,
+            ) -> ::core::result::Result<Self, <Self as ::core::str::FromStr>::Err> {
+                s.bytes().map(TryInto::try_into).collect()
+            }
+        }
+    };
+}
+
+#[macro_export]
 macro_rules! derive_FromIterator {
     ($t:ty, $v:ty) => {
         impl ::core::iter::FromIterator<$v> for $t {

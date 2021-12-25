@@ -42,17 +42,17 @@
 
 use super::Direction;
 
-pub fn solve(input: &super::DirectionList) -> isize {
+pub fn solve(input: &super::DirectionList) -> usize {
     let mut horizontal = 0;
     let mut depth = 0;
     for dir in input {
         match *dir {
-            Direction::Forward(v) => horizontal += v,
-            Direction::Up(v) => depth -= v,
-            Direction::Down(v) => depth += v,
+            Direction::Forward(v) => horizontal += v as isize,
+            Direction::Up(v) => depth -= v as isize,
+            Direction::Down(v) => depth += v as isize,
         }
     }
-    horizontal * depth
+    (horizontal * depth) as usize
 }
 
 #[cfg(test)]
