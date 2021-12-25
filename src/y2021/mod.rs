@@ -22,3 +22,4 @@ pub(crate) mod d21;
 pub(crate) mod d22;
 pub(crate) mod d23;
 pub(crate) mod d24;
+pub(crate) mod d25;
