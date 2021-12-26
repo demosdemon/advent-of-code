@@ -48,8 +48,8 @@
     possible. How much fuel must they spend to align to that position?
 */
 
-pub fn solve(input: &super::Ocean) -> isize {
-    input.solve(|a, b| (b - a).abs())
+pub fn solve(input: &super::Ocean) -> usize {
+    input.solve(|d| d)
 }
 
 #[cfg(test)]

@@ -1,16 +1,21 @@
-use super::coordinate::Coordinate;
+use euclid::point2;
 
-#[derive(Debug, PartialEq, Clone, derive_more::Display)]
-#[display(fmt = "{} -> {}", _0, _1)]
+use super::Coordinate;
+
+#[derive(Debug, PartialEq, Clone)]
 pub struct Line(pub Coordinate, pub Coordinate);
 
 impl Line {
     pub fn angle(&self) -> usize {
-        self.0.angle(&self.1)
+        ((self.1.y as f32) - (self.0.y as f32))
+            .atan2((self.1.x as f32) - (self.0.x as f32))
+            .to_degrees()
+            .abs()
+            .trunc() as usize
     }
 
     pub fn is_diagonal(&self) -> bool {
-        (self.angle() % 90) == 45
+        (dbg!(self.angle()) % 90) == 45
     }
 
     fn is_valid(&self) -> bool {
@@ -19,9 +24,12 @@ impl Line {
 
     fn incr(self) -> Line {
         assert!(self.is_valid());
-        let a = &self.0;
-        let b = &self.1;
-        Line(a + b, b.clone())
+        let a = self.0.cast::<isize>();
+        let b = self.1.cast::<isize>();
+        let dx = (b.x - a.x).signum();
+        let dy = (b.y - a.y).signum();
+        debug_assert!(!(dx == 0 && dy == 0));
+        Line(point2(a.x + dx, a.y + dy).cast(), b.cast())
     }
 }
 

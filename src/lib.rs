@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+pub mod matrix;
 pub mod nom;
 
 pub fn chardigit(c: u8) -> u8 {

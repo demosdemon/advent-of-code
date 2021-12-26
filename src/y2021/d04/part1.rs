@@ -68,17 +68,15 @@
     What will your final score be if you choose that board?
 */
 
-use super::builder::SolutionBuilder;
-
-pub fn solve(input: &SolutionBuilder) -> usize {
+pub fn solve(input: &super::Game) -> usize {
     let mut input = input.to_owned();
     input
         .pulls
         .into_iter()
         .find_map(|pull| {
             input.boards.iter_mut().find_map(|board| {
-                board.mark(pull).and_then(|(row, col)| {
-                    (board.bingo_row(row) || board.bingo_column(col))
+                board.mark(pull).and_then(|pos| {
+                    (board.bingo_row(pos.x) || board.bingo_column(pos.y))
                         .then(|| board.sum() * pull as usize)
                 })
             })

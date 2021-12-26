@@ -7,7 +7,7 @@
     lanternfish!
 */
 
-pub fn solve(input: &super::Ocean) -> isize {
+pub fn solve(input: &super::Ocean) -> usize {
     input.count(256)
 }
 

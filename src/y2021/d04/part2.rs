@@ -16,10 +16,9 @@
     Figure out which board will win last. Once it wins, what would its final score be?
 */
 
-use super::builder::SolutionBuilder;
 use super::matrix::Board;
 
-pub fn solve(input: &SolutionBuilder) -> usize {
+pub fn solve(input: &super::Game) -> usize {
     let input = input.to_owned();
     let mut bingo = Bingo(input.boards);
     input
@@ -38,8 +37,8 @@ impl Bingo {
             .iter_mut()
             .enumerate()
             .filter_map(|(idx, board)| {
-                board.mark(pull).and_then(|(row, col)| {
-                    (board.bingo_row(row) || board.bingo_column(col)).then(|| idx)
+                board.mark(pull).and_then(|pos| {
+                    (board.bingo_row(pos.x) || board.bingo_column(pos.y)).then(|| idx)
                 })
             })
             .collect::<Vec<_>>()

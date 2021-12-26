@@ -30,11 +30,8 @@
     align to that position?
 */
 
-pub fn solve(input: &super::Ocean) -> isize {
-    input.solve(|a, b| {
-        let d = (b - a).abs();
-        (d * (d + 1)) / 2
-    })
+pub fn solve(input: &super::Ocean) -> usize {
+    input.solve(|d| (d * (d + 1)) / 2)
 }
 
 #[cfg(test)]

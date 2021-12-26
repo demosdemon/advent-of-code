@@ -1,23 +1,22 @@
-use nom::{bytes::complete::tag, IResult};
+use euclid::point2;
+use nom::{bytes::complete::tag, combinator::map, sequence::separated_pair, IResult};
 
-use aoc::nom::{eol, isize};
+use aoc::nom::usize;
 
-use super::coordinate::Coordinate;
 use super::line::Line;
+use super::Coordinate;
 
-pub(super) fn coordinate(s: &str) -> IResult<&str, Coordinate> {
-    let (s, x) = isize(s)?;
-    let (s, _) = tag(",")(s)?;
-    let (s, y) = isize(s)?;
-    Ok((s, Coordinate::new(x, y)))
+fn coordinate(s: &str) -> IResult<&str, Coordinate> {
+    map(separated_pair(usize, tag(","), usize), |(x, y)| {
+        point2(x, y)
+    })(s)
 }
 
 pub(super) fn line(s: &str) -> IResult<&str, Line> {
-    let (s, a) = coordinate(s)?;
-    let (s, _) = tag(" -> ")(s)?;
-    let (s, b) = coordinate(s)?;
-    let (s, _) = eol(s)?;
-    Ok((s, Line(a, b)))
+    map(
+        separated_pair(coordinate, tag(" -> "), coordinate),
+        |(a, b)| Line(a, b),
+    )(s)
 }
 
 #[cfg(test)]
@@ -38,14 +37,6 @@ mod test {
     fn test_valid_line() {
         assert_eq!(
             line("42,69 -> 0,10").finish(),
-            Ok(("", Line(Coordinate::new(42, 69), Coordinate::new(0, 10))))
-        )
-    }
-
-    #[test]
-    fn test_line_consumes_newline() {
-        assert_eq!(
-            line("42,69 -> 0,10\n").finish(),
             Ok(("", Line(Coordinate::new(42, 69), Coordinate::new(0, 10))))
         )
     }

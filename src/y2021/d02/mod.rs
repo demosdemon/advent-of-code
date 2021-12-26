@@ -4,9 +4,9 @@ pub(crate) mod part2;
 mod parser;
 
 pub enum Direction {
-    Forward(usize),
-    Up(usize),
-    Down(usize),
+    Forward(u8),
+    Up(u8),
+    Down(u8),
 }
 
 ::aoc::derive_FromStr_for_nom!(Direction, parser::direction);

@@ -7,9 +7,9 @@ use anyhow::{Context, Error, Result};
 
 #[derive(derive_more::IntoIterator)]
 #[into_iterator(ref)]
-pub struct Ocean(Vec<isize>);
+pub struct Ocean(Vec<usize>);
 
-::aoc::derive_FromIterator!(Ocean, isize);
+::aoc::derive_FromIterator!(Ocean, usize);
 
 impl FromStr for Ocean {
     type Err = Error;
@@ -26,25 +26,33 @@ impl FromStr for Ocean {
 }
 
 impl Ocean {
-    pub fn solve<F>(&self, mut cost: F) -> isize
+    pub fn solve<F>(&self, mut cost: F) -> usize
     where
-        F: FnMut(isize, isize) -> isize,
+        F: FnMut(usize) -> usize,
     {
         self.range()
-            .map(|a| self.into_iter().map(|&b| (cost)(a, b)).sum())
+            .map(|a| self.into_iter().map(|&b| (cost)(absub(a, b))).sum())
             .min()
             .unwrap_or_default()
     }
 
-    pub fn range(&self) -> std::ops::RangeInclusive<isize> {
+    pub fn range(&self) -> std::ops::RangeInclusive<usize> {
         self.min()..=self.max()
     }
 
-    pub fn min(&self) -> isize {
+    pub fn min(&self) -> usize {
         self.into_iter().min().unwrap_or(&0).to_owned()
     }
 
-    pub fn max(&self) -> isize {
+    pub fn max(&self) -> usize {
         self.into_iter().max().unwrap_or(&0).to_owned()
+    }
+}
+
+fn absub(a: usize, b: usize) -> usize {
+    if b <= a {
+        a - b
+    } else {
+        b - a
     }
 }

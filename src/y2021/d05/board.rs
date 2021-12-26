@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
-use super::coordinate::Coordinate;
 use super::line::Line;
+use super::Coordinate;
 
 #[derive(Debug)]
 pub struct Board(BTreeMap<(isize, isize), usize>);
@@ -15,7 +15,7 @@ impl Board {
 impl FromIterator<Coordinate> for Board {
     fn from_iter<T: IntoIterator<Item = Coordinate>>(iter: T) -> Self {
         Self(iter.into_iter().fold(BTreeMap::new(), |mut map, c| {
-            *map.entry(c.into()).or_default() += 1;
+            *map.entry(c.cast::<isize>().into()).or_default() += 1;
             map
         }))
     }

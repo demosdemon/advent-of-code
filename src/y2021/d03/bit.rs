@@ -19,10 +19,10 @@ impl Not for Bit {
     }
 }
 
-impl<'a> Add<&'a Bit> for usize {
+impl Add<&Bit> for usize {
     type Output = Self;
 
-    fn add(mut self, rhs: &'a Bit) -> Self::Output {
+    fn add(mut self, rhs: &Bit) -> Self::Output {
         self <<= 1;
         self += *rhs as Self;
         self
