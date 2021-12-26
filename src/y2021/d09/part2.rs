@@ -50,11 +50,7 @@
 */
 
 pub fn solve(input: &super::Ocean) -> usize {
-    let mut v = input
-        .basins()
-        .into_iter()
-        .map(|(_, v)| v)
-        .collect::<Vec<_>>();
+    let mut v = input.basins();
     v.sort_unstable();
     v.into_iter().rev().take(3).product()
 }

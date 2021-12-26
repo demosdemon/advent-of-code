@@ -1,7 +1,6 @@
 use std::ops::{Index, IndexMut, Range};
 
 use euclid::{point2, Point2D};
-use strum::IntoEnumIterator;
 
 pub struct MatrixCoordinate;
 
@@ -74,27 +73,30 @@ impl<Tile> Matrix<Tile> {
     }
 
     pub fn range_x(&self) -> Range<usize> {
-        0..self.width
-    }
-
-    pub fn range_y(&self) -> Range<usize> {
         0..self.depth()
     }
 
-    pub fn irange_x(&self) -> Range<isize> {
-        0..self.width as isize
+    pub fn range_y(&self) -> Range<usize> {
+        0..self.width
     }
 
-    pub fn irange_y(&self) -> Range<isize> {
+    pub fn irange_x(&self) -> Range<isize> {
         0..self.depth() as isize
     }
 
+    pub fn irange_y(&self) -> Range<isize> {
+        0..self.width as isize
+    }
+
     pub fn idx_to_pos(&self, idx: usize) -> Position {
+        debug_assert!(idx < self.tiles.len());
         Position!(idx, self.width)
     }
 
     pub fn pos_to_idx(&self, pos: Position) -> usize {
-        (pos.x * self.width) + pos.y
+        let v = (pos.x * self.width) + pos.y;
+        debug_assert!(v < self.tiles.len());
+        v
     }
 
     pub fn relative_pos(&self, pos: Position, rel: RelativePosition) -> Option<Position> {
@@ -167,25 +169,27 @@ impl<Tile> Matrix<Tile> {
             .map(move |(idx, v)| (Position!(idx, width), v))
     }
 
-    pub fn map_surrounding<'a, F: 'a, V>(
-        &'a self,
-        pos: Position,
-        mut f: F,
-    ) -> impl Iterator<Item = V> + 'a
-    where
-        F: FnMut(RelativePosition, Option<Position>, Option<&Tile>) -> V,
-    {
-        RelativePosition::iter().map(move |rel| {
-            let pos = self.relative_pos(pos, rel);
-            let tile = pos.map(|pos| &self[pos]);
-            f(rel, pos, tile)
-        })
-    }
-
     pub fn swap(&mut self, lhs: Position, rhs: Position) {
         let lhs = self.pos_to_idx(lhs);
         let rhs = self.pos_to_idx(rhs);
         self.tiles.swap(lhs, rhs);
+    }
+
+    pub fn iter_relative<'a, I: 'a + IntoIterator<Item = RelativePosition>>(
+        &'a self,
+        pos: Position,
+        iter: I,
+    ) -> impl Iterator<Item = Option<Position>> + 'a {
+        iter.into_iter().map(move |rel| self.relative_pos(pos, rel))
+    }
+
+    pub fn select_relative<'a, I: 'a + IntoIterator<Item = RelativePosition>>(
+        &'a self,
+        pos: Position,
+        iter: I,
+    ) -> impl Iterator<Item = Option<(Position, &'a Tile)>> + 'a {
+        self.iter_relative(pos, iter)
+            .map(move |pos| pos.map(|pos| (pos, &self[pos])))
     }
 }
 
@@ -243,7 +247,12 @@ impl<I: IntoIterator<Item = V>, V: IntoIterator> From<I> for Matrix<V::Item> {
 
 #[cfg(test)]
 mod tests {
+    use std::ops::{Bound, RangeBounds};
+
     use euclid::point2;
+    use strum::IntoEnumIterator;
+
+    use crate::matrix::RelativePosition;
 
     use super::{Matrix, Position};
 
@@ -348,17 +357,51 @@ mod tests {
         let matrix = matrix();
 
         let v = matrix
-            .map_surrounding(point2(1, 1), |_, _, v| v.copied())
+            .select_relative(point2(1, 1), RelativePosition::iter())
             .flatten()
             .collect::<Vec<_>>();
 
-        assert_eq!(&v, &[0, 1, 2, 3, 4, 5, 6, 7, 8,]);
+        assert_eq!(
+            &v,
+            &[
+                (point2(0, 0), &0),
+                (point2(0, 1), &1),
+                (point2(0, 2), &2),
+                (point2(1, 0), &3),
+                (point2(1, 1), &4),
+                (point2(1, 2), &5),
+                (point2(2, 0), &6),
+                (point2(2, 1), &7),
+                (point2(2, 2), &8),
+            ]
+        );
 
         let v = matrix
-            .map_surrounding(point2(0, 0), |_, _, v| v.copied())
+            .select_relative(point2(0, 0), RelativePosition::iter())
             .flatten()
             .collect::<Vec<_>>();
 
-        assert_eq!(&v, &[0, 1, 3, 4]);
+        assert_eq!(
+            &v,
+            &[
+                (point2(0, 0), &0),
+                (point2(0, 1), &1),
+                (point2(1, 0), &3),
+                (point2(1, 1), &4),
+            ]
+        );
+    }
+
+    #[test]
+    fn test_range() {
+        let matrix = matrix();
+
+        let bounds = matrix.range_x();
+        assert_eq!(bounds.start_bound(), Bound::Included(&0));
+        assert_eq!(bounds.end_bound(), Bound::Excluded(&5));
+
+        let bounds = matrix.range_y();
+        assert_eq!(bounds.start_bound(), Bound::Included(&0));
+        assert_eq!(bounds.end_bound(), Bound::Excluded(&3));
     }
 }

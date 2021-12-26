@@ -15,7 +15,7 @@ impl Line {
     }
 
     pub fn is_diagonal(&self) -> bool {
-        (dbg!(self.angle()) % 90) == 45
+        (self.angle() % 90) == 45
     }
 
     fn is_valid(&self) -> bool {
