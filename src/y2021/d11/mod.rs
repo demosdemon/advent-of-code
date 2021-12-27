@@ -5,15 +5,17 @@ use std::collections::VecDeque;
 use std::convert::Infallible;
 use std::str::FromStr;
 
-const AROUND_THE_BLOCK: [(isize, isize); 8] = [
-    (-1, -1),
-    (-1, 0),
-    (-1, 1),
-    (0, 1),
-    (1, 1),
-    (1, 0),
-    (1, -1),
-    (0, -1),
+use aoc::matrix::{Matrix, Position, RelativePosition};
+
+const SURROUNDING: [RelativePosition; 8] = [
+    RelativePosition::TopLeft,
+    RelativePosition::TopCenter,
+    RelativePosition::TopRight,
+    RelativePosition::MiddleLeft,
+    RelativePosition::MiddleRight,
+    RelativePosition::BottomLeft,
+    RelativePosition::BottomCenter,
+    RelativePosition::BottomRight,
 ];
 
 #[derive(Debug, Clone)]
@@ -50,69 +52,25 @@ impl From<u8> for Octopus {
     }
 }
 
-const SIZE: usize = 10;
-
 #[derive(Debug, Clone)]
-pub struct Ocean([Octopus; SIZE * SIZE]);
-
-#[derive(Default)]
-struct FlashQueue {
-    queue: VecDeque<usize>,
-    seen: usize,
-}
-
-impl FlashQueue {
-    fn bump(&mut self, idx: usize, octopus: &mut Octopus) {
-        if octopus.bump() {
-            self.push(idx);
-        }
-    }
-
-    fn push(&mut self, idx: usize) {
-        self.queue.push_back(idx);
-        self.seen += 1;
-    }
-
-    fn pop(&mut self) -> Option<usize> {
-        self.queue.pop_front()
-    }
-}
+pub struct Ocean(Matrix<Octopus>);
 
 impl Ocean {
     pub fn tick(&mut self) -> usize {
         let mut queue = FlashQueue::default();
 
-        for (idx, octopus) in self.0.iter_mut().enumerate() {
-            queue.bump(idx, octopus)
+        for (pos, octopus) in self.0.iter_mut() {
+            queue.bump(pos, octopus)
         }
 
-        const ISIZE: isize = SIZE as isize;
-        while let Some(idx) = queue.pop() {
-            let (x, y) = (idx % SIZE, idx / SIZE);
-            for idx in AROUND_THE_BLOCK
-                .iter()
-                .map(move |&(dx, dy)| (x as isize + dx, y as isize + dy))
-                .filter(|(x, y)| (0..ISIZE).contains(x) && (0..ISIZE).contains(y))
-                .map(|(x, y)| (y * ISIZE + x) as usize)
-            {
-                queue.bump(idx, &mut self.0[idx]);
+        while let Some(pos) = queue.pop() {
+            for (pos, tile) in self.0.iter_rel_mut(pos, SURROUNDING).flatten() {
+                queue.bump(pos, tile);
             }
         }
 
-        self.0.iter_mut().for_each(Octopus::reset);
+        self.0.iter_mut().map(|(_, v)| v).for_each(Octopus::reset);
         queue.seen
-    }
-}
-
-impl FromIterator<u8> for Ocean {
-    fn from_iter<T: IntoIterator<Item = u8>>(iter: T) -> Self {
-        Self(
-            iter.into_iter()
-                .map(Octopus::from)
-                .collect::<Vec<_>>()
-                .try_into()
-                .unwrap(),
-        )
     }
 }
 
@@ -120,8 +78,33 @@ impl FromStr for Ocean {
     type Err = Infallible;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(s.lines()
-            .flat_map(|s| s.bytes().map(aoc::chardigit))
-            .collect())
+        Ok(Self(
+            s.lines()
+                .map(|l| l.bytes().map(aoc::chardigit).map(Octopus::from))
+                .collect(),
+        ))
+    }
+}
+
+#[derive(Default)]
+struct FlashQueue {
+    queue: VecDeque<Position>,
+    seen: usize,
+}
+
+impl FlashQueue {
+    fn bump(&mut self, pos: Position, octopus: &mut Octopus) {
+        if octopus.bump() {
+            self.push(pos);
+        }
+    }
+
+    fn push(&mut self, pos: Position) {
+        self.queue.push_back(pos);
+        self.seen += 1;
+    }
+
+    fn pop(&mut self) -> Option<Position> {
+        self.queue.pop_front()
     }
 }

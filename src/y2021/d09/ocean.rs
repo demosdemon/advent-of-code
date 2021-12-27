@@ -42,7 +42,7 @@ impl Ocean {
     }
 
     fn iter_surrounding(&self, pos: Position) -> impl Iterator<Item = (Position, &u8)> + '_ {
-        self.0.select_relative(pos, SURROUNDING).flatten()
+        self.0.iter_rel(pos, SURROUNDING).flatten()
     }
 
     fn is_low_point(&self, idx: Position, value: u8) -> bool {

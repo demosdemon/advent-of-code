@@ -17,10 +17,21 @@ macro_rules! Position {
 
 macro_rules! PositionIter {
     ($v:ty) => { impl Iterator<Item = (Position, $v)> + '_ };
-    ($av:ty, $bv:ty, $l:lifetime) => { impl Iterator<Item = (Position, $av, $bv)> + $l };
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, strum::EnumIter)]
+pub const SURROUNDING: [RelativePosition; 9] = [
+    RelativePosition::TopLeft,
+    RelativePosition::TopCenter,
+    RelativePosition::TopRight,
+    RelativePosition::MiddleLeft,
+    RelativePosition::MiddleCenter,
+    RelativePosition::MiddleRight,
+    RelativePosition::BottomLeft,
+    RelativePosition::BottomCenter,
+    RelativePosition::BottomRight,
+];
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum RelativePosition {
     TopLeft,
     TopCenter,
@@ -34,7 +45,7 @@ pub enum RelativePosition {
 }
 
 impl RelativePosition {
-    pub fn delta(&self) -> (isize, isize) {
+    pub const fn delta(&self) -> (isize, isize) {
         match self {
             RelativePosition::TopLeft => (-1, -1),
             RelativePosition::TopCenter => (-1, 0),
@@ -119,10 +130,19 @@ impl<Tile> Matrix<Tile> {
     }
 
     pub fn iter(&self) -> PositionIter!(&Tile) {
+        let width = self.width;
         self.tiles
             .iter()
             .enumerate()
-            .map(|(idx, v)| (self.idx_to_pos(idx), v))
+            .map(move |(idx, v)| (Position!(idx, width), v))
+    }
+
+    pub fn iter_mut(&mut self) -> PositionIter!(&mut Tile) {
+        let width = self.width;
+        self.tiles
+            .iter_mut()
+            .enumerate()
+            .map(move |(idx, v)| (Position!(idx, width), v))
     }
 
     pub fn iter_row(&self, row: usize) -> PositionIter!(&Tile) {
@@ -175,21 +195,30 @@ impl<Tile> Matrix<Tile> {
         self.tiles.swap(lhs, rhs);
     }
 
-    pub fn iter_relative<'a, I: 'a + IntoIterator<Item = RelativePosition>>(
-        &'a self,
+    pub fn iter_rel<I: IntoIterator<Item = RelativePosition>>(
+        &self,
         pos: Position,
-        iter: I,
-    ) -> impl Iterator<Item = Option<Position>> + 'a {
-        iter.into_iter().map(move |rel| self.relative_pos(pos, rel))
+        reliter: I,
+    ) -> IterRel<'_, Tile, I::IntoIter> {
+        IterRel {
+            matrix: self,
+            center: pos,
+            reliter: reliter.into_iter(),
+        }
     }
 
-    pub fn select_relative<'a, I: 'a + IntoIterator<Item = RelativePosition>>(
-        &'a self,
+    pub fn iter_rel_mut<I: IntoIterator<Item = RelativePosition>>(
+        &mut self,
         pos: Position,
-        iter: I,
-    ) -> impl Iterator<Item = Option<(Position, &'a Tile)>> + 'a {
-        self.iter_relative(pos, iter)
-            .map(move |pos| pos.map(|pos| (pos, &self[pos])))
+        reliter: I,
+    ) -> IterRelMut<'_, Tile, I::IntoIter> {
+        let ptr = self.tiles.as_mut_ptr();
+        IterRelMut {
+            matrix: self,
+            tiles_ptr: ptr,
+            center: pos,
+            reliter: reliter.into_iter(),
+        }
     }
 }
 
@@ -245,16 +274,52 @@ impl<I: IntoIterator<Item = V>, V: IntoIterator> From<I> for Matrix<V::Item> {
     }
 }
 
+pub struct IterRel<'a, Tile: 'a, I> {
+    matrix: &'a Matrix<Tile>,
+    center: Position,
+    reliter: I,
+}
+
+impl<'a, Tile: 'a, I: Iterator<Item = RelativePosition>> Iterator for IterRel<'a, Tile, I> {
+    type Item = Option<(Position, &'a Tile)>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.reliter.next().map(|rel| {
+            self.matrix
+                .relative_pos(self.center, rel)
+                .map(|pos| (pos, &self.matrix[pos]))
+        })
+    }
+}
+
+pub struct IterRelMut<'a, Tile: 'a, I> {
+    matrix: &'a Matrix<Tile>,
+    tiles_ptr: *mut Tile,
+    center: Position,
+    reliter: I,
+}
+
+impl<'a, Tile: 'a, I: Iterator<Item = RelativePosition>> Iterator for IterRelMut<'a, Tile, I> {
+    type Item = Option<(Position, &'a mut Tile)>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.reliter.next().map(|rel| {
+            self.matrix.relative_pos(self.center, rel).map(|pos| {
+                let idx = self.matrix.pos_to_idx(pos);
+                let mut_ref = unsafe { &mut *self.tiles_ptr.add(idx) };
+                (pos, mut_ref)
+            })
+        })
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::ops::{Bound, RangeBounds};
 
     use euclid::point2;
-    use strum::IntoEnumIterator;
 
-    use crate::matrix::RelativePosition;
-
-    use super::{Matrix, Position};
+    use super::{Matrix, Position, SURROUNDING};
 
     fn collect_tiles<'a, V: Copy + 'a>(
         iter: impl Iterator<Item = (Position, &'a V)> + 'a,
@@ -357,7 +422,7 @@ mod tests {
         let matrix = matrix();
 
         let v = matrix
-            .select_relative(point2(1, 1), RelativePosition::iter())
+            .iter_rel(point2(1, 1), SURROUNDING)
             .flatten()
             .collect::<Vec<_>>();
 
@@ -377,7 +442,7 @@ mod tests {
         );
 
         let v = matrix
-            .select_relative(point2(0, 0), RelativePosition::iter())
+            .iter_rel(point2(0, 0), SURROUNDING)
             .flatten()
             .collect::<Vec<_>>();
 

@@ -31,7 +31,7 @@ fn segment(s: &str) -> IResult<&str, super::Segment> {
 fn digit(s: &str) -> IResult<&str, super::Digit> {
     let (s, segments) = many_m_n(1, SEGMENTS.len(), segment)(s)?;
     let len_before_collect = segments.len();
-    let digit = super::Digit(segments.into_iter().collect());
+    let digit = segments.into_iter().collect::<super::Digit>();
     assert_eq!(
         len_before_collect,
         digit.len(),

@@ -16,8 +16,7 @@ pub enum Segment {
     G,
 }
 
-#[derive(Debug, Hash, PartialEq, Eq, PartialOrd, Ord, Clone, derive_more::Deref)]
-pub struct Digit(BTreeSet<Segment>);
+pub type Digit = BTreeSet<Segment>;
 
 #[derive(
     Debug,
