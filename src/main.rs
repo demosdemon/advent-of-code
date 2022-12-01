@@ -5,6 +5,9 @@
 #[cfg(test)]
 mod y2021;
 
+#[cfg(test)]
+mod y2022;
+
 // #[derive(StructOpt)]
 // struct App {
 //     #[structopt(short, long)]
