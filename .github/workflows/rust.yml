@@ -22,8 +22,7 @@ jobs:
       - name: Run cargo check
         uses: actions-rs/cargo@v1
         with:
-          command: check
-          args: --workspace --tests
+          command: xd
 
   test:
     name: Test Suite
@@ -42,8 +41,7 @@ jobs:
       - name: Run cargo test
         uses: actions-rs/cargo@v1
         with:
-          command: test
-          args: --workspace
+          command: td
 
   test-release:
     name: Test Suite (Release)
@@ -62,8 +60,7 @@ jobs:
       - name: Run cargo test
         uses: actions-rs/cargo@v1
         with:
-          command: test
-          args: --workspace --release
+          command: tr
 
   test-nightly:
     name: Test Suite (nightly)
@@ -82,8 +79,8 @@ jobs:
       - name: Run cargo test
         uses: actions-rs/cargo@v1
         with:
-          command: test
-          args: --workspace -- -Z unstable-options --report-time
+          command: td
+          args: -- -Z unstable-options --report-time
 
   test-nightly-release:
     name: Test Suite (Release + nightly)
@@ -102,8 +99,8 @@ jobs:
       - name: Run cargo test
         uses: actions-rs/cargo@v1
         with:
-          command: test
-          args: --workspace --release -- -Z unstable-options --report-time
+          command: tr
+          args: -- -Z unstable-options --report-time
 
   lints:
     name: Lints
@@ -112,11 +109,11 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Install stable toolchain
+      - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: nightly
           override: true
           components: rustfmt, clippy
 
@@ -124,13 +121,12 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: fmt
-          args: --all -- --check
+          args: --workspace -- --check
 
       - name: Run cargo clippy
         uses: actions-rs/cargo@v1
         with:
-          command: clippy
-          args: --workspace --tests -- -D warnings
+          command: cd
 
   coverage:
     name: Code Coverage

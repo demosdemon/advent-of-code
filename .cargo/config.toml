@@ -6,9 +6,17 @@ __vendored = [
     "--offline",
 ]
 
-cr = "__vendored clippy --verbose --release -- -D warnings"
-br = "__vendored build --verbose --release"
-rr = "__vendored run --verbose --release"
+xr = "__vendored check --release --workspace --verbose --all-features --all-targets"
+cr = "__vendored clippy --release --workspace --verbose --all-features --all-targets -- -D warnings"
+br = "__vendored build --release --workspace --verbose"
+rr = "__vendored run --release --workspace --verbose"
+tr = "__vendored test --release --workspace --verbose"
+
+xd = "__vendored check --verbose --workspace --all-features --all-targets"
+cd = "__vendored clippy --verbose --workspace --all-features --all-targets -- -D warnings"
+bd = "__vendored build --verbose --workspace"
+rd = "__vendored run --verbose --workspace"
+td = "__vendored test --verbose --workspace"
 
 v = "vendor --verbose --versioned-dirs"
 
