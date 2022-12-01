@@ -1,13 +1,13 @@
 use itertools::Itertools;
-use nom::{
-    branch::alt,
-    bytes::complete::tag,
-    character::complete::line_ending,
-    combinator::eof,
-    multi::{count, many1},
-    sequence::{separated_pair, terminated},
-    IResult,
-};
+use nom::branch::alt;
+use nom::bytes::complete::tag;
+use nom::character::complete::line_ending;
+use nom::combinator::eof;
+use nom::multi::count;
+use nom::multi::many1;
+use nom::sequence::separated_pair;
+use nom::sequence::terminated;
+use nom::IResult;
 
 fn dim(s: &str) -> IResult<&str, super::Pixel> {
     let (s, _) = tag(".")(s)?;

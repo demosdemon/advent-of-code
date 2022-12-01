@@ -1,9 +1,10 @@
-use std::{
-    ops::{Add, AddAssign, Not},
-    str::FromStr,
-};
+use std::ops::Add;
+use std::ops::AddAssign;
+use std::ops::Not;
+use std::str::FromStr;
 
-use anyhow::{anyhow, Context};
+use anyhow::anyhow;
+use anyhow::Context;
 
 pub(crate) mod part1;
 pub(crate) mod part2;
@@ -77,6 +78,7 @@ struct State {
 
 impl Add<usize> for State {
     type Output = Self;
+
     fn add(self, rhs: usize) -> Self {
         let Self { p1, p2, p1_roll } = self;
         let (p1, p2) = if p1_roll {
@@ -100,6 +102,7 @@ impl AddAssign<usize> for State {
 
 impl Not for State {
     type Output = State;
+
     fn not(self) -> State {
         State {
             p1: self.p2,

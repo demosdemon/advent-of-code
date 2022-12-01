@@ -1,12 +1,10 @@
-use nom::{
-    branch::alt,
-    bytes::complete::tag,
-    combinator::map,
-    sequence::{preceded, separated_pair},
-    IResult,
-};
-
 use aoc::nom::isize;
+use nom::branch::alt;
+use nom::bytes::complete::tag;
+use nom::combinator::map;
+use nom::sequence::preceded;
+use nom::sequence::separated_pair;
+use nom::IResult;
 
 fn variable(s: &str) -> IResult<&str, super::Variable> {
     let w = map(tag("w"), |_| super::Variable::W);

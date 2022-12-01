@@ -1,6 +1,7 @@
-use nom::{branch::alt, bytes::complete::tag, IResult};
-
 use aoc::nom::usize;
+use nom::branch::alt;
+use nom::bytes::complete::tag;
+use nom::IResult;
 
 fn node_value(s: &str) -> IResult<&str, super::Node> {
     let (s, v) = usize(s)?;

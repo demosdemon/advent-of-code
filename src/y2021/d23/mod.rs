@@ -1,11 +1,10 @@
 pub(crate) mod part1;
 pub(crate) mod part2;
 
-use std::{
-    collections::{BTreeMap, BinaryHeap},
-    ops::Range,
-    str::FromStr,
-};
+use std::collections::BTreeMap;
+use std::collections::BinaryHeap;
+use std::ops::Range;
+use std::str::FromStr;
 
 use anyhow::Context;
 use arrayvec::ArrayVec;
@@ -56,6 +55,7 @@ impl Tile {
 
 impl TryFrom<u8> for Tile {
     type Error = anyhow::Error;
+
     fn try_from(value: u8) -> Result<Self, Self::Error> {
         match value {
             b'#' => Ok(Self::Wall),
@@ -122,7 +122,7 @@ impl<const ROWS: usize> Maze<ROWS> {
             .flat_map(Tile::amphipod)
             .counts()
             .into_values()
-            .flat_map(|v| (v == rows).then(|| v))
+            .flat_map(|v| (v == rows).then_some(v))
             .sum::<usize>()
             == rows * AMPHIPOD_COUNT
     }

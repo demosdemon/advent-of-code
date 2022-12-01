@@ -34,9 +34,8 @@ impl Line {
 }
 
 impl IntoIterator for Line {
-    type Item = Line;
-
     type IntoIter = LineIterator;
+    type Item = Line;
 
     fn into_iter(self) -> Self::IntoIter {
         LineIterator(Some(self))

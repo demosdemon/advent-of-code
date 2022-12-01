@@ -5,9 +5,10 @@ pub(crate) mod bit;
 
 use std::str::FromStr;
 
-use anyhow::{Context, Error};
-
-use bit::{Bit, BitVector};
+use anyhow::Context;
+use anyhow::Error;
+use bit::Bit;
+use bit::BitVector;
 
 #[derive(Debug)]
 pub struct Version([Bit; 3]);

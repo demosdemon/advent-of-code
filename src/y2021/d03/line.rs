@@ -1,4 +1,5 @@
-use std::ops::{Add, Not};
+use std::ops::Add;
+use std::ops::Not;
 
 use super::bit::Bit;
 

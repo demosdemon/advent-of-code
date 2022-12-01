@@ -3,10 +3,9 @@ pub(crate) mod part2;
 
 mod parser;
 
-use std::{
-    collections::BTreeMap,
-    ops::{Index, IndexMut},
-};
+use std::collections::BTreeMap;
+use std::ops::Index;
+use std::ops::IndexMut;
 
 use anyhow::Context;
 
@@ -210,7 +209,8 @@ impl ArithmeticLogicUnit {
 
 #[cfg(test)]
 mod tests {
-    use super::{ArithmeticLogicUnit, Instructions};
+    use super::ArithmeticLogicUnit;
+    use super::Instructions;
 
     #[test]
     fn test_inverter() {

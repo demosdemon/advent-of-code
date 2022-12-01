@@ -2,11 +2,14 @@ pub(crate) mod part1;
 pub(crate) mod part2;
 
 use std::collections::BTreeSet;
-use std::fmt::{Display, Write};
+use std::fmt::Display;
+use std::fmt::Write;
 use std::ops::Add;
 use std::str::FromStr;
 
-use anyhow::{anyhow, Context, Error};
+use anyhow::anyhow;
+use anyhow::Context;
+use anyhow::Error;
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, derive_more::Display)]
 #[display(fmt = "{},{}\n", _0, _1)]

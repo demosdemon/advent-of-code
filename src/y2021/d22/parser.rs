@@ -1,12 +1,10 @@
-use nom::{
-    branch::alt,
-    bytes::complete::tag,
-    combinator::value,
-    sequence::{preceded, separated_pair},
-    IResult,
-};
-
 use aoc::nom::isize;
+use nom::branch::alt;
+use nom::bytes::complete::tag;
+use nom::combinator::value;
+use nom::sequence::preceded;
+use nom::sequence::separated_pair;
+use nom::IResult;
 
 fn state(s: &str) -> IResult<&str, super::State> {
     alt((

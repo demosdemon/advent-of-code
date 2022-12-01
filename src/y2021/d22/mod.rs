@@ -3,7 +3,8 @@ pub(crate) mod part2;
 
 mod parser;
 
-use std::{collections::BTreeMap, ops::Not};
+use std::collections::BTreeMap;
+use std::ops::Not;
 
 #[derive(
     Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, derive_more::Display, derive_more::IsVariant,
@@ -88,7 +89,7 @@ impl Cube {
     pub fn intersection(&self, rhs: &Self) -> Option<Self> {
         let head = self.head.max_coord(&rhs.head);
         let tail = self.tail.min_coord(&rhs.tail);
-        (head.x <= tail.x && head.y <= tail.y && head.z <= tail.z).then(|| Self { head, tail })
+        (head.x <= tail.x && head.y <= tail.y && head.z <= tail.z).then_some(Self { head, tail })
     }
 
     pub fn volume(&self) -> usize {

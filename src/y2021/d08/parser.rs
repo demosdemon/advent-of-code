@@ -1,12 +1,12 @@
-use nom::{
-    branch::alt,
-    bytes::complete::tag,
-    character::complete::{line_ending, one_of},
-    combinator::eof,
-    multi::{count, many_m_n},
-    sequence::terminated,
-    IResult,
-};
+use nom::branch::alt;
+use nom::bytes::complete::tag;
+use nom::character::complete::line_ending;
+use nom::character::complete::one_of;
+use nom::combinator::eof;
+use nom::multi::count;
+use nom::multi::many_m_n;
+use nom::sequence::terminated;
+use nom::IResult;
 
 const SEGMENTS: &str = "abcdefg";
 pub const SIGNAL_DIGITS: usize = 10;

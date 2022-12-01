@@ -4,7 +4,9 @@ pub(crate) mod part2;
 use std::collections::BTreeMap;
 use std::str::FromStr;
 
-use anyhow::{anyhow, Context, Error};
+use anyhow::anyhow;
+use anyhow::Context;
+use anyhow::Error;
 
 #[derive(Debug)]
 struct InsertionRule {

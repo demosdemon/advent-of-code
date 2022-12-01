@@ -4,12 +4,13 @@ pub(crate) mod part2;
 pub(crate) mod coordinate;
 pub(crate) mod parser;
 
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::HashMap;
+use std::collections::HashSet;
+use std::collections::VecDeque;
 use std::fmt::Display;
 
-use itertools::Itertools;
-
 use coordinate::Coordinate;
+use itertools::Itertools;
 
 #[derive(Default)]
 struct BeaconSet {

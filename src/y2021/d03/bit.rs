@@ -1,6 +1,9 @@
-use std::ops::{Add, Not};
+use std::ops::Add;
+use std::ops::Not;
 
-use anyhow::{anyhow, Error, Result};
+use anyhow::anyhow;
+use anyhow::Error;
+use anyhow::Result;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Bit {

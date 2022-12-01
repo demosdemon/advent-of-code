@@ -3,7 +3,8 @@ use std::iter::Sum;
 use std::ops::Add;
 use std::str::FromStr;
 
-use anyhow::{anyhow, Error};
+use anyhow::anyhow;
+use anyhow::Error;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Bit {

@@ -1,13 +1,13 @@
-use nom::{
-    bytes::complete::tag,
-    character::complete::line_ending,
-    combinator::eof,
-    multi::separated_list1,
-    sequence::{delimited, terminated},
-    IResult,
-};
-
-use aoc::nom::{eol, isize, usize};
+use aoc::nom::eol;
+use aoc::nom::isize;
+use aoc::nom::usize;
+use nom::bytes::complete::tag;
+use nom::character::complete::line_ending;
+use nom::combinator::eof;
+use nom::multi::separated_list1;
+use nom::sequence::delimited;
+use nom::sequence::terminated;
+use nom::IResult;
 
 pub(super) fn beacon(s: &str) -> IResult<&str, super::Coordinate> {
     let comma = tag(",");

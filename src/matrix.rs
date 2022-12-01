@@ -1,6 +1,9 @@
-use std::ops::{Index, IndexMut, Range};
+use std::ops::Index;
+use std::ops::IndexMut;
+use std::ops::Range;
 
-use euclid::{point2, Point2D};
+use euclid::point2;
+use euclid::Point2D;
 
 pub struct MatrixCoordinate;
 
@@ -315,11 +318,14 @@ impl<'a, Tile: 'a, I: Iterator<Item = RelativePosition>> Iterator for IterRelMut
 
 #[cfg(test)]
 mod tests {
-    use std::ops::{Bound, RangeBounds};
+    use std::ops::Bound;
+    use std::ops::RangeBounds;
 
     use euclid::point2;
 
-    use super::{Matrix, Position, SURROUNDING};
+    use super::Matrix;
+    use super::Position;
+    use super::SURROUNDING;
 
     fn collect_tiles<'a, V: Copy + 'a>(
         iter: impl Iterator<Item = (Position, &'a V)> + 'a,
@@ -426,35 +432,29 @@ mod tests {
             .flatten()
             .collect::<Vec<_>>();
 
-        assert_eq!(
-            &v,
-            &[
-                (point2(0, 0), &0),
-                (point2(0, 1), &1),
-                (point2(0, 2), &2),
-                (point2(1, 0), &3),
-                (point2(1, 1), &4),
-                (point2(1, 2), &5),
-                (point2(2, 0), &6),
-                (point2(2, 1), &7),
-                (point2(2, 2), &8),
-            ]
-        );
+        assert_eq!(&v, &[
+            (point2(0, 0), &0),
+            (point2(0, 1), &1),
+            (point2(0, 2), &2),
+            (point2(1, 0), &3),
+            (point2(1, 1), &4),
+            (point2(1, 2), &5),
+            (point2(2, 0), &6),
+            (point2(2, 1), &7),
+            (point2(2, 2), &8),
+        ]);
 
         let v = matrix
             .iter_rel(point2(0, 0), SURROUNDING)
             .flatten()
             .collect::<Vec<_>>();
 
-        assert_eq!(
-            &v,
-            &[
-                (point2(0, 0), &0),
-                (point2(0, 1), &1),
-                (point2(1, 0), &3),
-                (point2(1, 1), &4),
-            ]
-        );
+        assert_eq!(&v, &[
+            (point2(0, 0), &0),
+            (point2(0, 1), &1),
+            (point2(1, 0), &3),
+            (point2(1, 1), &4),
+        ]);
     }
 
     #[test]

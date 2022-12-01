@@ -3,7 +3,9 @@ pub(crate) mod part2;
 
 use std::str::FromStr;
 
-use anyhow::{Context, Error, Result};
+use anyhow::Context;
+use anyhow::Error;
+use anyhow::Result;
 
 pub struct Ocean(Vec<u8>);
 

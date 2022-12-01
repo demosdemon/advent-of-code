@@ -1,10 +1,19 @@
 use std::ops::RangeFrom;
 
-use nom::{
-    branch::alt, bytes::complete::tag, character::complete::u8, combinator::map, error::ParseError,
-    sequence::separated_pair, AsChar, Compare, IResult, InputIter, InputLength, InputTake, Parser,
-    Slice,
-};
+use nom::branch::alt;
+use nom::bytes::complete::tag;
+use nom::character::complete::u8;
+use nom::combinator::map;
+use nom::error::ParseError;
+use nom::sequence::separated_pair;
+use nom::AsChar;
+use nom::Compare;
+use nom::IResult;
+use nom::InputIter;
+use nom::InputLength;
+use nom::InputTake;
+use nom::Parser;
+use nom::Slice;
 
 fn dir<F, I, E>(key: &'static str, mut f: F) -> impl Parser<I, super::Direction, E>
 where

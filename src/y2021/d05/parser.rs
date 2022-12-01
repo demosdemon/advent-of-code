@@ -1,7 +1,9 @@
-use euclid::point2;
-use nom::{bytes::complete::tag, combinator::map, sequence::separated_pair, IResult};
-
 use aoc::nom::usize;
+use euclid::point2;
+use nom::bytes::complete::tag;
+use nom::combinator::map;
+use nom::sequence::separated_pair;
+use nom::IResult;
 
 use super::line::Line;
 use super::Coordinate;
@@ -23,7 +25,10 @@ pub(super) fn line(s: &str) -> IResult<&str, Line> {
 mod test {
     use nom::Finish;
 
-    use super::{coordinate, line, Coordinate, Line};
+    use super::coordinate;
+    use super::line;
+    use super::Coordinate;
+    use super::Line;
 
     #[test]
     fn test_valid_coordinate() {

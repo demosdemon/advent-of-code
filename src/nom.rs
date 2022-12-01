@@ -1,15 +1,23 @@
-use std::{
-    clone::Clone,
-    ops::{Range, RangeFrom, RangeTo},
-};
+use std::clone::Clone;
+use std::ops::Range;
+use std::ops::RangeFrom;
+use std::ops::RangeTo;
 
-use nom::{
-    branch::alt,
-    character::complete::{i32, i64, line_ending, u32, u64},
-    combinator::eof,
-    error::ParseError,
-    AsChar, Compare, IResult, InputIter, InputLength, InputTake, Slice,
-};
+use nom::branch::alt;
+use nom::character::complete::i32;
+use nom::character::complete::i64;
+use nom::character::complete::line_ending;
+use nom::character::complete::u32;
+use nom::character::complete::u64;
+use nom::combinator::eof;
+use nom::error::ParseError;
+use nom::AsChar;
+use nom::Compare;
+use nom::IResult;
+use nom::InputIter;
+use nom::InputLength;
+use nom::InputTake;
+use nom::Slice;
 
 pub fn eol<I, E>(input: I) -> IResult<I, I, E>
 where

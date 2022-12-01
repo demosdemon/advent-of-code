@@ -1,4 +1,5 @@
-use std::ops::{Add, Sub};
+use std::ops::Add;
+use std::ops::Sub;
 
 pub(super) const MAX_ROTATIONS: usize = 24;
 

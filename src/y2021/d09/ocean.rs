@@ -1,8 +1,11 @@
-use std::collections::{BTreeSet, VecDeque};
+use std::collections::BTreeSet;
+use std::collections::VecDeque;
 use std::convert::Infallible;
 use std::str::FromStr;
 
-use aoc::matrix::{Matrix, Position, RelativePosition};
+use aoc::matrix::Matrix;
+use aoc::matrix::Position;
+use aoc::matrix::RelativePosition;
 
 const SURROUNDING: [RelativePosition; 4] = [
     RelativePosition::TopCenter,

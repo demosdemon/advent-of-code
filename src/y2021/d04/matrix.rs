@@ -1,7 +1,8 @@
 use std::collections::BTreeMap;
 use std::fmt::Debug;
 
-use aoc::matrix::{Matrix, Position};
+use aoc::matrix::Matrix;
+use aoc::matrix::Position;
 
 #[derive(Debug, Default, Clone)]
 pub struct Tile {

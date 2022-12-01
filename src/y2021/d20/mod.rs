@@ -4,7 +4,9 @@ pub(crate) mod part2;
 pub(crate) mod image;
 pub(crate) mod parser;
 
-use image::{Algorithm, Image, Pixel};
+use image::Algorithm;
+use image::Image;
+use image::Pixel;
 
 const ALGORITHM_BITS: usize = 9;
 const ALGORITHM_PIXELS: usize = 1 << ALGORITHM_BITS;

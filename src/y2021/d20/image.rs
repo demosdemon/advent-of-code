@@ -1,4 +1,6 @@
-use std::ops::{AddAssign, Index, Not};
+use std::ops::AddAssign;
+use std::ops::Index;
+use std::ops::Not;
 
 use arrayvec::ArrayVec;
 

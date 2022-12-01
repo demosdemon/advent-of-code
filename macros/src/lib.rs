@@ -2,10 +2,15 @@ use heck::ToSnakeCase;
 use proc_macro::TokenStream;
 use proc_macro_error::proc_macro_error;
 use quote::quote;
-use syn::{
-    ext::IdentExt, parse::Parse, parse_macro_input, punctuated::Punctuated, spanned::Spanned, Expr,
-    Ident, Token, TypePath,
-};
+use syn::ext::IdentExt;
+use syn::parse::Parse;
+use syn::parse_macro_input;
+use syn::punctuated::Punctuated;
+use syn::spanned::Spanned;
+use syn::Expr;
+use syn::Ident;
+use syn::Token;
+use syn::TypePath;
 
 struct Roundtrip {
     ty: TypePath,
@@ -69,24 +74,22 @@ pub fn test_roundtrip(input: TokenStream) -> TokenStream {
     rv.into()
 }
 
-/*
-#[derive(structopt::StructOpt)]
-enum Day04 {
-    All,
-    Part1(Part1),
-    Part2(Part2),
-}
-
-#[derive(structopt::StructOpt)]
-enum Part1 {
-    All,
-    File(String, String),
-    Example,
-    Live,
-}
-
-macros::day! {
-
-    let part1 = (part1::solve, )
-}
-*/
+// #[derive(structopt::StructOpt)]
+// enum Day04 {
+// All,
+// Part1(Part1),
+// Part2(Part2),
+// }
+//
+// #[derive(structopt::StructOpt)]
+// enum Part1 {
+// All,
+// File(String, String),
+// Example,
+// Live,
+// }
+//
+// macros::day! {
+//
+// let part1 = (part1::solve, )
+// }

@@ -4,7 +4,8 @@ use std::convert::Infallible;
 use std::fmt::Display;
 use std::str::FromStr;
 
-use anyhow::{Context, Error};
+use anyhow::Context;
+use anyhow::Error;
 
 #[derive(Debug)]
 enum EdgeType {

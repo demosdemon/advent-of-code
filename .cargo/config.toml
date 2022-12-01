@@ -1,0 +1,16 @@
+[alias]
+__vendored = [
+    "--config",
+    "source.crates-io.replace-with = \"vendored-sources\"",
+    "--frozen",
+    "--offline",
+]
+
+cr = "__vendored clippy --verbose --release -- -D warnings"
+br = "__vendored build --verbose --release"
+rr = "__vendored run --verbose --release"
+
+v = "vendor --verbose --versioned-dirs"
+
+[source.vendored-sources]
+directory = "vendor"

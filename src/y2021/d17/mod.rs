@@ -54,7 +54,7 @@ impl TargetArea {
         let max_dx = self.max_x;
 
         (min_dx..=max_dx).flat_map(move |dx| {
-            (min_dy..=max_dy).filter_map(move |dy| self.intersects(dx, dy).then(|| (dx, dy)))
+            (min_dy..=max_dy).filter_map(move |dy| self.intersects(dx, dy).then_some((dx, dy)))
         })
     }
 }

@@ -1,7 +1,8 @@
 pub(crate) mod part1;
 // pub(crate) mod part2;
 
-use std::{borrow::Cow, str::FromStr};
+use std::borrow::Cow;
+use std::str::FromStr;
 
 #[derive(Clone, Copy, PartialEq, Eq, derive_more::IsVariant)]
 enum Tile {
@@ -73,7 +74,7 @@ impl OceanFloor {
             .filter_map(|(idx, t)| (*t == needle).then(|| self.idx_to_pos(idx)))
             .filter_map(|idx| {
                 let (pos, t) = self.peek(needle, idx);
-                t.is_vacant().then(|| (idx, pos))
+                t.is_vacant().then_some((idx, pos))
             })
         {
             // cow will clone self the first time we claim a mutable ref
