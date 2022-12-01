@@ -73,23 +73,3 @@ pub fn test_roundtrip(input: TokenStream) -> TokenStream {
     let rv = quote!(#( #tests )*);
     rv.into()
 }
-
-// #[derive(structopt::StructOpt)]
-// enum Day04 {
-// All,
-// Part1(Part1),
-// Part2(Part2),
-// }
-//
-// #[derive(structopt::StructOpt)]
-// enum Part1 {
-// All,
-// File(String, String),
-// Example,
-// Live,
-// }
-//
-// macros::day! {
-//
-// let part1 = (part1::solve, )
-// }
