@@ -102,7 +102,7 @@ jobs:
       - name: Run cargo test
         uses: actions-rs/cargo@v1
         with:
-          command: tr
+          command: test
           args: --release --verbose --workspace --all-features --all-targets -- -Z unstable-options --report-time
 
   lints:
@@ -124,7 +124,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: fmt
-          args: --workspace -- --check
+          args: --all -- --check
 
       - name: Run cargo clippy
         uses: actions-rs/cargo@v1
