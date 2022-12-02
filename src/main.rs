@@ -1,5 +1,4 @@
 #![allow(clippy::write_with_newline)]
-
 #![cfg_attr(not(test), allow(unused))]
 
 #[cfg(any(test, feature = "y2021"))]
