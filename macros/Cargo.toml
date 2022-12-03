@@ -10,7 +10,7 @@ heck = "0.4.0"
 proc-macro-error = "1.0.4"
 proc-macro2 = "1.0.47"
 quote = "1.0.21"
-syn = { version = "1.0.104", features = ["full"] }
+syn = { version = "1.0.105", features = ["full"] }
 
 [lib]
 proc-macro = true
