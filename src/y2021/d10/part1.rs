@@ -84,7 +84,7 @@ pub fn solve(input: &super::Lines) -> usize {
             Invalid(b']') => res[1] += 1,
             Invalid(b'}') => res[2] += 1,
             Invalid(b'>') => res[3] += 1,
-            Invalid(_) => panic!("invalid character: {:?}", c),
+            Invalid(_) => panic!("invalid character: {c:?}"),
             Incomplete(_) => {}
         }
     }

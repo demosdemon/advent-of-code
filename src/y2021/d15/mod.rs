@@ -153,7 +153,7 @@ impl Display for Cave {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for chunk in self.nodes.chunks(self.width) {
             for b in chunk {
-                write!(f, "{}", b)?;
+                write!(f, "{b}")?;
             }
             writeln!(f)?;
         }
@@ -172,8 +172,8 @@ mod test {
         let example_5x = include_str!("inputs/example_5x")
             .parse::<super::Cave>()
             .unwrap();
-        println!("{}", example);
-        println!("{}", example_5x);
+        println!("{example}");
+        println!("{example_5x}");
 
         assert_eq!(example.nodes, example_5x.nodes);
     }

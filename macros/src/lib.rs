@@ -55,7 +55,7 @@ pub fn test_roundtrip(input: TokenStream) -> TokenStream {
         .enumerate()
         .map(|(idx, lit)| {
             let test_fn_ident = {
-                let s = format!("test_roundtrip_{}_{:0zpad$}", ty_ident, idx, zpad = zpad);
+                let s = format!("test_roundtrip_{ty_ident}_{idx:0zpad$}");
                 Ident::new(&s, lit.span())
             };
             quote! {

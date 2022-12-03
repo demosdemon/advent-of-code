@@ -127,7 +127,7 @@ impl Cube {
     derive_more::Constructor,
     derive_more::Display,
 )]
-#[display(fmt = "{} {}", state, cube)]
+#[display(fmt = "{state} {cube}")]
 pub struct Instruction {
     state: State,
     cube: Cube,

@@ -84,5 +84,5 @@ enum Part {
 
 fn main() {
     let cli = Cli::parse();
-    eprintln!("{:#?}", cli);
+    eprintln!("{cli:#?}");
 }

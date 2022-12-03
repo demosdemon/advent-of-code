@@ -12,7 +12,7 @@ use anyhow::Context;
 use anyhow::Error;
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, derive_more::Display)]
-#[display(fmt = "{},{}\n", _0, _1)]
+#[display(fmt = "{_0},{_1}\n")]
 struct Coordinate(usize, usize);
 
 impl Coordinate {
@@ -60,22 +60,22 @@ impl FromStr for Coordinate {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (a, b) = s
             .split_once(',')
-            .with_context(|| format!("splitting {} on `,`", s))?;
+            .with_context(|| format!("splitting {s} on `,`"))?;
         Ok(Self(
             a.parse()
-                .with_context(|| format!("parsing {} into an int", a))?,
+                .with_context(|| format!("parsing {a} into an int"))?,
             b.parse()
-                .with_context(|| format!("parsing {} into an int", b))?,
+                .with_context(|| format!("parsing {b} into an int"))?,
         ))
     }
 }
 
 #[derive(Debug, derive_more::Display)]
 enum Fold {
-    #[display(fmt = "fold along x={}\n", _0)]
+    #[display(fmt = "fold along x={_0}\n")]
     X(usize),
 
-    #[display(fmt = "fold along y={}\n", _0)]
+    #[display(fmt = "fold along y={_0}\n")]
     Y(usize),
 }
 
@@ -85,10 +85,10 @@ impl FromStr for Fold {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (a, b) = s
             .split_once('=')
-            .with_context(|| format!("splitting {} on `=`", s))?;
+            .with_context(|| format!("splitting {s} on `=`"))?;
         let b = b
             .parse()
-            .with_context(|| format!("parsing {} into an int", b))?;
+            .with_context(|| format!("parsing {b} into an int"))?;
         match a {
             "fold along x" => Ok(Fold::X(b)),
             "fold along y" => Ok(Fold::Y(b)),

@@ -4,7 +4,7 @@ use std::ops::Sub;
 pub(super) const MAX_ROTATIONS: usize = 24;
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, derive_more::Display)]
-#[display(fmt = "{},{},{}", x, y, z)]
+#[display(fmt = "{x},{y},{z}")]
 pub(super) struct Coordinate {
     x: isize,
     y: isize,

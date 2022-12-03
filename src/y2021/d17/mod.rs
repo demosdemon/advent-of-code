@@ -6,7 +6,7 @@ pub(crate) mod parser;
 use std::ops::RangeInclusive;
 
 #[derive(derive_more::Display)]
-#[display(fmt = "target area: x={}..{}, y={}..{}\n", min_x, max_x, min_y, max_y)]
+#[display(fmt = "target area: x={min_x}..{max_x}, y={min_y}..{max_y}\n")]
 pub struct TargetArea {
     min_x: isize,
     max_x: isize,

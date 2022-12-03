@@ -72,7 +72,7 @@ impl Node {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, derive_more::Display, derive_more::From)]
-#[display(fmt = "[{},{}]", _0, _1)]
+#[display(fmt = "[{_0},{_1}]")]
 pub struct Snailfish(#[from(forward)] Node, #[from(forward)] Node);
 
 impl Snailfish {

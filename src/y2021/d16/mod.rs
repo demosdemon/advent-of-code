@@ -160,9 +160,7 @@ impl Packet {
                     let len = bv.len();
                     assert!(
                         need <= len,
-                        "invalid state; need {0} bits but only have {1}",
-                        need,
-                        len
+                        "invalid state; need {need} bits but only have {len}"
                     );
                     let remain = len - need;
                     while remain < bv.len() {
