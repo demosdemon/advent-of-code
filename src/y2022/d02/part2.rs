@@ -27,6 +27,6 @@ fn solve(s: &super::Instructions) -> usize {
 mod tests {
     ::aoc::tests_for_problem!(super::solve, {
         example => 12,
-        live => 0,
+        live => 11618,
     });
 }
