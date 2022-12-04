@@ -8,7 +8,6 @@ pub(crate) mod parser;
 
 use euclid::Point2D;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct D05;
+struct D05;
 
 type Coordinate = Point2D<usize, D05>;

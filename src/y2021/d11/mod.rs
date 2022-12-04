@@ -66,7 +66,7 @@ impl Ocean {
         }
 
         while let Some(pos) = queue.pop() {
-            for (pos, tile) in self.0.iter_rel_mut(pos, SURROUNDING).flatten() {
+            for (pos, tile) in self.0.iter_rel_mut(pos, SURROUNDING) {
                 queue.bump(pos, tile);
             }
         }

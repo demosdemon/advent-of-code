@@ -3,7 +3,7 @@ use super::line::Line;
 
 #[derive(Debug, derive_more::IntoIterator)]
 #[into_iterator(owned, ref)]
-pub struct SolutionBuilder(Vec<Line>);
+pub(super) struct SolutionBuilder(Vec<Line>);
 
 ::aoc::derive_FromIterator!(SolutionBuilder, Line);
 ::aoc::derive_FromStr_for_FromIterator!(SolutionBuilder, Line);

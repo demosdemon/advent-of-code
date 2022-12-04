@@ -5,6 +5,12 @@ use std::ops::Range;
 use euclid::point2;
 use euclid::Point2D;
 
+pub use self::into_iter::IntoIter;
+pub use self::iter_mut::IterMut;
+pub use self::iter_ref::IterRef;
+pub use self::iter_rel::IterRel;
+pub use self::iter_rel_mut::IterRelMut;
+
 pub struct MatrixCoordinate;
 
 pub type Position = Point2D<usize, MatrixCoordinate>;
@@ -22,19 +28,7 @@ macro_rules! PositionIter {
     ($v:ty) => { impl Iterator<Item = (Position, $v)> + '_ };
 }
 
-pub const SURROUNDING: [RelativePosition; 9] = [
-    RelativePosition::TopLeft,
-    RelativePosition::TopCenter,
-    RelativePosition::TopRight,
-    RelativePosition::MiddleLeft,
-    RelativePosition::MiddleCenter,
-    RelativePosition::MiddleRight,
-    RelativePosition::BottomLeft,
-    RelativePosition::BottomCenter,
-    RelativePosition::BottomRight,
-];
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum RelativePosition {
     TopLeft,
     TopCenter,
@@ -48,6 +42,18 @@ pub enum RelativePosition {
 }
 
 impl RelativePosition {
+    pub const ALL: [Self; 9] = [
+        Self::TopLeft,
+        Self::TopCenter,
+        Self::TopRight,
+        Self::MiddleLeft,
+        Self::MiddleCenter,
+        Self::MiddleRight,
+        Self::BottomLeft,
+        Self::BottomCenter,
+        Self::BottomRight,
+    ];
+
     pub const fn delta(&self) -> (isize, isize) {
         match self {
             RelativePosition::TopLeft => (-1, -1),
@@ -70,82 +76,93 @@ pub struct Matrix<Tile> {
 }
 
 impl<Tile> Matrix<Tile> {
-    pub fn len(&self) -> usize {
+    pub const fn len(&self) -> usize {
         self.tiles.len()
     }
 
-    pub fn is_empty(&self) -> bool {
+    pub const fn is_empty(&self) -> bool {
         self.width == 0
     }
 
-    pub fn width(&self) -> usize {
+    pub const fn width(&self) -> usize {
         self.width
     }
 
-    pub fn depth(&self) -> usize {
+    pub const fn depth(&self) -> usize {
         self.tiles.len() / self.width
     }
 
-    pub fn range_x(&self) -> Range<usize> {
+    pub const fn range_x(&self) -> Range<usize> {
         0..self.depth()
     }
 
-    pub fn range_y(&self) -> Range<usize> {
+    pub const fn range_y(&self) -> Range<usize> {
         0..self.width
     }
 
-    pub fn irange_x(&self) -> Range<isize> {
-        0..self.depth() as isize
-    }
-
-    pub fn irange_y(&self) -> Range<isize> {
-        0..self.width as isize
-    }
-
-    pub fn idx_to_pos(&self, idx: usize) -> Position {
+    pub const fn idx_to_pos(&self, idx: usize) -> Position {
         debug_assert!(idx < self.tiles.len());
         Position!(idx, self.width)
     }
 
-    pub fn pos_to_idx(&self, pos: Position) -> usize {
+    pub const fn pos_to_idx(&self, pos: Position) -> usize {
         let v = (pos.x * self.width) + pos.y;
         debug_assert!(v < self.tiles.len());
         v
     }
 
-    pub fn relative_pos(&self, pos: Position, rel: RelativePosition) -> Option<Position> {
+    pub const fn relative_pos(&self, pos: Position, rel: RelativePosition) -> Option<Position> {
         if self.is_empty() {
             return None;
         }
         let (dx, dy) = rel.delta();
         let x = pos.x as isize + dx;
         let y = pos.y as isize + dy;
-        (self.irange_x().contains(&x) && self.irange_y().contains(&y))
-            .then(|| point2(x as usize, y as usize))
+        if 0 <= x && x < self.depth() as isize && 0 <= y && y < self.width() as isize {
+            Some(point2(x as usize, y as usize))
+        } else {
+            None
+        }
     }
 
-    pub fn get_relative(&self, pos: Position, rel: RelativePosition) -> Option<&Tile> {
-        self.relative_pos(pos, rel).map(|pos| &self[pos])
+    pub const fn get(&self, pos: Position) -> Option<&Tile> {
+        if pos.x < self.depth() && pos.y < self.width() {
+            Some(&self.tiles[self.pos_to_idx(pos)])
+        } else {
+            None
+        }
+    }
+
+    pub fn get_mut(&mut self, pos: Position) -> Option<&mut Tile> {
+        if pos.x < self.depth() && pos.y < self.width() {
+            Some(&mut self.tiles[self.pos_to_idx(pos)])
+        } else {
+            None
+        }
+    }
+
+    pub const fn get_relative(&self, pos: Position, rel: RelativePosition) -> Option<&Tile> {
+        if let Some(pos) = self.relative_pos(pos, rel) {
+            self.get(pos)
+        } else {
+            None
+        }
     }
 
     pub fn get_relative_mut(&mut self, pos: Position, rel: RelativePosition) -> Option<&mut Tile> {
-        self.relative_pos(pos, rel).map(|pos| &mut self[pos])
+        if let Some(pos) = self.relative_pos(pos, rel) {
+            self.get_mut(pos)
+        } else {
+            None
+        }
     }
 
-    pub fn iter(&self) -> PositionIter!(&Tile) {
-        let width = self.width;
-        self.tiles
-            .iter()
-            .enumerate()
-            .map(move |(idx, v)| (Position!(idx, width), v))
+    pub const fn iter(&self) -> IterRef<'_, Tile> {
+        IterRef::new(self)
     }
 
-    pub fn iter_mut(&mut self) -> PositionIter!(&mut Tile) {
-        let width = self.width;
-        self.tiles
-            .iter_mut()
-            .enumerate()
-            .map(move |(idx, v)| (Position!(idx, width), v))
+    pub fn iter_mut(&mut self) -> IterMut<'_, Tile> {
+        self.into()
     }
 
     pub fn iter_row(&self, row: usize) -> PositionIter!(&Tile) {
@@ -203,11 +220,7 @@ impl<Tile> Matrix<Tile> {
         pos: Position,
         reliter: I,
     ) -> IterRel<'_, Tile, I::IntoIter> {
-        IterRel {
-            matrix: self,
-            center: pos,
-            reliter: reliter.into_iter(),
-        }
+        IterRel::new(self, pos, reliter.into_iter())
     }
 
     pub fn iter_rel_mut<I: IntoIterator<Item = RelativePosition>>(
@@ -215,27 +228,21 @@ impl<Tile> Matrix<Tile> {
         pos: Position,
         reliter: I,
     ) -> IterRelMut<'_, Tile, I::IntoIter> {
-        let ptr = self.tiles.as_mut_ptr();
-        IterRelMut {
-            matrix: self,
-            tiles_ptr: ptr,
-            center: pos,
-            reliter: reliter.into_iter(),
-        }
+        IterRelMut::new(self, pos, reliter)
     }
 }
 
 impl<Tile> Index<Position> for Matrix<Tile> {
     type Output = Tile;
 
-    fn index(&self, index: Position) -> &Self::Output {
-        &self.tiles[self.pos_to_idx(index)]
+    fn index(&self, pos: Position) -> &Self::Output {
+        self.get(pos).expect("index out of bounds")
     }
 }
 
 impl<Tile> IndexMut<Position> for Matrix<Tile> {
-    fn index_mut(&mut self, index: Position) -> &mut Self::Output {
-        &mut self.tiles[self.pos_to_idx(index)]
+    fn index_mut(&mut self, pos: Position) -> &mut Self::Output {
+        self.get_mut(pos).expect("index out of bounds")
     }
 }
 
@@ -253,7 +260,51 @@ impl<Tile> IndexMut<usize> for Matrix<Tile> {
     }
 }
 
-impl<I: IntoIterator> FromIterator<I> for Matrix<I::Item> {
+impl<Tile> Index<Range<usize>> for Matrix<Tile> {
+    type Output = [Tile];
+
+    fn index(&self, range: Range<usize>) -> &Self::Output {
+        &self.tiles[range]
+    }
+}
+
+impl<Tile> IndexMut<Range<usize>> for Matrix<Tile> {
+    fn index_mut(&mut self, range: Range<usize>) -> &mut Self::Output {
+        &mut self.tiles[range]
+    }
+}
+
+impl<Tile> IntoIterator for Matrix<Tile> {
+    type IntoIter = IntoIter<Tile>;
+    type Item = (Position, Tile);
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.into()
+    }
+}
+
+impl<'a, Tile> IntoIterator for &'a Matrix<Tile> {
+    type IntoIter = IterRef<'a, Tile>;
+    type Item = (Position, &'a Tile);
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.into()
+    }
+}
+
+impl<'a, Tile> IntoIterator for &'a mut Matrix<Tile> {
+    type IntoIter = IterMut<'a, Tile>;
+    type Item = (Position, &'a mut Tile);
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.into()
+    }
+}
+
+impl<I> FromIterator<I> for Matrix<I::Item>
+where
+    I: IntoIterator,
+{
     fn from_iter<T: IntoIterator<Item = I>>(iter: T) -> Self {
         let mut width = 0;
         let mut tiles = Vec::new();
@@ -271,48 +322,491 @@ impl<I: IntoIterator> FromIterator<I> for Matrix<I::Item> {
     }
 }
 
-impl<I: IntoIterator<Item = V>, V: IntoIterator> From<I> for Matrix<V::Item> {
-    fn from(iter: I) -> Self {
-        iter.into_iter().collect()
+mod iter_rel {
+    use super::Matrix;
+    use super::Position;
+    use super::RelativePosition;
+
+    pub struct IterRel<'a, Tile, I> {
+        matrix: &'a Matrix<Tile>,
+        center: Position,
+        reliter: I,
+    }
+
+    impl<'a, Tile, I> IterRel<'a, Tile, I>
+    where
+        I: Iterator<Item = RelativePosition>,
+    {
+        pub(super) fn new(
+            matrix: &'a Matrix<Tile>,
+            center: Position,
+            reliter: impl IntoIterator<IntoIter = I>,
+        ) -> Self {
+            Self {
+                matrix,
+                center,
+                reliter: reliter.into_iter(),
+            }
+        }
+    }
+
+    impl<'a, Tile, I> Iterator for IterRel<'a, Tile, I>
+    where
+        I: Iterator<Item = RelativePosition>,
+    {
+        type Item = (Position, &'a Tile);
+
+        fn next(&mut self) -> Option<Self::Item> {
+            for rel in self.reliter.by_ref() {
+                if let Some(pos) = self.matrix.relative_pos(self.center, rel) {
+                    return Some((pos, &self.matrix[pos]));
+                }
+            }
+
+            None
+        }
+
+        fn size_hint(&self) -> (usize, Option<usize>) {
+            let (_, upper) = self.reliter.size_hint();
+            (0, upper)
+        }
+    }
+
+    impl<'a, Tile, I> DoubleEndedIterator for IterRel<'a, Tile, I>
+    where
+        I: DoubleEndedIterator<Item = RelativePosition>,
+    {
+        fn next_back(&mut self) -> Option<Self::Item> {
+            for rel in self.reliter.by_ref().rev() {
+                if let Some(pos) = self.matrix.relative_pos(self.center, rel) {
+                    return Some((pos, &self.matrix[pos]));
+                }
+            }
+
+            None
+        }
     }
 }
 
-pub struct IterRel<'a, Tile: 'a, I> {
-    matrix: &'a Matrix<Tile>,
-    center: Position,
-    reliter: I,
-}
+mod iter_rel_mut {
+    use super::Matrix;
+    use super::Position;
+    use super::RelativePosition;
 
-impl<'a, Tile: 'a, I: Iterator<Item = RelativePosition>> Iterator for IterRel<'a, Tile, I> {
-    type Item = Option<(Position, &'a Tile)>;
+    pub struct IterRelMut<'a, Tile, I> {
+        matrix: &'a mut Matrix<Tile>,
+        center: Position,
+        reliter: I,
+    }
 
-    fn next(&mut self) -> Option<Self::Item> {
-        self.reliter.next().map(|rel| {
-            self.matrix
-                .relative_pos(self.center, rel)
-                .map(|pos| (pos, &self.matrix[pos]))
-        })
+    impl<'a, Tile, I> IterRelMut<'a, Tile, I>
+    where
+        I: Iterator<Item = RelativePosition>,
+    {
+        pub(super) fn new(
+            matrix: &'a mut Matrix<Tile>,
+            center: Position,
+            reliter: impl IntoIterator<IntoIter = I>,
+        ) -> Self {
+            Self {
+                matrix,
+                center,
+                reliter: reliter.into_iter(),
+            }
+        }
+
+        unsafe fn read(&mut self, pos: Position) -> (Position, &'a mut Tile) {
+            let idx = self.matrix.pos_to_idx(pos);
+            let tile = &mut *(self.matrix.tiles.get_unchecked_mut(idx) as *mut _);
+            (pos, tile)
+        }
+    }
+
+    impl<'a, Tile, I> Iterator for IterRelMut<'a, Tile, I>
+    where
+        I: Iterator<Item = RelativePosition>,
+    {
+        type Item = (Position, &'a mut Tile);
+
+        fn next(&mut self) -> Option<Self::Item> {
+            for rel in self.reliter.by_ref() {
+                if let Some(pos) = self.matrix.relative_pos(self.center, rel) {
+                    return Some(unsafe { self.read(pos) });
+                }
+            }
+
+            None
+        }
+    }
+
+    impl<'a, Tile, I> DoubleEndedIterator for IterRelMut<'a, Tile, I>
+    where
+        I: DoubleEndedIterator<Item = RelativePosition>,
+    {
+        fn next_back(&mut self) -> Option<Self::Item> {
+            self.reliter
+                .by_ref()
+                .rev()
+                .find_map(|rel| self.matrix.relative_pos(self.center, rel))
+                .map(|pos| unsafe { self.read(pos) })
+        }
     }
 }
 
-pub struct IterRelMut<'a, Tile: 'a, I> {
-    matrix: &'a Matrix<Tile>,
-    tiles_ptr: *mut Tile,
-    center: Position,
-    reliter: I,
+mod into_iter {
+    use std::mem::MaybeUninit;
+    use std::ops::Deref;
+    use std::ops::DerefMut;
+
+    use super::Matrix;
+    use super::Position;
+
+    pub struct IntoIter<Tile> {
+        matrix: Matrix<MaybeUninit<Tile>>,
+        head: usize,
+        tail: usize,
+    }
+
+    impl<Tile> IntoIter<Tile> {
+        pub const fn is_empty(&self) -> bool {
+            self.head == self.tail
+        }
+
+        pub const fn len(&self) -> usize {
+            self.tail - self.head
+        }
+
+        fn uninit_slice(&self) -> &[MaybeUninit<Tile>] {
+            &self.matrix.tiles[self.head..self.tail]
+        }
+
+        fn uninit_slice_mut(&mut self) -> &mut [MaybeUninit<Tile>] {
+            &mut self.matrix.tiles[self.head..self.tail]
+        }
+
+        unsafe fn read(&self, idx: usize) -> (Position, Tile) {
+            let pos = self.matrix.idx_to_pos(idx);
+            let tile = self.matrix.tiles.get_unchecked(idx).assume_init_read();
+            (pos, tile)
+        }
+    }
+
+    impl<Tile> Iterator for IntoIter<Tile> {
+        type Item = (Position, Tile);
+
+        fn next(&mut self) -> Option<Self::Item> {
+            let idx = self.head;
+            if idx < self.tail {
+                self.head += 1;
+                Some(unsafe { self.read(idx) })
+            } else {
+                None
+            }
+        }
+
+        fn size_hint(&self) -> (usize, Option<usize>) {
+            let len = IntoIter::len(self);
+            (len, Some(len))
+        }
+
+        fn count(self) -> usize
+        where
+            Self: Sized,
+        {
+            IntoIter::len(&self)
+        }
+    }
+
+    impl<Tile> DoubleEndedIterator for IntoIter<Tile> {
+        fn next_back(&mut self) -> Option<Self::Item> {
+            if self.head < self.tail {
+                self.tail -= 1;
+                Some(unsafe { self.read(self.tail) })
+            } else {
+                None
+            }
+        }
+    }
+
+    impl<Tile> ExactSizeIterator for IntoIter<Tile> {}
+
+    impl<Tile> Drop for IntoIter<Tile> {
+        fn drop(&mut self) {
+            unsafe { drop_uninit_slice(self.uninit_slice_mut()) };
+            let len = self.matrix.len();
+            self.head = len;
+            self.tail = len;
+        }
+    }
+
+    impl<Tile> From<Matrix<Tile>> for IntoIter<Tile> {
+        fn from(matrix: Matrix<Tile>) -> Self {
+            let Matrix { width, tiles } = matrix;
+            let tail = tiles.len();
+            let matrix = Matrix {
+                width,
+                tiles: into_uninit_slice(tiles),
+            };
+            Self {
+                matrix,
+                head: 0,
+                tail,
+            }
+        }
+    }
+
+    impl<Tile> AsRef<[Tile]> for IntoIter<Tile> {
+        fn as_ref(&self) -> &[Tile] {
+            unsafe { from_uninit_slice(self.uninit_slice()) }
+        }
+    }
+
+    impl<Tile> AsMut<[Tile]> for IntoIter<Tile> {
+        fn as_mut(&mut self) -> &mut [Tile] {
+            unsafe { from_uninit_slice_mut(self.uninit_slice_mut()) }
+        }
+    }
+
+    impl<Tile> Deref for IntoIter<Tile> {
+        type Target = [Tile];
+
+        fn deref(&self) -> &Self::Target {
+            self.as_ref()
+        }
+    }
+
+    impl<Tile> DerefMut for IntoIter<Tile> {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            self.as_mut()
+        }
+    }
+
+    fn into_uninit_slice<T>(boxed: Box<[T]>) -> Box<[MaybeUninit<T>]> {
+        let len = boxed.len();
+        let ptr = Box::into_raw(boxed) as *mut MaybeUninit<T>;
+        unsafe { Box::from_raw(std::slice::from_raw_parts_mut(ptr, len)) }
+    }
+
+    unsafe fn from_uninit_slice<T>(slice: &[MaybeUninit<T>]) -> &[T] {
+        let ptr = slice.as_ptr() as *const T;
+        std::slice::from_raw_parts(ptr, slice.len())
+    }
+
+    unsafe fn from_uninit_slice_mut<T>(slice: &mut [MaybeUninit<T>]) -> &mut [T] {
+        let ptr = slice.as_mut_ptr() as *mut T;
+        std::slice::from_raw_parts_mut(ptr, slice.len())
+    }
+
+    unsafe fn drop_uninit_slice<T>(slice: &mut [MaybeUninit<T>]) {
+        for uninit in slice {
+            uninit.assume_init_drop();
+        }
+    }
 }
 
-impl<'a, Tile: 'a, I: Iterator<Item = RelativePosition>> Iterator for IterRelMut<'a, Tile, I> {
-    type Item = Option<(Position, &'a mut Tile)>;
+mod iter_ref {
+    use std::ops::Deref;
 
-    fn next(&mut self) -> Option<Self::Item> {
-        self.reliter.next().map(|rel| {
-            self.matrix.relative_pos(self.center, rel).map(|pos| {
-                let idx = self.matrix.pos_to_idx(pos);
-                let mut_ref = unsafe { &mut *self.tiles_ptr.add(idx) };
-                (pos, mut_ref)
-            })
-        })
+    use super::Matrix;
+    use super::Position;
+
+    pub struct IterRef<'a, Tile> {
+        matrix: &'a Matrix<Tile>,
+        head: usize,
+        tail: usize,
+    }
+
+    impl<'a, Tile> IterRef<'a, Tile> {
+        pub const fn new(matrix: &'a Matrix<Tile>) -> Self {
+            Self {
+                matrix,
+                head: 0,
+                tail: matrix.len(),
+            }
+        }
+
+        pub const fn is_empty(&self) -> bool {
+            self.head == self.tail
+        }
+
+        pub const fn len(&self) -> usize {
+            self.tail - self.head
+        }
+
+        unsafe fn read(&self, idx: usize) -> (Position, &'a Tile) {
+            let pos = self.matrix.idx_to_pos(idx);
+            let tile = self.matrix.tiles.get_unchecked(idx);
+            (pos, tile)
+        }
+    }
+
+    impl<'a, Tile> Iterator for IterRef<'a, Tile> {
+        type Item = (Position, &'a Tile);
+
+        fn next(&mut self) -> Option<Self::Item> {
+            let idx = self.head;
+            if idx < self.tail {
+                self.head += 1;
+                Some(unsafe { self.read(idx) })
+            } else {
+                None
+            }
+        }
+
+        fn size_hint(&self) -> (usize, Option<usize>) {
+            let len = IterRef::len(self);
+            (len, Some(len))
+        }
+
+        fn count(self) -> usize
+        where
+            Self: Sized,
+        {
+            self.len()
+        }
+    }
+
+    impl<'a, Tile> DoubleEndedIterator for IterRef<'a, Tile> {
+        fn next_back(&mut self) -> Option<Self::Item> {
+            if self.head < self.tail {
+                self.tail -= 1;
+                Some(unsafe { self.read(self.tail) })
+            } else {
+                None
+            }
+        }
+    }
+
+    impl<'a, Tile> ExactSizeIterator for IterRef<'a, Tile> {}
+
+    impl<'a, Tile> From<&'a Matrix<Tile>> for IterRef<'a, Tile> {
+        fn from(matrix: &'a Matrix<Tile>) -> Self {
+            Self::new(matrix)
+        }
+    }
+
+    impl<'a, Tile> AsRef<[Tile]> for IterRef<'a, Tile> {
+        fn as_ref(&self) -> &[Tile] {
+            &self.matrix.tiles[self.head..self.tail]
+        }
+    }
+
+    impl<'a, Tile> Deref for IterRef<'a, Tile> {
+        type Target = [Tile];
+
+        fn deref(&self) -> &Self::Target {
+            self.as_ref()
+        }
+    }
+}
+
+mod iter_mut {
+    use std::ops::Deref;
+    use std::ops::DerefMut;
+
+    use super::Matrix;
+    use super::Position;
+
+    pub struct IterMut<'a, Tile> {
+        matrix: &'a mut Matrix<Tile>,
+        head: usize,
+        tail: usize,
+    }
+
+    impl<'a, Tile> IterMut<'a, Tile> {
+        pub fn new(matrix: &'a mut Matrix<Tile>) -> Self {
+            let tail = matrix.len();
+            Self {
+                matrix,
+                head: 0,
+                tail,
+            }
+        }
+
+        pub const fn is_empty(&self) -> bool {
+            self.head == self.tail
+        }
+
+        pub const fn len(&self) -> usize {
+            self.tail - self.head
+        }
+
+        unsafe fn read_mut(&mut self, idx: usize) -> (Position, &'a mut Tile) {
+            let pos = self.matrix.idx_to_pos(idx);
+            let tile = &mut *(self.matrix.tiles.get_unchecked_mut(idx) as *mut _);
+            (pos, tile)
+        }
+    }
+
+    impl<'a, Tile> Iterator for IterMut<'a, Tile> {
+        type Item = (Position, &'a mut Tile);
+
+        fn next(&mut self) -> Option<Self::Item> {
+            let idx = self.head;
+            if idx < self.tail {
+                self.head += 1;
+                Some(unsafe { self.read_mut(idx) })
+            } else {
+                None
+            }
+        }
+
+        fn size_hint(&self) -> (usize, Option<usize>) {
+            let len = IterMut::len(self);
+            (len, Some(len))
+        }
+
+        fn count(self) -> usize
+        where
+            Self: Sized,
+        {
+            self.len()
+        }
+    }
+
+    impl<'a, Tile> DoubleEndedIterator for IterMut<'a, Tile> {
+        fn next_back(&mut self) -> Option<Self::Item> {
+            if self.head < self.tail {
+                self.tail -= 1;
+                Some(unsafe { self.read_mut(self.tail) })
+            } else {
+                None
+            }
+        }
+    }
+
+    impl<'a, Tile> ExactSizeIterator for IterMut<'a, Tile> {}
+
+    impl<'a, Tile> From<&'a mut Matrix<Tile>> for IterMut<'a, Tile> {
+        fn from(value: &'a mut Matrix<Tile>) -> Self {
+            Self::new(value)
+        }
+    }
+
+    impl<'a, Tile> AsRef<[Tile]> for IterMut<'a, Tile> {
+        fn as_ref(&self) -> &[Tile] {
+            &self.matrix.tiles[self.head..self.tail]
+        }
+    }
+
+    impl<'a, Tile> AsMut<[Tile]> for IterMut<'a, Tile> {
+        fn as_mut(&mut self) -> &mut [Tile] {
+            &mut self.matrix.tiles[self.head..self.tail]
+        }
+    }
+
+    impl<'a, Tile> Deref for IterMut<'a, Tile> {
+        type Target = [Tile];
+
+        fn deref(&self) -> &Self::Target {
+            self.as_ref()
+        }
+    }
+
+    impl<'a, Tile> DerefMut for IterMut<'a, Tile> {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            self.as_mut()
+        }
     }
 }
 
@@ -322,10 +816,11 @@ mod tests {
     use std::ops::RangeBounds;
 
     use euclid::point2;
+    use itertools::Itertools;
 
     use super::Matrix;
     use super::Position;
-    use super::SURROUNDING;
+    use super::RelativePosition;
 
     fn collect_tiles<'a, V: Copy + 'a>(
         iter: impl Iterator<Item = (Position, &'a V)> + 'a,
@@ -344,7 +839,7 @@ mod tests {
     const COL_2: [u8; 5] = [2, 5, 8, 11, 14];
 
     fn matrix() -> Matrix<u8> {
-        Matrix::from([ROW_0, ROW_1, ROW_2, ROW_3, ROW_4])
+        [ROW_0, ROW_1, ROW_2, ROW_3, ROW_4].into_iter().collect()
     }
 
     #[test]
@@ -428,9 +923,8 @@ mod tests {
         let matrix = matrix();
 
         let v = matrix
-            .iter_rel(point2(1, 1), SURROUNDING)
-            .flatten()
-            .collect::<Vec<_>>();
+            .iter_rel(point2(1, 1), RelativePosition::ALL)
+            .collect_vec();
 
         assert_eq!(&v, &[
             (point2(0, 0), &0),
@@ -445,9 +939,8 @@ mod tests {
         ]);
 
         let v = matrix
-            .iter_rel(point2(0, 0), SURROUNDING)
-            .flatten()
-            .collect::<Vec<_>>();
+            .iter_rel(point2(0, 0), RelativePosition::ALL)
+            .collect_vec();
 
         assert_eq!(&v, &[
             (point2(0, 0), &0),

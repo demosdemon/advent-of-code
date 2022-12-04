@@ -3,7 +3,7 @@ use euclid::point2;
 use super::Coordinate;
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct Line(pub Coordinate, pub Coordinate);
+pub(super) struct Line(pub Coordinate, pub Coordinate);
 
 impl Line {
     pub fn angle(&self) -> usize {
@@ -42,7 +42,7 @@ impl IntoIterator for Line {
     }
 }
 
-pub struct LineIterator(Option<Line>);
+pub(super) struct LineIterator(Option<Line>);
 
 ::aoc::derive_FromStr_for_nom!(Line, super::parser::line);
 

@@ -31,7 +31,7 @@
 
 use super::builder::SolutionBuilder;
 
-pub fn solve(input: &SolutionBuilder) -> usize {
+fn solve(input: &SolutionBuilder) -> usize {
     input.board(|_| true).overlaps()
 }
 

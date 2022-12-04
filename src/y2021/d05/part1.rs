@@ -57,7 +57,7 @@
 
 use super::builder::SolutionBuilder;
 
-pub fn solve(input: &SolutionBuilder) -> usize {
+fn solve(input: &SolutionBuilder) -> usize {
     input.board(|l| !l.is_diagonal()).overlaps()
 }
 
