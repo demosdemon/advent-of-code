@@ -7,11 +7,10 @@ use anyhow::Context;
 use anyhow::Error;
 use anyhow::Result;
 
-#[derive(derive_more::IntoIterator)]
+#[derive(derive_more::IntoIterator, macros::FromIterator)]
 #[into_iterator(ref)]
+#[from_iterator(usize)]
 pub struct Ocean(Vec<usize>);
-
-::aoc::derive_FromIterator!(Ocean, usize);
 
 impl FromStr for Ocean {
     type Err = Error;

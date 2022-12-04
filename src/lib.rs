@@ -80,17 +80,17 @@ macro_rules! derive_FromStr_for_bytes_TryFrom_collect {
     };
 }
 
-#[macro_export]
-macro_rules! derive_FromIterator {
-    ($t:ty, $v:ty) => {
-        impl ::core::iter::FromIterator<$v> for $t {
-            #[inline]
-            fn from_iter<T: ::core::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
-                Self(iter.into_iter().collect())
-            }
-        }
-    };
-}
+// #[macro_export]
+// macro_rules! derive_FromIterator {
+//     ($t:ty, $v:ty) => {
+//         impl ::core::iter::FromIterator<$v> for $t {
+//             #[inline]
+//             fn from_iter<T: ::core::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
+//                 Self(iter.into_iter().collect())
+//             }
+//         }
+//     };
+// }
 
 #[macro_export]
 macro_rules! derive_FromStr_for_nom {

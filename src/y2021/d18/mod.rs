@@ -5,11 +5,11 @@ use std::ops::Add;
 
 pub(crate) mod parser;
 
-#[derive(derive_more::IntoIterator)]
+#[derive(derive_more::IntoIterator, macros::FromIterator)]
 #[into_iterator(ref)]
+#[from_iterator(Snailfish)]
 pub struct Homework(Vec<Snailfish>);
 
-::aoc::derive_FromIterator!(Homework, Snailfish);
 ::aoc::derive_FromStr_for_FromIterator!(Homework, Snailfish);
 
 #[derive(Debug, Clone, PartialEq, Eq, derive_more::Display, derive_more::From)]

@@ -136,9 +136,9 @@ impl FromStr for Instructions {
     }
 }
 
+#[derive(macros::FromIterator)]
+#[from_iterator(Coordinate)]
 struct Matrix(BTreeSet<Coordinate>);
-
-::aoc::derive_FromIterator!(Matrix, Coordinate);
 
 impl Matrix {
     pub fn len(&self) -> usize {

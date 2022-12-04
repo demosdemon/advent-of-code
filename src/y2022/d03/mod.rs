@@ -35,7 +35,8 @@ impl TryFrom<u8> for Priority {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, macros::FromIterator)]
+#[from_iterator(Priority)]
 pub struct Sack(Vec<Priority>);
 
 impl Sack {
@@ -45,11 +46,10 @@ impl Sack {
     }
 }
 
-::aoc::derive_FromIterator!(Sack, Priority);
 ::aoc::derive_FromStr_for_bytes_TryFrom_collect!(Sack, Priority);
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, macros::FromIterator)]
+#[from_iterator(Sack)]
 pub struct Sacks(Vec<Sack>);
 
-::aoc::derive_FromIterator!(Sacks, Sack);
 ::aoc::derive_FromStr_for_FromIterator!(Sacks, Sack);

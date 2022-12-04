@@ -7,9 +7,9 @@ use anyhow::Context;
 use anyhow::Error;
 use anyhow::Result;
 
+#[derive(macros::FromIterator)]
+#[from_iterator(u8)]
 pub struct Ocean(Vec<u8>);
-
-::aoc::derive_FromIterator!(Ocean, u8);
 
 impl FromStr for Ocean {
     type Err = Error;

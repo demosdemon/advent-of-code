@@ -63,9 +63,10 @@ impl Instruction {
 
 ::aoc::derive_FromStr_for_nom!(Instruction, parser::instruction);
 
+#[derive(macros::FromIterator)]
+#[from_iterator(Instruction)]
 pub struct Instructions(Vec<Instruction>);
 
-::aoc::derive_FromIterator!(Instructions, Instruction);
 ::aoc::derive_FromStr_for_FromIterator!(Instructions, Instruction);
 
 impl Instructions {

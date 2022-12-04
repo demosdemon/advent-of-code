@@ -91,9 +91,9 @@ impl From<bool> for Bit {
     }
 }
 
+#[derive(macros::FromIterator)]
+#[from_iterator(Bit)]
 pub struct BitVector(Vec<Bit>);
-
-::aoc::derive_FromIterator!(BitVector, Bit);
 
 impl BitVector {
     fn reverse(&mut self) {

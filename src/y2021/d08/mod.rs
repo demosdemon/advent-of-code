@@ -123,10 +123,10 @@ impl From<Line> for usize {
     }
 }
 
-#[derive(Debug, Clone, derive_more::IntoIterator)]
+#[derive(Debug, Clone, derive_more::IntoIterator, macros::FromIterator)]
+#[from_iterator(Line)]
 pub struct Lines(Vec<Line>);
 
-::aoc::derive_FromIterator!(Lines, Line);
 ::aoc::derive_FromStr_for_FromIterator!(Lines, Line);
 
 fn split_iter<I, F>(iter: I, f: F) -> (I, I)
