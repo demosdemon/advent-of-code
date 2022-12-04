@@ -49,8 +49,6 @@ impl AssignmentPair {
     }
 }
 
-#[derive(macros::FromIterator)]
-#[from_iterator(AssignmentPair)]
+#[derive(macros::FromLines)]
+#[from_lines(AssignmentPair)]
 struct Assignments(Vec<AssignmentPair>);
-
-::aoc::derive_FromStr_for_FromIterator!(Assignments, AssignmentPair);

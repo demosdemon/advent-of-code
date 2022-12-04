@@ -135,8 +135,8 @@ pub struct Instruction {
 
 ::aoc::derive_FromStr_for_nom!(Instruction, parser::instruction);
 
-#[derive(Default, derive_more::IntoIterator, macros::FromIterator)]
-#[from_iterator(Instruction)]
+#[derive(Default, derive_more::IntoIterator, macros::FromLines)]
+#[from_lines(Instruction)]
 pub struct Instructions(Vec<Instruction>);
 
 impl Instructions {
@@ -163,8 +163,6 @@ impl Instructions {
             .sum::<isize>()
     }
 }
-
-::aoc::derive_FromStr_for_FromIterator!(Instructions, Instruction);
 
 #[cfg(test)]
 mod tests {

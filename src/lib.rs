@@ -49,22 +49,6 @@ macro_rules! tests_for_problem {
 }
 
 #[macro_export]
-macro_rules! derive_FromStr_for_FromIterator {
-    ($t:ty, $v:ty) => {
-        impl ::core::str::FromStr for $t {
-            type Err = <$v as ::core::str::FromStr>::Err;
-
-            #[inline]
-            fn from_str(
-                s: &str,
-            ) -> ::core::result::Result<Self, <Self as ::core::str::FromStr>::Err> {
-                s.lines().map(str::parse::<$v>).collect()
-            }
-        }
-    };
-}
-
-#[macro_export]
 macro_rules! derive_FromStr_for_bytes_TryFrom_collect {
     ($t:ty, $v:ty) => {
         impl ::core::str::FromStr for $t {
@@ -79,18 +63,6 @@ macro_rules! derive_FromStr_for_bytes_TryFrom_collect {
         }
     };
 }
-
-// #[macro_export]
-// macro_rules! derive_FromIterator {
-//     ($t:ty, $v:ty) => {
-//         impl ::core::iter::FromIterator<$v> for $t {
-//             #[inline]
-//             fn from_iter<T: ::core::iter::IntoIterator<Item = $v>>(iter: T) -> Self {
-//                 Self(iter.into_iter().collect())
-//             }
-//         }
-//     };
-// }
 
 #[macro_export]
 macro_rules! derive_FromStr_for_nom {

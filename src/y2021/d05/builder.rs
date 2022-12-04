@@ -1,12 +1,10 @@
 use super::board::Board;
 use super::line::Line;
 
-#[derive(Debug, derive_more::IntoIterator, macros::FromIterator)]
+#[derive(Debug, derive_more::IntoIterator, macros::FromLines)]
 #[into_iterator(owned, ref)]
-#[from_iterator(Line)]
+#[from_lines(Line)]
 pub(super) struct SolutionBuilder(Vec<Line>);
-
-::aoc::derive_FromStr_for_FromIterator!(SolutionBuilder, Line);
 
 impl SolutionBuilder {
     pub fn board<F>(&self, predicate: F) -> Board

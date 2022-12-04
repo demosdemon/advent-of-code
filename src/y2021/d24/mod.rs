@@ -63,11 +63,9 @@ impl Instruction {
 
 ::aoc::derive_FromStr_for_nom!(Instruction, parser::instruction);
 
-#[derive(macros::FromIterator)]
-#[from_iterator(Instruction)]
+#[derive(macros::FromLines)]
+#[from_lines(Instruction)]
 pub struct Instructions(Vec<Instruction>);
-
-::aoc::derive_FromStr_for_FromIterator!(Instructions, Instruction);
 
 impl Instructions {
     fn count_inputs(&self) -> usize {

@@ -148,8 +148,6 @@ impl InstructionP2 {
 
 ::aoc::derive_FromStr_for_nom!(Instruction, parser::instruction);
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, macros::FromIterator)]
-#[from_iterator(Instruction)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, macros::FromLines)]
+#[from_lines(Instruction)]
 struct Instructions(Vec<Instruction>);
-
-::aoc::derive_FromStr_for_FromIterator!(Instructions, Instruction);

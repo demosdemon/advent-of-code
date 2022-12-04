@@ -48,8 +48,6 @@ impl Sack {
 
 ::aoc::derive_FromStr_for_bytes_TryFrom_collect!(Sack, Priority);
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, macros::FromIterator)]
-#[from_iterator(Sack)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, macros::FromLines)]
+#[from_lines(Sack)]
 pub struct Sacks(Vec<Sack>);
-
-::aoc::derive_FromStr_for_FromIterator!(Sacks, Sack);

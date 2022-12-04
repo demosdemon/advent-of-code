@@ -11,9 +11,7 @@ pub enum Direction {
 
 ::aoc::derive_FromStr_for_nom!(Direction, parser::direction);
 
-#[derive(derive_more::IntoIterator, macros::FromIterator)]
+#[derive(derive_more::IntoIterator, macros::FromLines)]
 #[into_iterator(ref)]
-#[from_iterator(Direction)]
+#[from_lines(Direction)]
 pub struct DirectionList(Vec<Direction>);
-
-::aoc::derive_FromStr_for_FromIterator!(DirectionList, Direction);

@@ -1,12 +1,10 @@
 pub(crate) mod part1;
 pub(crate) mod part2;
 
-#[derive(derive_more::IntoIterator, macros::FromIterator)]
+#[derive(derive_more::IntoIterator, macros::FromLines)]
 #[into_iterator(ref)]
-#[from_iterator(Line)]
+#[from_lines(Line)]
 pub struct Lines(Vec<Line>);
-
-::aoc::derive_FromStr_for_FromIterator!(Lines, Line);
 
 #[derive(Debug)]
 pub enum Line {

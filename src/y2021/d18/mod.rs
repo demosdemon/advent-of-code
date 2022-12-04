@@ -5,12 +5,10 @@ use std::ops::Add;
 
 pub(crate) mod parser;
 
-#[derive(derive_more::IntoIterator, macros::FromIterator)]
+#[derive(derive_more::IntoIterator, macros::FromLines)]
 #[into_iterator(ref)]
-#[from_iterator(Snailfish)]
+#[from_lines(Snailfish)]
 pub struct Homework(Vec<Snailfish>);
-
-::aoc::derive_FromStr_for_FromIterator!(Homework, Snailfish);
 
 #[derive(Debug, Clone, PartialEq, Eq, derive_more::Display, derive_more::From)]
 pub enum Node {
