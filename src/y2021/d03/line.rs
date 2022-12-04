@@ -4,13 +4,11 @@ use std::ops::Not;
 use super::bit::Bit;
 
 #[derive(
-    Default, Debug, Clone, derive_more::IntoIterator, derive_more::Index, macros::FromIterator,
+    Default, Debug, Clone, derive_more::IntoIterator, derive_more::Index, macros::FromBytes,
 )]
 #[into_iterator(owned, ref)]
-#[from_iterator(Bit)]
+#[from_bytes(Bit)]
 pub struct Line(Vec<Bit>);
-
-::aoc::derive_FromStr_for_bytes_TryFrom_collect!(Line, Bit);
 
 impl<'slice> From<&'slice [Bit]> for Line {
     fn from(v: &'slice [Bit]) -> Self {

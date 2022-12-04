@@ -49,22 +49,6 @@ macro_rules! tests_for_problem {
 }
 
 #[macro_export]
-macro_rules! derive_FromStr_for_bytes_TryFrom_collect {
-    ($t:ty, $v:ty) => {
-        impl ::core::str::FromStr for $t {
-            type Err = <$v as ::core::convert::TryFrom<u8>>::Error;
-
-            #[inline]
-            fn from_str(
-                s: &str,
-            ) -> ::core::result::Result<Self, <Self as ::core::str::FromStr>::Err> {
-                s.bytes().map(TryInto::try_into).collect()
-            }
-        }
-    };
-}
-
-#[macro_export]
 macro_rules! derive_FromStr_for_nom {
     ($t:ty, $f:path) => {
         impl ::core::str::FromStr for $t {

@@ -1,3 +1,5 @@
+pub(crate) mod common;
+mod from_bytes;
 mod from_iterator;
 mod from_lines;
 mod roundtrip;
@@ -6,6 +8,7 @@ use proc_macro::TokenStream;
 use proc_macro_error::proc_macro_error;
 use syn::parse_macro_input;
 
+use self::from_bytes::FromBytes;
 use self::from_iterator::FromIterator;
 use self::from_lines::FromLines;
 use self::roundtrip::Roundtrip;
@@ -30,6 +33,14 @@ pub fn derive_from_iterator(input: TokenStream) -> TokenStream {
 #[proc_macro_error]
 pub fn derive_from_lines(input: TokenStream) -> TokenStream {
     parse_macro_input!(input as FromLines)
+        .into_token_stream()
+        .into()
+}
+
+#[proc_macro_derive(FromBytes, attributes(from_bytes))]
+#[proc_macro_error]
+pub fn derive_from_bytes(input: TokenStream) -> TokenStream {
+    parse_macro_input!(input as FromBytes)
         .into_token_stream()
         .into()
 }

@@ -12,7 +12,13 @@ pub enum Line {
     Invalid(u8),
 }
 
-::aoc::derive_FromStr_for_bytes_TryFrom_collect!(Line, u8);
+impl std::str::FromStr for Line {
+    type Err = std::convert::Infallible;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(s.bytes().collect())
+    }
+}
 
 impl Line {
     fn score(&self) -> Option<usize> {
