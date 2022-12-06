@@ -83,20 +83,17 @@
 
 use super::line::Line;
 
-pub fn solve(input: &super::Lines) -> usize {
-    let lines = input;
-    let bits = lines[0].len();
-    let mut o2 = lines.iter().collect::<Lines>();
-    let mut co2 = lines.iter().collect::<Lines>();
+fn solve(input: &super::Lines) -> usize {
+    let bits = input[0].len();
+    let mut o2 = Lines::from_iter(input);
+    let mut co2 = Lines::from_iter(input);
 
     for bit in 0..=bits {
         o2 = o2.filter_ceiling(bit);
         co2 = co2.filter_floor(bit);
     }
 
-    let o2_rating: usize = o2.only().into();
-    let co2_rating: usize = co2.only().into();
-    o2_rating * co2_rating
+    o2 * co2
 }
 
 #[derive(derive_more::Deref, derive_more::IntoIterator)]
@@ -129,15 +126,23 @@ impl<'a> Lines<'a> {
         self.iter().map(|v| v[bit]).collect::<Line>().ceiling()
     }
 
-    fn only(self) -> &'a Line {
+    fn only(self) -> usize {
         assert_eq!(self.len(), 1);
-        self[0]
+        self[0].into()
     }
 }
 
 impl<'a> FromIterator<&'a Line> for Lines<'a> {
     fn from_iter<T: IntoIterator<Item = &'a Line>>(iter: T) -> Self {
         Self(iter.into_iter().collect())
+    }
+}
+
+impl<'a, 'b> std::ops::Mul<Lines<'b>> for Lines<'a> {
+    type Output = usize;
+
+    fn mul(self, rhs: Lines<'b>) -> Self::Output {
+        self.only() * rhs.only()
     }
 }
 

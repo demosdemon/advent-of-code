@@ -3,7 +3,7 @@ pub(crate) mod part2;
 
 mod parser;
 
-pub enum Direction {
+enum Direction {
     Forward(u8),
     Up(u8),
     Down(u8),
@@ -14,4 +14,4 @@ pub enum Direction {
 #[derive(derive_more::IntoIterator, macros::FromLines)]
 #[into_iterator(ref)]
 #[from_lines(Direction)]
-pub struct DirectionList(Vec<Direction>);
+struct DirectionList(Vec<Direction>);

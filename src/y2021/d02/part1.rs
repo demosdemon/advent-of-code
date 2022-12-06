@@ -40,7 +40,7 @@
 
 use super::Direction;
 
-pub fn solve(input: &super::DirectionList) -> usize {
+fn solve(input: &super::DirectionList) -> usize {
     let mut horizontal = 0;
     let mut depth = 0;
     for dir in input {

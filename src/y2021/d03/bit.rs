@@ -5,7 +5,7 @@ use anyhow::anyhow;
 use anyhow::Error;
 use anyhow::Result;
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Bit {
     Zero = 0,
     One = 1,
@@ -43,7 +43,7 @@ impl From<Bit> for bool {
 
 impl From<&Bit> for bool {
     fn from(value: &Bit) -> Self {
-        value.to_owned().into()
+        (*value).into()
     }
 }
 

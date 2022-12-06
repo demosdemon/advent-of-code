@@ -10,8 +10,8 @@ use super::bit::Bit;
 #[from_bytes(Bit)]
 pub struct Line(Vec<Bit>);
 
-impl<'slice> From<&'slice [Bit]> for Line {
-    fn from(v: &'slice [Bit]) -> Self {
+impl From<&[Bit]> for Line {
+    fn from(v: &[Bit]) -> Self {
         v.iter().copied().collect()
     }
 }
@@ -45,7 +45,7 @@ impl Not for Line {
 
 impl<'a> From<&'a Line> for usize {
     fn from(v: &'a Line) -> Self {
-        v.into_iter().fold(Self::default(), Add::add)
+        v.into_iter().fold(0, Add::add)
     }
 }
 
