@@ -25,10 +25,9 @@ impl TryFromStr {
 
         quote! {
             impl #impl_generics ::core::convert::TryFrom<&'__try_from str> for #struct_ident #ty_generics #where_clause {
-                type Error = <#struct_ident #ty_generics as ::core::str::FromStr>::Err;
+                type Error = <Self as ::core::str::FromStr>::Err;
 
-                #[inline]
-                fn try_from(s: &str) -> ::core::result::Result<Self, Self::Error> {
+                fn try_from(s: &'__try_from str) -> ::core::result::Result<Self, <Self as ::core::convert::TryFrom<&'__try_from str>>::Error> {
                     s.parse()
                 }
             }

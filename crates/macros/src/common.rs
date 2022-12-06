@@ -90,7 +90,7 @@ impl Common {
         let (try_from_impl_generics, _, _) = try_from_generics.split_for_impl();
         quote! {
             impl #try_from_impl_generics ::core::convert::TryFrom<&'__try_from str> for #struct_ident #ty_generics #where_clause {
-                type Error = <#struct_ident as ::core::str::FromStr>::Err;
+                type Error = <Self as ::core::str::FromStr>::Err;
 
                 fn try_from(s: &'__try_from str) -> ::core::result::Result<Self, <Self as ::core::convert::TryFrom<&'__try_from str>>::Error> {
                     s.parse()
