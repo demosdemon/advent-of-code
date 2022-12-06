@@ -175,9 +175,3 @@ impl<'a> Add<&'a Fold> for Matrix {
         self.0.iter().map(|c| c.fold(rhs)).collect()
     }
 }
-
-impl<'a> FromIterator<&'a Coordinate> for Matrix {
-    fn from_iter<T: IntoIterator<Item = &'a Coordinate>>(iter: T) -> Self {
-        iter.into_iter().cloned().collect()
-    }
-}

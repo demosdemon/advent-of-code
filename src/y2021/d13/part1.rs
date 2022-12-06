@@ -136,7 +136,7 @@
 // your transparent paper?
 
 pub fn solve(input: super::Instructions) -> usize {
-    let matrix: super::Matrix = input.coordinates.iter().collect();
+    let matrix: super::Matrix = input.coordinates.into_iter().collect();
     let matrix = matrix + &input.folds[0];
     matrix.len()
 }

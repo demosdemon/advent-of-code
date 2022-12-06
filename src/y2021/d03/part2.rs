@@ -96,7 +96,8 @@ fn solve(input: super::Lines) -> usize {
     o2 * co2
 }
 
-#[derive(derive_more::Deref, derive_more::IntoIterator)]
+#[derive(derive_more::Deref, derive_more::IntoIterator, macros::FromIterator)]
+#[from_iterator(&'a Line)]
 struct Lines<'a>(Vec<&'a Line>);
 
 impl<'a> Lines<'a> {
@@ -129,12 +130,6 @@ impl<'a> Lines<'a> {
     fn only(self) -> usize {
         assert_eq!(self.len(), 1);
         self[0].into()
-    }
-}
-
-impl<'a> FromIterator<&'a Line> for Lines<'a> {
-    fn from_iter<T: IntoIterator<Item = &'a Line>>(iter: T) -> Self {
-        Self(iter.into_iter().collect())
     }
 }
 

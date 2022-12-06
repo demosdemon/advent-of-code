@@ -5,7 +5,7 @@
 // What code do you use to activate the infrared thermal imaging camera system?
 
 pub fn solve(input: super::Instructions) -> String {
-    let matrix: super::Matrix = input.coordinates.iter().collect();
+    let matrix: super::Matrix = input.coordinates.into_iter().collect();
     let matrix = input.folds.iter().fold(matrix, |prev, fold| prev + fold);
     matrix.to_string()
 }
