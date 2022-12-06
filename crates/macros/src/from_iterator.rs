@@ -1,9 +1,17 @@
 use proc_macro2::TokenStream;
 use syn::parse::Parse;
+use syn::parse::Parser;
 
 use crate::common::Common;
 
-pub struct FromIterator(Common);
+pub fn expand(tokens: TokenStream) -> TokenStream {
+    FromIterator::parse
+        .parse2(tokens)
+        .map(FromIterator::into_token_stream)
+        .unwrap_or_else(syn::Error::into_compile_error)
+}
+
+struct FromIterator(Common);
 
 impl FromIterator {
     pub fn into_token_stream(self) -> TokenStream {

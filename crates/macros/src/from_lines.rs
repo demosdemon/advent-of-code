@@ -1,10 +1,18 @@
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::parse::Parse;
+use syn::parse::Parser;
 
 use crate::common::Common;
 
-pub struct FromLines(Common);
+pub fn expand(tokens: TokenStream) -> TokenStream {
+    FromLines::parse
+        .parse2(tokens)
+        .map(FromLines::into_token_stream)
+        .unwrap_or_else(syn::Error::into_compile_error)
+}
+
+struct FromLines(Common);
 
 impl FromLines {
     pub fn into_token_stream(self) -> TokenStream {

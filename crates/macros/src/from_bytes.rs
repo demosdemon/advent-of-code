@@ -1,13 +1,21 @@
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::parse::Parse;
+use syn::parse::Parser;
 
 use crate::common::Common;
 
-pub struct FromBytes(Common);
+pub fn expand(tokens: TokenStream) -> TokenStream {
+    FromBytes::parse
+        .parse2(tokens)
+        .map(FromBytes::into_token_stream)
+        .unwrap_or_else(syn::Error::into_compile_error)
+}
+
+struct FromBytes(Common);
 
 impl FromBytes {
-    pub fn into_token_stream(self) -> TokenStream {
+    fn into_token_stream(self) -> TokenStream {
         let Common {
             attr_type,
             struct_ident,

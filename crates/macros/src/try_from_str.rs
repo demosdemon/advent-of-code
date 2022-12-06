@@ -1,11 +1,19 @@
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::parse::Parse;
+use syn::parse::Parser;
 use syn::DeriveInput;
 use syn::Generics;
 use syn::Ident;
 
-pub struct TryFromStr {
+pub fn expand(tokens: TokenStream) -> TokenStream {
+    TryFromStr::parse
+        .parse2(tokens)
+        .map(TryFromStr::into_token_stream)
+        .unwrap_or_else(syn::Error::into_compile_error)
+}
+
+struct TryFromStr {
     pub struct_ident: Ident,
     pub struct_generics: Generics,
 }

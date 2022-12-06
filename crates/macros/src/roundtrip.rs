@@ -3,6 +3,7 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use syn::ext::IdentExt;
 use syn::parse::Parse;
+use syn::parse::Parser;
 use syn::punctuated::Punctuated;
 use syn::spanned::Spanned;
 use syn::Expr;
@@ -10,7 +11,14 @@ use syn::Ident;
 use syn::Token;
 use syn::TypePath;
 
-pub struct Roundtrip {
+pub fn expand(tokens: TokenStream) -> TokenStream {
+    Roundtrip::parse
+        .parse2(tokens)
+        .map(Roundtrip::into_token_stream)
+        .unwrap_or_else(syn::Error::into_compile_error)
+}
+
+struct Roundtrip {
     ty: TypePath,
 
     #[allow(unused)]
