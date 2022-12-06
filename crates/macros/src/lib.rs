@@ -45,11 +45,23 @@ mod tests {
     type Macro = (&'static str, Expander);
     type AttrMacro = (&'static str, AttrExpander);
 
-    const FUNCTION_LIKE: [Macro; 1] = [("test_roundtrip", crate::roundtrip::expand)];
-    const DERIVE: [Macro; 4] = [
+    const FUNCTION_LIKE: [Macro; 3] = [
+        ("::macros::test_roundtrip", crate::roundtrip::expand),
+        ("macros::test_roundtrip", crate::roundtrip::expand),
+        ("test_roundtrip", crate::roundtrip::expand),
+    ];
+    const DERIVE: [Macro; 12] = [
+        ("::macros::FromBytes", crate::from_bytes::expand),
+        ("macros::FromBytes", crate::from_bytes::expand),
         ("FromBytes", crate::from_bytes::expand),
+        ("::macros::FromIterator", crate::from_iterator::expand),
+        ("macros::FromIterator", crate::from_iterator::expand),
         ("FromIterator", crate::from_iterator::expand),
+        ("::macros::FromLines", crate::from_lines::expand),
+        ("macros::FromLines", crate::from_lines::expand),
         ("FromLines", crate::from_lines::expand),
+        ("::macros::TryFromStr", crate::try_from_str::expand),
+        ("macros::TryFromStr", crate::try_from_str::expand),
         ("TryFromStr", crate::try_from_str::expand),
     ];
     const ATTRIBUTE: [AttrMacro; 0] = [];
@@ -68,6 +80,8 @@ mod tests {
     fn code_coverage() {
         // This code doesn't check much. Instead, it does macro expansion at run
         // time to let tarpaulin measure code coverage for the macro.
+        let mut once = false;
+
         for p in iter_src_files() {
             let mut fp = fs::File::open(p).unwrap();
 
@@ -79,6 +93,10 @@ mod tests {
 
             emulate_attributelike_macro_expansion(fp.try_clone().unwrap(), &ATTRIBUTE).unwrap();
             fp.rewind().unwrap();
+
+            once = true;
         }
+
+        assert!(once);
     }
 }
