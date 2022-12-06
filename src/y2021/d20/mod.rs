@@ -22,6 +22,7 @@ const ALGORITHM_DX_DY: [(isize, isize); ALGORITHM_BITS] = [
     (1, 1),
 ];
 
+#[derive(macros::TryFromStr)]
 pub struct Input {
     algo: Algorithm,
     image: Image,

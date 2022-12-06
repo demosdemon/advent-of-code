@@ -36,7 +36,7 @@ impl TryFrom<u8> for Tile {
 
 type Position = (usize, usize);
 
-#[derive(Clone)]
+#[derive(Clone, macros::TryFromStr)]
 pub struct OceanFloor {
     width: usize,
     tiles: Box<[Tile]>,

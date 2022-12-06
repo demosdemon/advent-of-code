@@ -61,7 +61,7 @@
 // Find the completion string for each incomplete line, score the completion
 // strings, and sort the scores. What is the middle score?
 
-pub fn solve(input: &super::Lines) -> usize {
+pub fn solve(input: super::Lines) -> usize {
     let mut scores = input
         .into_iter()
         .filter_map(|l| l.score())

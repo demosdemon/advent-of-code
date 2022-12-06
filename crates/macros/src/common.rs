@@ -76,6 +76,29 @@ impl Common {
         })
     }
 
+    pub fn impl_try_from_str(&self) -> TokenStream {
+        let Self {
+            struct_ident,
+            struct_generics,
+            ..
+        } = &self;
+        let (_, ty_generics, where_clause) = struct_generics.split_for_impl();
+        let mut try_from_generics = struct_generics.clone();
+        try_from_generics
+            .params
+            .insert(0, syn::parse_quote!('__try_from));
+        let (try_from_impl_generics, _, _) = try_from_generics.split_for_impl();
+        quote! {
+            impl #try_from_impl_generics ::core::convert::TryFrom<&'__try_from str> for #struct_ident #ty_generics #where_clause {
+                type Error = <#struct_ident as ::core::str::FromStr>::Err;
+
+                fn try_from(s: &'__try_from str) -> ::core::result::Result<Self, <Self as ::core::convert::TryFrom<&'__try_from str>>::Error> {
+                    s.parse()
+                }
+            }
+        }
+    }
+
     pub fn impl_from_iterator(&self) -> TokenStream {
         if self.skip_from_iter {
             return quote! {};

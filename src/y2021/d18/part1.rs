@@ -201,7 +201,7 @@
 // Add up all of the snailfish numbers from the homework assignment in the order
 // they appear. What is the magnitude of the final sum?
 
-pub fn solve(input: &super::Homework) -> usize {
+pub fn solve(input: super::Homework) -> usize {
     super::sum(input).magnitude()
 }
 

@@ -73,7 +73,7 @@ fn solve_chunk((mut s1, mut s2, mut s3): (Sack, Sack, Sack)) -> usize {
     }
 }
 
-fn solve(sacks: &super::Sacks) -> usize {
+fn solve(sacks: super::Sacks) -> usize {
     sacks.0.iter().cloned().tuples().map(solve_chunk).sum()
 }
 

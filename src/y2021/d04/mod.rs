@@ -4,7 +4,7 @@ pub(crate) mod part2;
 pub(crate) mod matrix;
 mod parser;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, macros::TryFromStr)]
 pub struct Game {
     pub pulls: Vec<u8>,
 

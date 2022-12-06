@@ -57,7 +57,7 @@
 // What is the lowest total risk of any path from the top left to the bottom
 // right?
 
-pub fn solve(input: &super::Cave) -> usize {
+pub fn solve(input: super::Cave) -> usize {
     input.cost().unwrap()
 }
 

@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 pub mod matrix;
 pub mod nom;
 
@@ -18,14 +16,12 @@ pub fn expect_empty_line<S: AsRef<str>>(s: S) -> anyhow::Result<()> {
     }
 }
 
-pub fn parse_and_solve<I, O, S>(s: &str, f: S) -> Result<O, I::Err>
+pub fn parse_and_solve<'a, I, O>(s: &'a str, f: fn(I) -> O) -> Result<O, I::Error>
 where
-    I: FromStr,
+    I: TryFrom<&'a str>,
     O: PartialEq,
-    S: FnOnce(&I) -> O,
 {
-    let input = s.parse()?;
-    Ok((f)(&input))
+    s.try_into().map(f)
 }
 
 #[macro_export]

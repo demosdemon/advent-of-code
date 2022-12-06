@@ -117,7 +117,7 @@
 // How many paths through this cave system are there that visit small caves at
 // most once?
 
-pub fn solve(input: &super::ocean::Ocean) -> usize {
+pub fn solve(input: super::ocean::Ocean) -> usize {
     input.paths(false).count()
 }
 

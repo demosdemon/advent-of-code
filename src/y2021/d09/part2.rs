@@ -48,7 +48,7 @@
 // What do you get if you multiply together the sizes of the three largest
 // basins?
 
-pub fn solve(input: &super::Ocean) -> usize {
+pub fn solve(input: super::Ocean) -> usize {
     let mut v = input.basins();
     v.sort_unstable();
     v.into_iter().rev().take(3).product()

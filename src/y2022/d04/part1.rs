@@ -55,7 +55,7 @@
 // In how many assignment pairs does one range fully contain the other?
 //
 
-fn solve(input: &super::Assignments) -> usize {
+fn solve(input: super::Assignments) -> usize {
     input
         .0
         .iter()

@@ -98,8 +98,8 @@ impl Dirac {
     }
 }
 
-pub fn solve(input: &Input) -> usize {
-    Dirac::from_input(input).max()
+pub fn solve(input: Input) -> usize {
+    Dirac::from_input(&input).max()
 }
 
 #[cfg(test)]

@@ -49,7 +49,7 @@ impl FromStr for InsertionRule {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, macros::TryFromStr)]
 pub struct Instructions {
     tuples: BTreeMap<(u8, u8), usize>,
     rules: BTreeMap<(u8, u8), u8>,

@@ -5,7 +5,7 @@
 // After 256 days in the example above, there would be a total of 26984457539
 // lanternfish!
 
-pub fn solve(input: &super::Ocean) -> usize {
+pub fn solve(input: super::Ocean) -> usize {
     input.count(256)
 }
 

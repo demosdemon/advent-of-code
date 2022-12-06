@@ -16,7 +16,7 @@
 // Find the top three Elves carrying the most Calories. How many Calories are
 // those Elves carrying in total?
 
-pub fn solve(input: &super::Elves) -> usize {
+pub fn solve(input: super::Elves) -> usize {
     input.0.iter().rev().take(3).sum()
 }
 

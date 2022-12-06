@@ -169,7 +169,7 @@
 // Decode the structure of your hexadecimal-encoded BITS transmission; what do
 // you get if you add up the version numbers in all packets?
 
-pub fn solve(packet: &super::Packet) -> usize {
+pub fn solve(packet: super::Packet) -> usize {
     packet.version_sum()
 }
 

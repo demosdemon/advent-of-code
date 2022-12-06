@@ -54,7 +54,7 @@ impl From<u8> for Octopus {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, macros::TryFromStr)]
 pub struct Ocean(Matrix<Octopus>);
 
 impl Ocean {

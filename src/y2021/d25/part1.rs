@@ -313,7 +313,7 @@
 // Find somewhere safe to land your submarine. What is the first step on which
 // no sea cucumbers move?
 
-pub fn solve(input: &super::OceanFloor) -> usize {
+pub fn solve(input: super::OceanFloor) -> usize {
     let (v, _) = input.tick_to_deadlock();
     v
 }

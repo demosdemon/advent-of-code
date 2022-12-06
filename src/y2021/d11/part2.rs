@@ -46,10 +46,9 @@
 // simultaneously, you should be able to navigate through the cavern. What is
 // the first step during which all octopuses flash?
 
-pub fn solve(input: &super::Ocean) -> usize {
-    let mut ocean = input.to_owned();
+pub fn solve(mut input: super::Ocean) -> usize {
     (1..)
-        .find_map(|tick| (ocean.tick() == 100).then_some(tick))
+        .find_map(|tick| (input.tick() == 100).then_some(tick))
         .unwrap()
 }
 

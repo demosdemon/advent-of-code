@@ -140,7 +140,7 @@
 // twice, being careful to account for the infinite size of the images. How many
 // pixels are lit in the resulting image?
 
-pub fn solve(input: &super::Input) -> usize {
+pub fn solve(input: super::Input) -> usize {
     input.fold(2)
 }
 

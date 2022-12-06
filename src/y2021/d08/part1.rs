@@ -94,9 +94,8 @@
 //
 // In the output values, how many times do digits 1, 4, 7, or 8 appear?
 
-pub fn solve(input: &super::Lines) -> usize {
+pub fn solve(input: super::Lines) -> usize {
     input
-        .clone()
         .into_iter()
         .map(|v| {
             v.output

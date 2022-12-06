@@ -8,7 +8,7 @@
 // Start again with the original input image and apply the image enhancement
 // algorithm 50 times. How many pixels are lit in the resulting image?
 
-pub fn solve(input: &super::Input) -> usize {
+pub fn solve(input: super::Input) -> usize {
     input.fold(50)
 }
 

@@ -31,11 +31,11 @@
 
 use itertools::Itertools;
 
-pub fn solve(input: &super::Homework) -> usize {
+pub fn solve(input: super::Homework) -> usize {
     input
         .into_iter()
         .permutations(2)
-        .map(|v| (v[0] + v[1]).magnitude())
+        .map(|v| (v[0].clone() + v[1].clone()).magnitude())
         .max()
         .unwrap()
 }

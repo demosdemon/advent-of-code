@@ -4,7 +4,7 @@
 //
 // What is the smallest model number accepted by MONAD?
 
-pub fn solve(input: &super::Instructions) -> usize {
+pub fn solve(input: super::Instructions) -> usize {
     let (min, _) = input.opt();
     min
 }

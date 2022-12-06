@@ -50,7 +50,7 @@
 // What do you get if you evaluate the expression represented by your
 // hexadecimal- encoded BITS transmission?
 
-pub fn solve(packet: &super::Packet) -> usize {
+pub fn solve(packet: super::Packet) -> usize {
     packet.evaluate()
 }
 

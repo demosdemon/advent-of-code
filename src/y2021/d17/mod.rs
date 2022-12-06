@@ -5,7 +5,7 @@ pub(crate) mod parser;
 
 use std::ops::RangeInclusive;
 
-#[derive(derive_more::Display)]
+#[derive(derive_more::Display, macros::TryFromStr)]
 #[display(fmt = "target area: x={min_x}..{max_x}, y={min_y}..{max_y}\n")]
 pub struct TargetArea {
     min_x: isize,
@@ -61,7 +61,7 @@ impl TargetArea {
 
 #[cfg(test)]
 mod tests {
-    fn solve(s: &super::TargetArea) -> String {
+    fn solve(s: super::TargetArea) -> String {
         s.to_string()
     }
 

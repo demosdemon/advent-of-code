@@ -82,9 +82,9 @@ impl Deterministic {
     }
 }
 
-pub fn solve(input: &super::Input) -> usize {
+pub fn solve(input: super::Input) -> usize {
     let mut game = Deterministic::default();
-    let state = game.game(input);
+    let state = game.game(&input);
     std::cmp::min(state.p1.score, state.p2.score) * game.rolls
 }
 

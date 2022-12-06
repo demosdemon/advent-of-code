@@ -53,7 +53,7 @@
 use super::bit::Bit;
 use super::line::Line;
 
-fn solve(input: &super::Lines) -> usize {
+fn solve(input: super::Lines) -> usize {
     let len = input[0].len();
     let mut zeros = vec![0; len];
     let mut ones = vec![0; len];

@@ -10,7 +10,7 @@
 
 use itertools::Itertools;
 
-pub fn solve(input: &super::Report) -> usize {
+pub fn solve(input: super::Report) -> usize {
     let set: super::BeaconSet = input.0.as_slice().into();
     set.scanners
         .iter()

@@ -85,7 +85,7 @@ fn solve_sack(mut sack: Sack) -> usize {
     }
 }
 
-fn solve(sacks: &Sacks) -> usize {
+fn solve(sacks: Sacks) -> usize {
     sacks.0.iter().cloned().map(solve_sack).sum()
 }
 

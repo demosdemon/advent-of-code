@@ -65,7 +65,7 @@ impl<'a> From<&'a [Scanner]> for BeaconSet {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, macros::TryFromStr)]
 struct Scanner {
     idx: usize,
     beacons: Vec<Coordinate>,
@@ -91,6 +91,7 @@ impl Display for Scanner {
 
 ::aoc::derive_FromStr_for_nom!(Scanner, parser::scanner);
 
+#[derive(macros::TryFromStr)]
 pub struct Report(Vec<Scanner>);
 
 impl Display for Report {

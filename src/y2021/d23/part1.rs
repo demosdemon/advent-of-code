@@ -134,7 +134,7 @@
 //
 // What is the least energy required to organize the amphipods?
 
-pub fn solve(input: &super::Maze<5>) -> usize {
+pub fn solve(input: super::Maze<5>) -> usize {
     input.shortest_path()
 }
 

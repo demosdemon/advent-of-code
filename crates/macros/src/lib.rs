@@ -3,6 +3,7 @@ mod from_bytes;
 mod from_iterator;
 mod from_lines;
 mod roundtrip;
+mod try_from_str;
 
 use proc_macro::TokenStream;
 use proc_macro_error::proc_macro_error;
@@ -12,11 +13,20 @@ use self::from_bytes::FromBytes;
 use self::from_iterator::FromIterator;
 use self::from_lines::FromLines;
 use self::roundtrip::Roundtrip;
+use self::try_from_str::TryFromStr;
 
 #[proc_macro]
 #[proc_macro_error]
 pub fn test_roundtrip(input: TokenStream) -> TokenStream {
     parse_macro_input!(input as Roundtrip)
+        .into_token_stream()
+        .into()
+}
+
+#[proc_macro_derive(TryFromStr)]
+#[proc_macro_error]
+pub fn derive_try_from_str(input: TokenStream) -> TokenStream {
+    parse_macro_input!(input as TryFromStr)
         .into_token_stream()
         .into()
 }

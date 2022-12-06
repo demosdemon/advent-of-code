@@ -75,7 +75,7 @@
 // Find a way to simulate lanternfish. How many lanternfish would there be after
 // 80 days?
 
-pub fn solve(input: &super::Ocean) -> usize {
+pub fn solve(input: super::Ocean) -> usize {
     input.count(80)
 }
 

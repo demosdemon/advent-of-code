@@ -83,10 +83,10 @@
 
 use super::line::Line;
 
-fn solve(input: &super::Lines) -> usize {
+fn solve(input: super::Lines) -> usize {
     let bits = input[0].len();
-    let mut o2 = Lines::from_iter(input);
-    let mut co2 = Lines::from_iter(input);
+    let mut o2 = Lines::from_iter(&input);
+    let mut co2 = Lines::from_iter(&input);
 
     for bit in 0..=bits {
         o2 = o2.filter_ceiling(bit);

@@ -15,7 +15,7 @@
 // In how many assignment pairs do the ranges overlap?
 //
 
-fn solve(input: &super::Assignments) -> usize {
+fn solve(input: super::Assignments) -> usize {
     input
         .0
         .iter()

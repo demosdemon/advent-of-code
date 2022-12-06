@@ -319,9 +319,8 @@
 // Given the starting energy levels of the dumbo octopuses in your cavern,
 // simulate 100 steps. How many total flashes are there after 100 steps?
 
-pub fn solve(input: &super::Ocean) -> usize {
-    let mut ocean = input.to_owned();
-    (0..100).map(move |_| ocean.tick()).sum()
+pub fn solve(mut input: super::Ocean) -> usize {
+    (0..100).map(move |_| input.tick()).sum()
 }
 
 #[cfg(test)]

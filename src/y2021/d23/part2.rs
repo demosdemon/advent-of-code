@@ -227,7 +227,7 @@
 // Using the initial configuration from the full diagram, what is the least
 // energy required to organize the amphipods?
 
-pub fn solve(input: &super::Maze<7>) -> usize {
+pub fn solve(input: super::Maze<7>) -> usize {
     input.shortest_path()
 }
 

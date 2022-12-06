@@ -131,7 +131,7 @@ const CLAMP: super::Cube = super::Cube::new(
     super::Coordinate::new(50, 50, 50),
 );
 
-pub fn solve(input: &super::Instructions) -> isize {
+pub fn solve(input: super::Instructions) -> isize {
     input.reduce(Some(&CLAMP))
 }
 

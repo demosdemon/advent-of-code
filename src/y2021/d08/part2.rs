@@ -58,8 +58,8 @@
 // four-digit output values. What do you get if you add up all of the output
 // values?
 
-pub fn solve(input: &super::Lines) -> usize {
-    input.clone().into_iter().map(usize::from).sum()
+pub fn solve(input: super::Lines) -> usize {
+    input.into_iter().map(usize::from).sum()
 }
 
 #[cfg(test)]

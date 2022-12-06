@@ -71,7 +71,7 @@
 // each stack?
 //
 
-fn solve(input: &super::Input) -> String {
+fn solve(input: super::Input) -> String {
     let mut state: super::State = input.rows.clone().into();
     for i in input.instructions.iter().copied() {
         state.execute(i, false);

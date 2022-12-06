@@ -135,7 +135,7 @@
 // How many dots are visible after completing just the first fold instruction on
 // your transparent paper?
 
-pub fn solve(input: &super::Instructions) -> usize {
+pub fn solve(input: super::Instructions) -> usize {
     let matrix: super::Matrix = input.coordinates.iter().collect();
     let matrix = matrix + &input.folds[0];
     matrix.len()

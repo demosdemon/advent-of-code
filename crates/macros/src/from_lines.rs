@@ -16,9 +16,10 @@ impl FromLines {
         } = &self.0;
         let (impl_generics, ty_generics, where_clause) = struct_generics.split_for_impl();
         let from_iter = self.0.impl_from_iterator();
+        let try_from_str = self.0.impl_try_from_str();
         quote! {
             #from_iter
-
+            #try_from_str
             impl #impl_generics ::core::str::FromStr for #struct_ident #ty_generics #where_clause {
                 type Err = <#attr_type as ::core::str::FromStr>::Err;
 

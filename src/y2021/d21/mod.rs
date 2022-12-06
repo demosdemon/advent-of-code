@@ -1,3 +1,6 @@
+pub(crate) mod part1;
+pub(crate) mod part2;
+
 use std::ops::Add;
 use std::ops::AddAssign;
 use std::ops::Not;
@@ -6,10 +9,7 @@ use std::str::FromStr;
 use anyhow::anyhow;
 use anyhow::Context;
 
-pub(crate) mod part1;
-pub(crate) mod part2;
-
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, macros::TryFromStr)]
 pub struct Input {
     p1: u8,
     p2: u8,

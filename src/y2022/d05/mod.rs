@@ -13,6 +13,7 @@ struct Instruction {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 struct Slot(Option<char>);
 
+#[derive(macros::TryFromStr)]
 struct Input {
     rows: Vec<Vec<Slot>>,
     instructions: Vec<Instruction>,

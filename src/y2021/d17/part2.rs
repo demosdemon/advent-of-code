@@ -26,7 +26,7 @@
 // How many distinct initial velocity values cause the probe to be within the
 // target area after any step?
 
-pub fn solve(input: &super::TargetArea) -> usize {
+pub fn solve(input: super::TargetArea) -> usize {
     input.range().count()
 }
 

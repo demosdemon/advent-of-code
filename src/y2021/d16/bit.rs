@@ -91,7 +91,7 @@ impl From<bool> for Bit {
     }
 }
 
-#[derive(macros::FromIterator)]
+#[derive(macros::FromIterator, macros::TryFromStr)]
 #[from_iterator(Bit)]
 pub struct BitVector(Vec<Bit>);
 
@@ -155,7 +155,7 @@ impl Display for BitVector {
 
 #[cfg(test)]
 mod tests {
-    fn solve(v: &super::BitVector) -> String {
+    fn solve(v: super::BitVector) -> String {
         v.to_string()
     }
 

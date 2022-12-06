@@ -7,7 +7,7 @@ use anyhow::Context;
 use anyhow::Error;
 use anyhow::Result;
 
-#[derive(derive_more::IntoIterator, macros::FromIterator)]
+#[derive(derive_more::IntoIterator, macros::FromIterator, macros::TryFromStr)]
 #[into_iterator(ref)]
 #[from_iterator(usize)]
 pub struct Ocean(Vec<usize>);

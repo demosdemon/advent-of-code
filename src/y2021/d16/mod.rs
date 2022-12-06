@@ -46,7 +46,7 @@ impl LengthType {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, macros::TryFromStr)]
 pub enum Packet {
     Literal {
         version: Version,

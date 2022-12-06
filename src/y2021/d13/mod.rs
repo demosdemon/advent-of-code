@@ -97,7 +97,7 @@ impl FromStr for Fold {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, macros::TryFromStr)]
 pub struct Instructions {
     coordinates: Vec<Coordinate>,
     folds: Vec<Fold>,

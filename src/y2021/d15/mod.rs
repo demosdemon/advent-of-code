@@ -31,7 +31,7 @@ impl Ord for State {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, macros::TryFromStr)]
 pub struct Cave {
     width: usize,
     nodes: Vec<u8>,
@@ -59,7 +59,7 @@ fn clamp(v: usize) -> u8 {
     (((v as isize - 1) % 9) + 1) as u8
 }
 
-impl<'lhs> Mul<usize> for &'lhs Cave {
+impl Mul<usize> for Cave {
     type Output = Cave;
 
     fn mul(self, rhs: usize) -> Self::Output {
@@ -168,7 +168,7 @@ mod test {
         let example = include_str!("inputs/example")
             .parse::<super::Cave>()
             .unwrap();
-        let example = (&example) * 5;
+        let example = example * 5;
         let example_5x = include_str!("inputs/example_5x")
             .parse::<super::Cave>()
             .unwrap();

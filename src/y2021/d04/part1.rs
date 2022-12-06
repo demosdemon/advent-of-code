@@ -75,8 +75,7 @@
 // To guarantee victory against the giant squid, figure out which board will win
 // first. What will your final score be if you choose that board?
 
-pub fn solve(input: &super::Game) -> usize {
-    let mut input = input.to_owned();
+pub fn solve(mut input: super::Game) -> usize {
     input
         .pulls
         .into_iter()

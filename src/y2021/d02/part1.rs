@@ -40,11 +40,11 @@
 
 use super::Direction;
 
-fn solve(input: &super::DirectionList) -> usize {
+fn solve(input: super::DirectionList) -> usize {
     let mut horizontal = 0;
     let mut depth = 0;
     for dir in input {
-        match *dir {
+        match dir {
             Direction::Forward(v) => horizontal += v as isize,
             Direction::Up(v) => depth -= v as isize,
             Direction::Down(v) => depth += v as isize,

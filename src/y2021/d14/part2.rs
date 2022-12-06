@@ -12,8 +12,8 @@
 // quantity of the most common element and subtract the quantity of the least
 // common element?
 
-pub fn solve(input: &super::Instructions) -> usize {
-    (0..40).fold(input.clone(), |i, _| i.step()).score()
+pub fn solve(input: super::Instructions) -> usize {
+    (0..40).fold(input, |i, _| i.step()).score()
 }
 
 #[cfg(test)]

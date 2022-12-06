@@ -74,7 +74,7 @@ const HALLWAY_ROW: usize = 1;
 const AMPHIPOD_COUNT: usize = 4;
 const ROW_WIDTH: usize = 13;
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, macros::TryFromStr)]
 pub struct Maze<const ROWS: usize> {
     tiles: [[Tile; ROW_WIDTH]; ROWS],
 }

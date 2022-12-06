@@ -6,7 +6,7 @@ use std::ops::Add;
 pub(crate) mod parser;
 
 #[derive(derive_more::IntoIterator, macros::FromLines)]
-#[into_iterator(ref)]
+#[into_iterator]
 #[from_lines(Snailfish)]
 pub struct Homework(Vec<Snailfish>);
 
@@ -120,24 +120,8 @@ impl Add for Snailfish {
     }
 }
 
-impl<'rhs> Add<&'rhs Snailfish> for Snailfish {
-    type Output = Snailfish;
-
-    fn add(self, rhs: &'rhs Snailfish) -> Self::Output {
-        self + rhs.to_owned()
-    }
-}
-
-impl<'lhs, 'rhs> Add<&'rhs Snailfish> for &'lhs Snailfish {
-    type Output = Snailfish;
-
-    fn add(self, rhs: &'rhs Snailfish) -> Self::Output {
-        self.to_owned() + rhs
-    }
-}
-
-fn sum(input: &Homework) -> Snailfish {
-    input.into_iter().cloned().reduce(Add::add).unwrap()
+fn sum(input: Homework) -> Snailfish {
+    input.into_iter().reduce(Add::add).unwrap()
 }
 
 #[cfg(test)]

@@ -74,7 +74,7 @@
 // Starting again with all cubes off, execute all reboot steps. Afterward,
 // considering all cubes, how many cubes are on?
 
-pub fn solve(input: &super::Instructions) -> isize {
+pub fn solve(input: super::Instructions) -> isize {
     input.reduce(None)
 }
 

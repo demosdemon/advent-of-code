@@ -51,7 +51,7 @@
 //
 // Given these new rules, how many paths through this cave system are there?
 
-pub fn solve(input: &super::ocean::Ocean) -> usize {
+pub fn solve(input: super::ocean::Ocean) -> usize {
     input.paths(true).count()
 }
 

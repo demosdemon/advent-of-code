@@ -17,8 +17,7 @@
 
 use super::matrix::Board;
 
-pub fn solve(input: &super::Game) -> usize {
-    let input = input.to_owned();
+pub fn solve(input: super::Game) -> usize {
     let mut bingo = Bingo(input.boards);
     input
         .pulls

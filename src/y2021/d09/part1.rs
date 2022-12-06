@@ -37,7 +37,7 @@
 // Find all of the low points on your heightmap. What is the sum of the risk
 // levels of all low points on your heightmap?
 
-pub fn solve(input: &super::Ocean) -> usize {
+pub fn solve(input: super::Ocean) -> usize {
     input
         .iter_low_points()
         .map(|(_, &v)| (v + 1) as usize)

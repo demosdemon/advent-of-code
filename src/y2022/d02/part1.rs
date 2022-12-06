@@ -48,7 +48,7 @@
 // What would your total score be if everything goes exactly according to your
 // strategy guide?
 
-fn solve(s: &super::Instructions) -> usize {
+fn solve(s: super::Instructions) -> usize {
     s.0.iter().map(|i| i.p1().score()).sum()
 }
 

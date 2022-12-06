@@ -14,7 +14,7 @@ const SURROUNDING: [RelativePosition; 4] = [
     RelativePosition::BottomCenter,
 ];
 
-#[derive(Debug)]
+#[derive(Debug, macros::TryFromStr)]
 pub struct Ocean(Matrix<u8>);
 
 impl Ocean {

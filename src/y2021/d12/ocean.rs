@@ -209,7 +209,7 @@ impl Ocean {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, macros::TryFromStr)]
 pub struct Ocean {
     names: Box<[String]>,
     edges: Vec<Vec<(usize, EdgeType)>>,

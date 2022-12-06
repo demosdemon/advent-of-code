@@ -62,7 +62,7 @@
 //
 // How many measurements are larger than the previous measurement?
 
-fn solve(input: &super::Ocean) -> usize {
+fn solve(input: super::Ocean) -> usize {
     input.windows(2).filter(|s| s[0] < s[1]).count()
 }
 

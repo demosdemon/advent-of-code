@@ -136,7 +136,7 @@
 // position and still eventually be within the target area after any step. What
 // is the highest y position it reaches on this trajectory?
 
-pub fn solve(input: &super::TargetArea) -> usize {
+pub fn solve(input: super::TargetArea) -> usize {
     let min_y = input.min_y.unsigned_abs();
     (min_y * (min_y - 1)) / 2
 }

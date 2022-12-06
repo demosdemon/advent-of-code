@@ -105,7 +105,7 @@
 // fourteen-digit model number that contains no 0 digits. What is the largest
 // model number accepted by MONAD?
 
-pub fn solve(input: &super::Instructions) -> usize {
+pub fn solve(input: super::Instructions) -> usize {
     let (_, max) = input.opt();
     max
 }

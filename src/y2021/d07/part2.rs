@@ -29,7 +29,7 @@
 // fuel possible so they can make you an escape route! How much fuel must they
 // spend to align to that position?
 
-pub fn solve(input: &super::Ocean) -> usize {
+pub fn solve(input: super::Ocean) -> usize {
     input.solve(|d| (d * (d + 1)) / 2)
 }
 

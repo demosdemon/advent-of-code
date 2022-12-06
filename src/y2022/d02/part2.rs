@@ -19,7 +19,7 @@
 // Following the Elf's instructions for the second column, what would your total
 // score be if everything goes exactly according to your strategy guide?
 
-fn solve(s: &super::Instructions) -> usize {
+fn solve(s: super::Instructions) -> usize {
     s.0.iter().map(|i| i.p2().score()).sum()
 }
 

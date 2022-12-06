@@ -5,6 +5,7 @@ mod parser;
 pub(crate) mod part1;
 pub(crate) mod part2;
 
+#[derive(macros::TryFromStr)]
 pub struct Elves(Vec<Elf>);
 
 pub struct Elf(Vec<usize>);

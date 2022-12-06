@@ -43,7 +43,7 @@
 // Consider sums of a three-measurement sliding window. How many sums are larger
 // than the previous sum?
 
-fn solve(input: &super::Ocean) -> usize {
+fn solve(input: super::Ocean) -> usize {
     input.windows(4).filter(|s| s[0] < s[3]).count()
 }
 

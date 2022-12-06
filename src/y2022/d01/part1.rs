@@ -58,7 +58,7 @@
 // carrying?
 //
 
-pub fn solve(input: &super::Elves) -> usize {
+pub fn solve(input: super::Elves) -> usize {
     input.0.last().unwrap().sum()
 }
 
