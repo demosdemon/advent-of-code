@@ -7,7 +7,7 @@ use anyhow::Context;
 use anyhow::Error;
 use anyhow::Result;
 
-#[derive(macros::FromIterator,macros::TryFromStr)]
+#[derive(macros::FromIterator, macros::TryFromStr)]
 #[from_iterator(u8)]
 pub struct Ocean(Vec<u8>);
 
