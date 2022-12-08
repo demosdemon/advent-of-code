@@ -230,6 +230,17 @@ impl<Tile> Matrix<Tile> {
     ) -> IterRelMut<'_, Tile, I::IntoIter> {
         IterRelMut::new(self, pos, reliter)
     }
+
+    pub fn map<O, F>(self, mut func: F) -> Matrix<O>
+    where
+        F: FnMut(Tile) -> O,
+    {
+        let width = self.width;
+        Matrix {
+            tiles: self.into_iter().map(|(_, tile)| func(tile)).collect(),
+            width,
+        }
+    }
 }
 
 impl<Tile> Index<Position> for Matrix<Tile> {
