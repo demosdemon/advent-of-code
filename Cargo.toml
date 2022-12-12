@@ -6,31 +6,49 @@ version = "0.1.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "aoc"
+required-features = ["cli"]
+
+[features]
+default = ["full"]
+cli = ["clap"]
+full = ["cli", "y2021", "y2022"]
+y2021 = ["arrayvec", "derive_more", "hashbrown", "itertools", "macros"]
+y2022 = ["derive_more", "hashbrown", "macros"]
+
+[workspace]
+members = ["crates/*"]
+
 [dependencies]
-anyhow = "1.0.66"
+anyhow = { version = "1.0.66", features = ["backtrace"] }
 arrayvec = { version = "0.7.2", optional = true }
-derive_more = "0.99.17"
 euclid = "0.22.7"
 itertools = { version = "0.10.5", optional = true }
 macros = { path = "./crates/macros", optional = true }
 nom = "7.1.1"
 paste = "1.0.9"
-hashbrown = "0.13.1"
+hashbrown = { version = "0.13.1", optional = true }
 
 [dependencies.clap]
 version = "4.0.29"
 features = ["derive", "deprecated"]
 optional = true
 
-[[bin]]
-name = "aoc"
-required-features = ["full", "clap"]
+[dependencies.derive_more]
+version = "0.99.17"
+default-features = false
+optional = true
+features = [
+    "add",
+    "constructor",
+    "deref",
+    "display",
+    "from",
+    "index_mut",
+    "index",
+    "into_iterator",
+]
 
-[features]
-default = ["full", "clap"]
-full = ["y2021", "y2022"]
-y2021 = ["arrayvec", "itertools", "macros"]
-y2022 = []
-
-[workspace]
-members = ["crates/*"]
+[dev-dependencies]
+itertools = "0.10.5"

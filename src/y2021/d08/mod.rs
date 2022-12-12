@@ -24,7 +24,8 @@ pub(crate) mod part2;
 pub(crate) mod parser;
 
 use std::collections::BTreeSet;
-use std::collections::HashMap;
+
+use hashbrown::HashMap;
 
 #[derive(Debug, Hash, PartialEq, Eq, PartialOrd, Ord, Clone)]
 pub enum Segment {

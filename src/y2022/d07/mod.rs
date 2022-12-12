@@ -22,7 +22,7 @@ mod parser;
 pub(crate) mod part1;
 pub(crate) mod part2;
 
-use std::collections::HashMap;
+use hashbrown::HashMap;
 
 #[derive(Debug, PartialEq, macros::TryFromStr)]
 struct Shell(Vec<Command>);
