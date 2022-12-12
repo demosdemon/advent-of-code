@@ -24,7 +24,7 @@ use std::ops::Not;
 
 use arrayvec::ArrayVec;
 
-#[derive(Debug, Clone, Copy, derive_more::Display, derive_more::IsVariant)]
+#[derive(Debug, Clone, Copy, derive_more::Display, macros::Unwrap)]
 pub(super) enum Pixel {
     #[display(fmt = ".")]
     Dim,

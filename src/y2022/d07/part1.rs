@@ -129,13 +129,10 @@
 fn solve(shell: super::Shell) -> usize {
     let fs = shell.evaluate();
     let mut total = 0;
-    for dir in fs.walk() {
-        if let super::NodeType::Directory {
-            directories_size, ..
-        } = dir.node_type
-        {
-            if directories_size <= 100_000 {
-                total += directories_size;
+    for node in fs.walk() {
+        if let Some(dir) = node.node_type.as_directory_ref() {
+            if dir.directories_size <= 100_000 {
+                total += dir.directories_size;
             }
         }
     }

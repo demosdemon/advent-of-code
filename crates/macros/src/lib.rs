@@ -18,12 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#![cfg_attr(test, feature(slice_flatten))]
+
 pub(crate) mod common;
 mod from_bytes;
 mod from_iterator;
 mod from_lines;
 mod roundtrip;
 mod try_from_str;
+mod unwrap;
 
 macro_rules! derive {
     ($mod:ident, $ty:ident $(, $attr:ident)? $(,)?) => {
@@ -41,6 +44,7 @@ derive!(from_bytes, FromBytes, from_bytes);
 derive!(from_iterator, FromIterator, from_iterator);
 derive!(from_lines, FromLines, from_lines);
 derive!(try_from_str, TryFromStr);
+derive!(unwrap, Unwrap);
 
 #[proc_macro]
 #[proc_macro_error::proc_macro_error]
@@ -65,26 +69,29 @@ mod tests {
     type Macro = (&'static str, Expander);
     type AttrMacro = (&'static str, AttrExpander);
 
-    const FUNCTION_LIKE: [Macro; 3] = [
-        ("::macros::test_roundtrip", crate::roundtrip::expand),
-        ("macros::test_roundtrip", crate::roundtrip::expand),
-        ("test_roundtrip", crate::roundtrip::expand),
+    macro_rules! macro_ {
+        ($name:ident, $mod:ident) => {
+            [
+                (
+                    concat!("::macros::", stringify!($name)),
+                    crate::$mod::expand,
+                ),
+                (concat!("macros::", stringify!($name)), crate::$mod::expand),
+                (stringify!($name), crate::$mod::expand),
+            ]
+        };
+    }
+
+    const FUNCTION_LIKE: &[[Macro; 3]] = &[macro_!(test_roundtrip, roundtrip)];
+
+    const DERIVE: &[[Macro; 3]] = &[
+        macro_!(FromBytes, from_bytes),
+        macro_!(FromIterator, from_iterator),
+        macro_!(FromLines, from_lines),
+        macro_!(TryFromStr, try_from_str),
+        macro_!(Unwrap, unwrap),
     ];
-    const DERIVE: [Macro; 12] = [
-        ("::macros::FromBytes", crate::from_bytes::expand),
-        ("macros::FromBytes", crate::from_bytes::expand),
-        ("FromBytes", crate::from_bytes::expand),
-        ("::macros::FromIterator", crate::from_iterator::expand),
-        ("macros::FromIterator", crate::from_iterator::expand),
-        ("FromIterator", crate::from_iterator::expand),
-        ("::macros::FromLines", crate::from_lines::expand),
-        ("macros::FromLines", crate::from_lines::expand),
-        ("FromLines", crate::from_lines::expand),
-        ("::macros::TryFromStr", crate::try_from_str::expand),
-        ("macros::TryFromStr", crate::try_from_str::expand),
-        ("TryFromStr", crate::try_from_str::expand),
-    ];
-    const ATTRIBUTE: [AttrMacro; 0] = [];
+    const ATTRIBUTE: &[[AttrMacro; 3]] = &[];
 
     const SRC_ROOT: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../src");
 
@@ -105,13 +112,15 @@ mod tests {
         for p in iter_src_files() {
             let mut fp = fs::File::open(p).unwrap();
 
-            emulate_functionlike_macro_expansion(fp.try_clone().unwrap(), &FUNCTION_LIKE).unwrap();
+            emulate_functionlike_macro_expansion(fp.try_clone().unwrap(), FUNCTION_LIKE.flatten())
+                .unwrap();
             fp.rewind().unwrap();
 
-            emulate_derive_macro_expansion(fp.try_clone().unwrap(), &DERIVE).unwrap();
+            emulate_derive_macro_expansion(fp.try_clone().unwrap(), DERIVE.flatten()).unwrap();
             fp.rewind().unwrap();
 
-            emulate_attributelike_macro_expansion(fp.try_clone().unwrap(), &ATTRIBUTE).unwrap();
+            emulate_attributelike_macro_expansion(fp.try_clone().unwrap(), ATTRIBUTE.flatten())
+                .unwrap();
             fp.rewind().unwrap();
 
             once = true;

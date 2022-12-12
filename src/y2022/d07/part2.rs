@@ -52,23 +52,18 @@ fn solve(shell: super::Shell) -> usize {
 
     let fs = shell.evaluate();
 
-    let root_size = match fs.nodes.get(&0).unwrap().node_type {
-        super::NodeType::Directory {
-            directories_size, ..
-        } => directories_size,
-        _ => panic!("root node is not a directory"),
-    };
+    let root_size = fs.nodes[&0]
+        .node_type
+        .unwrap_directory_ref()
+        .directories_size;
 
     let need = REQ - (CAP - root_size);
 
     let mut min = usize::MAX;
     for node in fs.walk() {
-        if let super::NodeType::Directory {
-            directories_size, ..
-        } = node.node_type
-        {
-            if directories_size >= need && directories_size < min {
-                min = directories_size;
+        if let Some(dir) = node.node_type.as_directory_ref() {
+            if dir.directories_size >= need && dir.directories_size < min {
+                min = dir.directories_size;
             }
         }
     }

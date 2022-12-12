@@ -23,7 +23,7 @@ pub(crate) mod part1;
 use std::borrow::Cow;
 use std::str::FromStr;
 
-#[derive(Clone, Copy, PartialEq, Eq, derive_more::IsVariant)]
+#[derive(Clone, Copy, PartialEq, Eq, macros::Unwrap)]
 enum Tile {
     Vacant,
     Eastward,

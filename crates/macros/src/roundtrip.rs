@@ -18,7 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-use heck::ToSnakeCase;
+use convert_case::Case::Snake;
+use convert_case::Casing;
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::ext::IdentExt;
@@ -58,7 +59,7 @@ impl Roundtrip {
             .ident
             .unraw()
             .to_string()
-            .to_snake_case();
+            .to_case(Snake);
         let num_tests = self.lits.len();
         let zpad = (num_tests as f32).log10().ceil() as usize;
 

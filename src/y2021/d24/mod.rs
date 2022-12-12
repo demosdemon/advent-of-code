@@ -53,7 +53,7 @@ impl Value {
     }
 }
 
-#[derive(derive_more::IsVariant, Debug, Clone, Copy)]
+#[derive(macros::Unwrap, Debug, Clone, Copy)]
 pub enum Instruction {
     Input(Variable),
 

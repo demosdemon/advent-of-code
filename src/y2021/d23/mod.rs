@@ -56,21 +56,12 @@ impl Amphipod {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, derive_more::IsVariant)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, macros::Unwrap)]
 enum Tile {
     Wall,
     Vacant,
     Amphipod(Amphipod),
     Void,
-}
-
-impl Tile {
-    fn amphipod(&self) -> Option<&Amphipod> {
-        match self {
-            Self::Amphipod(v) => Some(v),
-            _ => None,
-        }
-    }
 }
 
 impl TryFrom<u8> for Tile {
@@ -139,7 +130,7 @@ impl<const ROWS: usize> Maze<ROWS> {
         self.tiles
             .iter()
             .flatten()
-            .flat_map(Tile::amphipod)
+            .flat_map(Tile::as_amphipod_ref)
             .counts()
             .into_values()
             .flat_map(|v| (v == rows).then_some(v))

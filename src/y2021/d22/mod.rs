@@ -27,7 +27,7 @@ use std::collections::BTreeMap;
 use std::ops::Not;
 
 #[derive(
-    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, derive_more::Display, derive_more::IsVariant,
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, derive_more::Display, macros::Unwrap,
 )]
 pub enum State {
     #[display(fmt = "off")]
