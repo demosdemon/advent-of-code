@@ -89,13 +89,22 @@ impl RelativePosition {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Matrix<Tile> {
     width: usize,
     tiles: Box<[Tile]>,
 }
 
 impl<Tile> Matrix<Tile> {
+    pub fn new(width: usize, tiles: impl IntoIterator<Item = Tile>) -> Self {
+        let this = Self {
+            width,
+            tiles: tiles.into_iter().collect(),
+        };
+        assert!(this.tiles.len() % this.width == 0);
+        this
+    }
+
     pub const fn len(&self) -> usize {
         self.tiles.len()
     }

@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#![cfg_attr(test, feature(slice_flatten))]
-
 pub(crate) mod common;
 mod from_bytes;
 mod from_iterator;
@@ -103,6 +101,10 @@ mod tests {
             .filter(|p| p.extension().map_or(false, |p| p == "rs"))
     }
 
+    fn flatten<const N: usize, T>(arr: &[[T; N]]) -> &[T] {
+        unsafe { std::slice::from_raw_parts(arr.as_ptr() as *const T, arr.len() * N) }
+    }
+
     #[test]
     fn code_coverage() {
         // This code doesn't check much. Instead, it does macro expansion at run
@@ -112,14 +114,14 @@ mod tests {
         for p in iter_src_files() {
             let mut fp = fs::File::open(p).unwrap();
 
-            emulate_functionlike_macro_expansion(fp.try_clone().unwrap(), FUNCTION_LIKE.flatten())
+            emulate_functionlike_macro_expansion(fp.try_clone().unwrap(), flatten(FUNCTION_LIKE))
                 .unwrap();
             fp.rewind().unwrap();
 
-            emulate_derive_macro_expansion(fp.try_clone().unwrap(), DERIVE.flatten()).unwrap();
+            emulate_derive_macro_expansion(fp.try_clone().unwrap(), flatten(DERIVE)).unwrap();
             fp.rewind().unwrap();
 
-            emulate_attributelike_macro_expansion(fp.try_clone().unwrap(), ATTRIBUTE.flatten())
+            emulate_attributelike_macro_expansion(fp.try_clone().unwrap(), flatten(ATTRIBUTE))
                 .unwrap();
             fp.rewind().unwrap();
 
